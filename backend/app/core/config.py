@@ -2,7 +2,7 @@
 应用配置管理
 """
 from pydantic_settings import BaseSettings
-from typing import List
+from typing import List, Optional
 import os
 
 
@@ -10,11 +10,13 @@ class Settings(BaseSettings):
     # 环境
     ENVIRONMENT: str = "development"
 
-    # 数据库
-    DATABASE_URL: str
+    # 数据库 - 支持 MySQL 和 SQLite
+    DATABASE_TYPE: str = "mysql"  # mysql 或 sqlite
+    DATABASE_URL: Optional[str] = None  # MySQL 连接字符串
+    SQLITE_PATH: str = "./legal_saas.db"  # SQLite 数据库路径
 
-    # Redis
-    REDIS_URL: str
+    # Redis（仅生产环境需要）
+    REDIS_URL: Optional[str] = None
 
     # JWT
     JWT_SECRET: str
@@ -37,6 +39,14 @@ class Settings(BaseSettings):
         "http://localhost:3000",
         "http://127.0.0.1:5173",
     ]
+
+    @property
+    def is_mysql(self) -> bool:
+        return self.DATABASE_TYPE == "mysql"
+
+    @property
+    def is_sqlite(self) -> bool:
+        return self.DATABASE_TYPE == "sqlite"
 
     class Config:
         env_file = ".env"
