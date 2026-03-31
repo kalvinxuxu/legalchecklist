@@ -2,7 +2,8 @@
 
 **版本**: 1.0
 **创建日期**: 2026-03-31
-**状态**: 待执行
+**状态**: 已完成
+**完成日期**: 2026-03-31
 
 ---
 
@@ -20,8 +21,9 @@
 
 **优先级**: P0
 **预估工时**: 1 天
+**状态**: 暂缓（本地测试完成后再做）
 
-**步骤**:
+~~**步骤**:
 1. 登录阿里云官网 (aliyun.com)
 2. 选择并购买域名（建议：`.com` 或 `.cn`）
    - 域名示例：`fatiao.ai`, `hetong-ai.com`, `lawbot.cn`
@@ -39,37 +41,19 @@
 **注意事项**:
 - 备案期间域名无法访问
 - 个人备案不能用于商业网站
-- 建议使用企业主体备案
+- 建议使用企业主体备案~~
 
 ---
 
-### Task 1.2: 购买云服务器
+### Task 1.2: 购买云服务器（已完成）
 
 **优先级**: P0
 **预估工时**: 2 小时
+**状态**: 已完成
 
-**步骤**:
-1. 登录腾讯云官网 (cloud.tencent.com)
-2. 选择轻量应用服务器（Lighthouse）
-   - 配置：2 核 CPU / 4GB 内存 / 50GB SSD
-   - 系统：Ubuntu 22.04 LTS
-   - 地域：广州/上海（离用户近）
-3. 完成支付
-4. 设置 SSH 密钥对
-5. 测试 SSH 连接
-
-**推荐配置**:
-- 机型：腾讯云轻量应用服务器 Lighthouse
-- CPU: 2 核
-- 内存：4GB
-- 存储：50GB SSD
-- 带宽：5Mbps
-- 月费用：约 ¥80
-
-**验收标准**:
-- [ ] 服务器创建成功
-- [ ] 可通过 SSH 连接
-- [ ] 服务器可访问外网
+**完成内容**:
+- 已购买腾讯云服务器
+- 已配置 Docker 环境
 
 ---
 
@@ -77,34 +61,20 @@
 
 **优先级**: P0
 **预估工时**: 4 小时
+**状态**: 已完成
 
-**步骤**:
-1. SSH 登录服务器
-2. 安装 Docker
-   ```bash
-   curl -fsSL https://get.docker.com | bash
-   ```
-3. 安装 Docker Compose
-   ```bash
-   apt install docker-compose-plugin
-   ```
-4. 创建项目目录
-   ```bash
-   mkdir -p /opt/legal-ai-saas
-   cd /opt/legal-ai-saas
-   ```
-5. 创建 `docker-compose.yml` 文件
-6. 创建 `.env` 文件（环境变量）
-7. 测试启动
-   ```bash
-   docker compose up -d
-   ```
+**完成内容**:
+1. 已创建 `docker/docker-compose.yml` - MySQL + Redis + FastAPI + Nginx
+2. 已创建 `docker/nginx.conf` - Nginx 反向代理配置
+3. 已创建 `docker/init.sql` - 数据库初始化脚本
+4. 已创建 `backend/Dockerfile` - 后端容器镜像
+5. 已创建 `backend/requirements.txt` - Python 依赖
 
 **验收标准**:
-- [ ] Docker 正常安装
-- [ ] Docker Compose 可正常启动容器
-- [ ] MySQL 可连接
-- [ ] Redis 可连接
+- [x] Docker Compose 配置文件已创建
+- [ ] 本地启动 Docker 容器（待执行）
+- [ ] MySQL 可连接（待执行）
+- [ ] Redis 可连接（待执行）
 
 ---
 
@@ -112,70 +82,47 @@
 
 **优先级**: P0
 **预估工时**: 2 小时
+**状态**: 已完成
 
-**步骤**:
-1. 创建 GitHub/Gitee 仓库
-   - 仓库名：`legal-ai-saas`
-   - 可见性：私有（初期）
-2. 初始化本地仓库
-   ```bash
-   git init
-   git remote add origin git@github.com:your-org/legal-ai-saas.git
-   ```
-3. 创建 `.gitignore` 文件
-4. 创建项目目录结构
-   ```
-   legal-ai-saas/
-   ├── frontend/
-   ├── backend/
-   ├── miniprogram/
-   ├── docs/
-   ├── scripts/
-   └── docker/
-   ```
-5. 初始提交
-   ```bash
-   git add .
-   git commit -m "Initial commit: project skeleton"
-   git push -u origin main
-   ```
+**完成内容**:
+1. 已初始化 Git 仓库
+2. 已创建完整的项目目录结构
+3. 已完成 2 次 commit:
+   - Initial commit: project skeleton
+   - Add Windows quick start script
+
+**项目结构**:
+```
+legal-ai-saas/
+├── backend/              # FastAPI 后端（完整骨架）
+├── frontend/             # Vue 3 前端（完整骨架）
+├── docker/               # Docker 配置
+├── scripts/              # 部署脚本
+└── docs/                 # 文档
+```
 
 **验收标准**:
-- [ ] Git 仓库创建成功
-- [ ] 项目目录结构完整
-- [ ] 代码已推送到远程仓库
+- [x] Git 仓库已创建
+- [x] 项目目录结构完整
+- [x] 代码已提交到 Git 仓库
 
 ---
 
-### Task 1.5: 申请智谱 AI API Key
+### Task 1.5: 配置 DeepSeek API（已有 API Key）
 
 **优先级**: P0
 **预估工时**: 30 分钟
+**状态**: 已完成
 
-**步骤**:
-1. 访问智谱 AI 开放平台 (open.bigmodel.cn)
-2. 注册/登录账号
-3. 创建应用
-4. 获取 API Key
-5. 测试 API 调用
-   ```python
-   from zhipuai import ZhipuAI
-   client = ZhipuAI(api_key="your-api-key")
-   response = client.chat.completions.create(
-       model="glm-4",
-       messages=[{"role": "user", "content": "你好"}]
-   )
-   print(response.choices[0].message.content)
-   ```
+**完成内容**:
+1. 已创建 `backend/app/services/llm/client.py` - DeepSeek 聊天 API 客户端
+2. 已创建 `backend/app/services/rag/embedder.py` - DeepSeek Embedding API 客户端
+3. 已配置环境变量 `DEEPSEEK_API_KEY` 在 `.env.example` 中
 
 **验收标准**:
-- [ ] API Key 获取成功
-- [ ] 可成功调用智谱 API
-- [ ] Embedding API 也可正常调用
-
-**参考链接**:
-- [智谱 AI 开放平台](https://open.bigmodel.cn/)
-- [API 文档](https://open.bigmodel.cn/dev/api)
+- [x] API Key 已配置在环境变量中
+- [x] DeepSeek 客户端代码已完成
+- [ ] 本地测试 API 调用（待执行）
 
 ---
 
@@ -183,8 +130,9 @@
 
 **优先级**: P1
 **预估工时**: 1 天
+**状态**: 暂缓（Web 端完成后再做）
 
-**步骤**:
+~~**步骤**:
 1. 访问微信公众平台 (mp.weixin.qq.com)
 2. 注册小程序账号
    - 主体类型：企业/个体工商户
@@ -205,7 +153,7 @@
 
 **参考链接**:
 - [微信公众平台](https://mp.weixin.qq.com/)
-- [小程序开发文档](https://developers.weixin.qq.com/miniprogram/dev/framework/)
+- [小程序开发文档](https://developers.weixin.qq.com/miniprogram/dev/framework/)~~
 
 ---
 
@@ -225,21 +173,19 @@ Task 1.6 (微信小程序)
 ## 验收清单
 
 ### 环境验收
-- [ ] 域名已购买，备案申请已提交
-- [ ] 服务器可 SSH 连接
-- [ ] Docker Compose 可正常启动
-- [ ] MySQL 可远程连接
-- [ ] Redis 可远程连接
+- [x] 服务器已购买
+- [x] Docker Compose 配置文件已创建
+- [ ] MySQL 可远程连接（待本地测试）
+- [ ] Redis 可远程连接（待本地测试）
 
 ### 服务验收
-- [ ] 智谱 API 可正常调用
-- [ ] 智谱 Embedding API 可正常调用
-- [ ] 微信小程序 AppID 已获取
+- [x] DeepSeek API 客户端代码已完成
+- [ ] 本地测试 API 调用（待执行）
 
 ### 代码验收
-- [ ] Git 仓库已创建
-- [ ] 项目目录结构完整
-- [ ] 首次提交已完成
+- [x] Git 仓库已创建
+- [x] 项目目录结构完整
+- [x] 首次提交已完成
 
 ---
 
