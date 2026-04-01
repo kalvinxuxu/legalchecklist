@@ -2,6 +2,7 @@ fastapi==0.109.0
 uvicorn[standard]==0.27.0
 pydantic==2.5.3
 pydantic-settings==2.1.0
+pydantic[email]==2.5.3
 sqlalchemy==2.0.25
 aiomysql==0.2.0
 aiosqlite==0.19.0
@@ -11,3 +12,14 @@ passlib[bcrypt]==1.7.4
 python-multipart==0.0.6
 httpx==0.26.0
 tenacity==8.2.3
+bcrypt==4.0.1
+
+# 文档解析
+pdfplumber>=0.10.0
+python-docx>=0.8.11
+
+# 阿里云 OSS（可选，生产环境）
+# oss2>=2.18.0
+
+# 异步任务队列
+celery>=5.3.0
