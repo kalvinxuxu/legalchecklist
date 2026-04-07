@@ -1,0 +1,83 @@
+- generic [ref=e57]:
+  - complementary [ref=e58]:
+    - generic [ref=e59]: 法务 AI
+    - menubar [ref=e60]:
+      - menuitem "工作台" [ref=e61] [cursor=pointer]
+      - menuitem "合同列表" [ref=e62] [cursor=pointer]
+      - menuitem "上传合同" [ref=e63] [cursor=pointer]
+  - generic [ref=e64]:
+    - generic [ref=e65]:
+      - generic [ref=e66]: 欢迎使用法务 AI SaaS
+      - button "退出登录" [ref=e67] [cursor=pointer]:
+        - generic [ref=e68]: 退出登录
+    - main [ref=e69]:
+      - generic [ref=e208]:
+        - generic [ref=e210]:
+          - button "返回工作台" [ref=e211] [cursor=pointer]:
+            - generic [ref=e213]: 返回工作台
+          - generic [ref=e214]:
+            - button "工作台" [ref=e215] [cursor=pointer]:
+              - generic [ref=e216]: 工作台
+            - button "合同列表" [ref=e217] [cursor=pointer]:
+              - generic [ref=e218]: 合同列表
+            - button "上传合同" [ref=e219] [cursor=pointer]:
+              - generic [ref=e220]: 上传合同
+        - generic [ref=e221]:
+          - generic [ref=e222]:
+            - generic [ref=e223]:
+              - heading [level=2]
+              - generic [ref=e224]:
+                - generic [ref=e226] [cursor=pointer]: 点击设置类型
+                - generic [ref=e227]:
+                  - img [ref=e229]
+                  - text: 2026/04/05
+                - generic [ref=e233]: 9 页
+            - generic [ref=e234]:
+              - generic [ref=e235]:
+                - generic [ref=e236]: 审查状态
+                - generic [ref=e237]: "0"
+              - generic [ref=e238]:
+                - generic [ref=e239]: 置信度
+                - generic [ref=e240]:
+                  - text: "0"
+                  - generic [ref=e241]: "%"
+          - generic [ref=e243]:
+            - tablist [ref=e247]:
+              - tab "审查报告" [selected] [ref=e249]:
+                - generic [ref=e250]:
+                  - img [ref=e252]
+                  - text: 审查报告
+              - tab "合同理解" [ref=e254]:
+                - generic [ref=e255]:
+                  - img [ref=e257]
+                  - text: 合同理解
+              - tab "合同原文" [ref=e259]:
+                - generic [ref=e260]:
+                  - img [ref=e262]
+                  - text: 合同原文
+            - generic:
+              - tabpanel "审查报告"
+          - generic [ref=e267]:
+            - generic [ref=e268]:
+              - generic [ref=e269]:
+                - generic [ref=e270]:
+                  - button [ref=e271] [cursor=pointer]
+                  - button [ref=e273] [cursor=pointer]
+                  - button "适应宽度" [ref=e275] [cursor=pointer]:
+                    - generic [ref=e276]: 适应宽度
+                - generic [ref=e277]: 100%
+              - generic [ref=e279]:
+                - button [disabled] [ref=e280]
+                - button "1 / 0" [disabled] [ref=e282]:
+                  - generic [ref=e283]: 1 / 0
+                - button [disabled] [ref=e284]
+              - generic [ref=e286]:
+                - generic [ref=e287] [cursor=pointer]:
+                  - generic [ref=e288]:
+                    - checkbox "显示高亮" [checked]
+                  - generic [ref=e290]: 显示高亮
+                - button "条款列表" [ref=e291] [cursor=pointer]:
+                  - generic [ref=e293]: 条款列表
+            - generic [ref=e297]:
+              - img [ref=e299]
+              - paragraph [ref=e302]: PDF 加载失败

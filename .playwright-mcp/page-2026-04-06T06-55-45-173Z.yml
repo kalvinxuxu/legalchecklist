@@ -1,0 +1,40 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - img [ref=e10]
+          - generic [ref=e13]: 法务 AI
+        - heading "让法律服务 触手可及" [level=1] [ref=e14]:
+          - text: 让法律服务
+          - text: 触手可及
+        - paragraph [ref=e15]: 基于 RAG 检索增强生成技术，为您提供精准、可信的智能合同审查服务。
+        - generic [ref=e16]:
+          - generic [ref=e17]:
+            - img [ref=e19]
+            - text: 30 秒完成合同审查
+          - generic [ref=e21]:
+            - img [ref=e23]
+            - text: RAG 引用溯源，每条建议有法可依
+          - generic [ref=e25]:
+            - img [ref=e27]
+            - text: 支持 20+ 合同类型
+      - generic [ref=e29]: 首次注册赠送 10 次免费审查额度
+    - generic [ref=e31]:
+      - heading "登录账户" [level=2] [ref=e32]
+      - paragraph [ref=e33]: 欢迎回来
+      - generic [ref=e34]:
+        - generic [ref=e35]:
+          - text: 邮箱地址
+          - textbox "邮箱地址" [ref=e36]:
+            - /placeholder: name@company.com
+        - generic [ref=e37]:
+          - text: 密码
+          - textbox "密码" [ref=e38]:
+            - /placeholder: 请输入密码
+        - button "登录" [ref=e39] [cursor=pointer]
+      - paragraph [ref=e41]:
+        - text: 还没有账号？
+        - button "立即注册" [ref=e42] [cursor=pointer]
+  - region "Notifications (F8)":
+    - list

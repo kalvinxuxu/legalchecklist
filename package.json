@@ -1,0 +1,12 @@
+{
+  "name": "legal-ai-saas",
+  "version": "0.2.0",
+  "private": true,
+  "scripts": {
+    "dev": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "test:unit": "cd frontend && npm run test:unit",
+    "test:e2e": "npx playwright test --config=playwright.config.ts",
+    "test:e2e:ui": "npx playwright test --config=playwright.config.ts --ui"
+  }
+}

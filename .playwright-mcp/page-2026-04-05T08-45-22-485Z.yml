@@ -1,0 +1,158 @@
+- generic [ref=e33]:
+  - banner [ref=e34]:
+    - alert [ref=e35]:
+      - img [ref=e37]
+      - generic [ref=e39]:
+        - generic [ref=e40]: 体验模式
+        - paragraph [ref=e41]: 这是演示环境，内置了 3 份标准合同样例。您可以查看审查结果，但无法保存或下载。（无需登录，数据不会保存）
+    - button "← 返回首页" [ref=e42] [cursor=pointer]:
+      - generic [ref=e43]: ← 返回首页
+  - main [ref=e44]:
+    - heading "选择示例合同" [level=2] [ref=e45]
+    - generic [ref=e46]:
+      - generic [ref=e49] [cursor=pointer]:
+        - generic [ref=e51]: 技术服务
+        - heading "软件开发合同" [level=3] [ref=e52]
+        - paragraph [ref=e53]: ¥50,000·8页
+        - paragraph [ref=e54]: 定制软件开发服务协议，包含需求变更、知识产权等条款
+      - generic [ref=e57] [cursor=pointer]:
+        - generic [ref=e59]: 房屋租赁
+        - heading "办公场地租赁合同" [level=3] [ref=e60]
+        - paragraph [ref=e61]: ¥20,000/月·6页
+        - paragraph [ref=e62]: 写字楼租赁合同，包含押金、物业费、维修责任等条款
+      - generic [ref=e65] [cursor=pointer]:
+        - generic [ref=e67]: 贸易采购
+        - heading "产品采购合同" [level=3] [ref=e68]
+        - paragraph [ref=e69]: ¥180,000·5页
+        - paragraph [ref=e70]: 批量产品采购协议，含质量标准、交货期限、售后条款
+    - generic [ref=e71]:
+      - heading "审查结果预览" [level=2] [ref=e72]
+      - generic [ref=e73]:
+        - generic [ref=e74]:
+          - generic [ref=e75]:
+            - heading "合同原文" [level=3] [ref=e76]
+            - generic [ref=e78]:
+              - img [ref=e81]
+              - textbox "搜索合同内容..." [ref=e83]
+          - generic [ref=e84]:
+            - generic [ref=e85] [cursor=pointer]:
+              - generic [ref=e86]: "1"
+              - generic [ref=e87]: 软件开发合同
+            - generic [ref=e88] [cursor=pointer]:
+              - generic [ref=e89]: "2"
+              - generic [ref=e90]: 甲方（委托方）：XXX 公司
+            - generic [ref=e91] [cursor=pointer]:
+              - generic [ref=e92]: "3"
+              - generic [ref=e93]: 乙方（开发方）：XXX 科技公司
+            - generic [ref=e94] [cursor=pointer]:
+              - generic [ref=e95]: "4"
+              - generic [ref=e96]: 第一条 服务内容
+            - generic [ref=e97] [cursor=pointer]:
+              - generic [ref=e98]: "5"
+              - generic [ref=e99]: 乙方为甲方提供定制化软件开发服务，具体功能需求详见附件一。
+            - generic [ref=e100] [cursor=pointer]:
+              - generic [ref=e101]: "6"
+              - generic [ref=e102]: 第二条 服务费用
+            - generic [ref=e103] [cursor=pointer]:
+              - generic [ref=e104]: "7"
+              - generic [ref=e105]: 本合同总金额为人民币 50,000 元整。
+            - generic [ref=e106] [cursor=pointer]:
+              - generic [ref=e107]: "8"
+              - generic [ref=e108]: 第三条 付款方式
+            - generic [ref=e109] [cursor=pointer]:
+              - generic [ref=e110]: "9"
+              - generic [ref=e111]: 项目完成后一次性付款。
+            - generic [ref=e112] [cursor=pointer]:
+              - generic [ref=e113]: "10"
+              - generic [ref=e114]: 第四条 交付时间
+            - generic [ref=e115] [cursor=pointer]:
+              - generic [ref=e116]: "11"
+              - generic [ref=e117]: 乙方应于 2024 年 12 月 31 日前完成开发并交付。
+            - generic [ref=e118] [cursor=pointer]:
+              - generic [ref=e119]: "12"
+              - generic [ref=e120]: 第五条 知识产权
+            - generic [ref=e121] [cursor=pointer]:
+              - generic [ref=e122]: "13"
+              - generic [ref=e123]: 本合同产生的知识产权归双方共有。
+            - generic [ref=e124] [cursor=pointer]:
+              - generic [ref=e125]: "14"
+              - generic [ref=e126]: 第六条 违约责任
+            - generic [ref=e127] [cursor=pointer]:
+              - generic [ref=e128]: "15"
+              - generic [ref=e129]: 任何一方违约，应赔偿对方因此遭受的损失。
+        - generic [ref=e130]:
+          - generic [ref=e131]:
+            - generic [ref=e132] [cursor=pointer]:
+              - generic:
+                - img
+              - generic [ref=e134]:
+                - generic [ref=e135]: "3"
+                - generic [ref=e136]: 风险条款
+            - generic [ref=e137] [cursor=pointer]:
+              - generic:
+                - img
+              - generic [ref=e139]:
+                - generic [ref=e140]: "3"
+                - generic [ref=e141]: 待改进
+          - generic [ref=e142]:
+            - heading "风险条款" [level=4] [ref=e143]:
+              - img [ref=e144]
+              - text: 风险条款
+            - generic [ref=e146]:
+              - generic [ref=e147] [cursor=pointer]:
+                - generic [ref=e148]:
+                  - generic [ref=e149]: 付款条件不明确
+                  - generic [ref=e151]: 高风险
+                - generic [ref=e152]: "\"项目完成后一次性付款。\""
+                - generic [ref=e153]: 合同约定"项目完成后付款"，但未定义完成标准
+                - generic [ref=e154]:
+                  - strong [ref=e155]: 建议：
+                  - text: 建议明确验收标准和付款节点，如"验收合格后 5 个工作日内支付尾款"
+              - generic [ref=e156] [cursor=pointer]:
+                - generic [ref=e157]:
+                  - generic [ref=e158]: 需求变更流程缺失
+                  - generic [ref=e160]: 中风险
+                - generic [ref=e161]: "\"未约定需求变更的处理流程和费用调整机制\""
+                - generic [ref=e162]: 未约定需求变更的处理流程和费用调整机制
+                - generic [ref=e163]:
+                  - strong [ref=e164]: 建议：
+                  - text: 建议增加变更控制条款，约定变更申请、评估、确认的流程
+              - generic [ref=e165] [cursor=pointer]:
+                - generic [ref=e166]:
+                  - generic [ref=e167]: 知识产权归属需明确
+                  - generic [ref=e169]: 低风险
+                - generic [ref=e170]: "\"本合同产生的知识产权归双方共有。\""
+                - generic [ref=e171]: 开发成果的知识产权归属约定不够清晰
+                - generic [ref=e172]:
+                  - strong [ref=e173]: 建议：
+                  - text: 建议明确约定代码、文档等成果的知识产权归委托方所有
+          - generic [ref=e174]:
+            - heading "条款审查" [level=4] [ref=e175]:
+              - img [ref=e176]
+              - text: 条款审查
+            - generic [ref=e178]:
+              - generic [ref=e179] [cursor=pointer]:
+                - generic [ref=e180]:
+                  - generic [ref=e181]: 服务内容
+                  - generic [ref=e183]: 通过
+                - generic [ref=e184]: 服务范围明确，交付物清单完整
+              - generic [ref=e185] [cursor=pointer]:
+                - generic [ref=e186]:
+                  - generic [ref=e187]: 付款方式
+                  - generic [ref=e189]: 风险
+                - generic [ref=e190]: 缺少具体付款时间节点
+              - generic [ref=e191] [cursor=pointer]:
+                - generic [ref=e192]:
+                  - generic [ref=e193]: 验收标准
+                  - generic [ref=e195]: 风险
+                - generic [ref=e196]: 验收标准过于模糊，建议量化
+              - generic [ref=e197] [cursor=pointer]:
+                - generic [ref=e198]:
+                  - generic [ref=e199]: 知识产权
+                  - generic [ref=e201]: 注意
+                - generic [ref=e202]: 建议明确约定成果归属
+              - generic [ref=e203] [cursor=pointer]:
+                - generic [ref=e204]:
+                  - generic [ref=e205]: 违约责任
+                  - generic [ref=e207]: 通过
+                - generic [ref=e208]: 责任约定合理

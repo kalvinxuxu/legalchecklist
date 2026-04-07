@@ -1,0 +1,26 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e123]:
+    - heading "登录法务 AI" [level=2] [ref=e124]
+    - generic [ref=e125]:
+      - generic [ref=e126]:
+        - generic [ref=e127]: "* 邮箱"
+        - textbox "* 邮箱" [ref=e131]:
+          - /placeholder: 请输入邮箱
+          - text: demo@example.com
+      - generic [ref=e132]:
+        - generic [ref=e133]: "* 密码"
+        - textbox "* 密码" [ref=e137]:
+          - /placeholder: 请输入密码
+          - text: demo1234
+      - button "登录" [ref=e140] [cursor=pointer]:
+        - generic [ref=e141]: 登录
+      - paragraph [ref=e142]:
+        - text: 还没有账号？
+        - link "立即注册" [ref=e143] [cursor=pointer]:
+          - /url: "#"
+  - alert [ref=e154]:
+    - img [ref=e156]
+    - paragraph [ref=e158]: 邮箱或密码错误
+  - alert [ref=e159]:
+    - img [ref=e161]
+    - paragraph [ref=e163]: 邮箱或密码错误

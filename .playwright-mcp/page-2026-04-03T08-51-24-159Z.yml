@@ -1,0 +1,30 @@
+- generic [ref=e5]:
+  - complementary [ref=e6]:
+    - generic [ref=e7]: 法务 AI
+    - menubar [ref=e8]:
+      - menuitem "工作台" [ref=e9] [cursor=pointer]
+      - menuitem "合同列表" [ref=e10] [cursor=pointer]
+      - menuitem "上传合同" [ref=e11] [cursor=pointer]
+  - generic [ref=e12]:
+    - generic [ref=e13]:
+      - generic [ref=e14]: 欢迎使用法务 AI SaaS
+      - button "退出登录" [ref=e15] [cursor=pointer]:
+        - generic [ref=e16]: 退出登录
+    - main [ref=e17]:
+      - generic [ref=e18]:
+        - generic [ref=e20]:
+          - button "返回工作台" [ref=e21] [cursor=pointer]:
+            - generic [ref=e23]: 返回工作台
+          - generic [ref=e24]:
+            - button "工作台" [ref=e25] [cursor=pointer]:
+              - generic [ref=e26]: 工作台
+            - button "合同列表" [ref=e27] [cursor=pointer]:
+              - generic [ref=e28]: 合同列表
+            - button "上传合同" [ref=e29] [cursor=pointer]:
+              - generic [ref=e30]: 上传合同
+        - generic [ref=e32]:
+          - img [ref=e34]
+          - paragraph [ref=e37]: 正在加载文档
+          - paragraph [ref=e39]: 请稍候...
+          - generic:
+            - progressbar

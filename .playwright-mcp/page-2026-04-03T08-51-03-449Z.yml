@@ -1,0 +1,40 @@
+- generic [ref=e5]:
+  - complementary [ref=e6]:
+    - generic [ref=e7]: 法务 AI
+    - menubar [ref=e8]:
+      - menuitem "工作台" [ref=e9] [cursor=pointer]
+      - menuitem "合同列表" [ref=e10] [cursor=pointer]
+      - menuitem "上传合同" [ref=e11] [cursor=pointer]
+  - generic [ref=e12]:
+    - generic [ref=e13]:
+      - generic [ref=e14]: 欢迎使用法务 AI SaaS
+      - button "退出登录" [ref=e15] [cursor=pointer]:
+        - generic [ref=e16]: 退出登录
+    - main [ref=e17]:
+      - generic [ref=e18]:
+        - generic [ref=e19]:
+          - heading "合同列表" [level=2] [ref=e20]
+          - button "上传合同" [ref=e21] [cursor=pointer]:
+            - generic [ref=e22]: 上传合同
+        - generic [ref=e23]:
+          - generic [ref=e24]:
+            - table [ref=e26]:
+              - rowgroup [ref=e34]:
+                - row "合同名称 合同类型 状态 风险等级 上传时间 操作" [ref=e35]:
+                  - columnheader "合同名称" [ref=e36]:
+                    - generic [ref=e37]: 合同名称
+                  - columnheader "合同类型" [ref=e38]:
+                    - generic [ref=e39]: 合同类型
+                  - columnheader "状态" [ref=e40]:
+                    - generic [ref=e41]: 状态
+                  - columnheader "风险等级" [ref=e42]:
+                    - generic [ref=e43]: 风险等级
+                  - columnheader "上传时间" [ref=e44]:
+                    - generic [ref=e45]: 上传时间
+                  - columnheader "操作" [ref=e46]:
+                    - generic [ref=e47]: 操作
+            - generic [ref=e51]:
+              - table:
+                - rowgroup
+              - generic [ref=e53]: No Data
+          - img [ref=e56]

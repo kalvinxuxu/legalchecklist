@@ -1,0 +1,87 @@
+- generic [ref=e57]:
+  - complementary [ref=e58]:
+    - generic [ref=e59]: 法务 AI
+    - menubar [ref=e60]:
+      - menuitem "工作台" [ref=e61] [cursor=pointer]
+      - menuitem "合同列表" [active] [ref=e62] [cursor=pointer]
+      - menuitem "上传合同" [ref=e63] [cursor=pointer]
+  - generic [ref=e64]:
+    - generic [ref=e65]:
+      - generic [ref=e66]: 欢迎使用法务 AI SaaS
+      - button "退出登录" [ref=e67] [cursor=pointer]:
+        - generic [ref=e68]: 退出登录
+    - main [ref=e69]:
+      - generic [ref=e191]:
+        - generic [ref=e192]:
+          - heading "合同列表" [level=2] [ref=e193]
+          - button "上传合同" [ref=e194] [cursor=pointer]:
+            - generic [ref=e195]: 上传合同
+        - generic [ref=e197]:
+          - table [ref=e199]:
+            - rowgroup [ref=e207]:
+              - row "合同名称 合同类型 状态 风险等级 上传时间 操作" [ref=e208]:
+                - columnheader "合同名称" [ref=e209]:
+                  - generic [ref=e210]: 合同名称
+                - columnheader "合同类型" [ref=e211]:
+                  - generic [ref=e212]: 合同类型
+                - columnheader "状态" [ref=e213]:
+                  - generic [ref=e214]: 状态
+                - columnheader "风险等级" [ref=e215]:
+                  - generic [ref=e216]: 风险等级
+                - columnheader "上传时间" [ref=e217]:
+                  - generic [ref=e218]: 上传时间
+                - columnheader "操作" [ref=e219]:
+                  - generic [ref=e220]: 操作
+          - table [ref=e225]:
+            - rowgroup [ref=e233]:
+              - row "深圳市劳动合同参考文本_converted_0_1_converted.docx - 已完成 高 2026/04/02 03:11 查看报告 删除" [ref=e234]:
+                - cell "深圳市劳动合同参考文本_converted_0_1_converted.docx" [ref=e235]:
+                  - generic [ref=e236]: 深圳市劳动合同参考文本_converted_0_1_converted.docx
+                - cell "-" [ref=e237]:
+                  - generic [ref=e240]: "-"
+                - cell "已完成" [ref=e241]:
+                  - generic [ref=e244]: 已完成
+                - cell "高" [ref=e245]:
+                  - generic [ref=e246]: 高
+                - cell "2026/04/02 03:11" [ref=e247]:
+                  - generic [ref=e248]: 2026/04/02 03:11
+                - cell "查看报告 删除" [ref=e249]:
+                  - generic [ref=e250]:
+                    - button "查看报告" [ref=e251] [cursor=pointer]:
+                      - generic [ref=e252]: 查看报告
+                    - button "删除" [ref=e253] [cursor=pointer]:
+                      - generic [ref=e254]: 删除
+              - row "终版申请签章 - 北京大兴国际机场临空经济区国际会展消费功能区全球创意征集_保密协议-加密版.pdf NDA 已完成 高 2026/04/01 03:18 查看报告 删除" [ref=e255]:
+                - cell "终版申请签章 - 北京大兴国际机场临空经济区国际会展消费功能区全球创意征集_保密协议-加密版.pdf" [ref=e256]:
+                  - generic [ref=e257]: 终版申请签章 - 北京大兴国际机场临空经济区国际会展消费功能区全球创意征集_保密协议-加密版.pdf
+                - cell "NDA" [ref=e258]:
+                  - generic [ref=e261]: NDA
+                - cell "已完成" [ref=e262]:
+                  - generic [ref=e265]: 已完成
+                - cell "高" [ref=e266]:
+                  - generic [ref=e267]: 高
+                - cell "2026/04/01 03:18" [ref=e268]:
+                  - generic [ref=e269]: 2026/04/01 03:18
+                - cell "查看报告 删除" [ref=e270]:
+                  - generic [ref=e271]:
+                    - button "查看报告" [ref=e272] [cursor=pointer]:
+                      - generic [ref=e273]: 查看报告
+                    - button "删除" [ref=e274] [cursor=pointer]:
+                      - generic [ref=e275]: 删除
+              - row "劳动合同 (2026专业标准版).pdf 劳动合同 已完成 高 2026/03/31 12:38 查看报告 删除" [ref=e276]:
+                - cell "劳动合同 (2026专业标准版).pdf" [ref=e277]:
+                  - generic [ref=e278]: 劳动合同 (2026专业标准版).pdf
+                - cell "劳动合同" [ref=e279]:
+                  - generic [ref=e282]: 劳动合同
+                - cell "已完成" [ref=e283]:
+                  - generic [ref=e286]: 已完成
+                - cell "高" [ref=e287]:
+                  - generic [ref=e288]: 高
+                - cell "2026/03/31 12:38" [ref=e289]:
+                  - generic [ref=e290]: 2026/03/31 12:38
+                - cell "查看报告 删除" [ref=e291]:
+                  - generic [ref=e292]:
+                    - button "查看报告" [ref=e293] [cursor=pointer]:
+                      - generic [ref=e294]: 查看报告
+                    - button "删除" [ref=e295] [cursor=pointer]:
+                      - generic [ref=e296]: 删除

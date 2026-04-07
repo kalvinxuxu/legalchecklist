@@ -1,0 +1,776 @@
+- generic [ref=e57]:
+  - complementary [ref=e58]:
+    - generic [ref=e59]: 法务 AI
+    - menubar [ref=e60]:
+      - menuitem "工作台" [ref=e61] [cursor=pointer]
+      - menuitem "合同列表" [ref=e62] [cursor=pointer]
+      - menuitem "上传合同" [ref=e63] [cursor=pointer]
+  - generic [ref=e64]:
+    - generic [ref=e65]:
+      - generic [ref=e66]: 欢迎使用法务 AI SaaS
+      - button "退出登录" [ref=e67] [cursor=pointer]:
+        - generic [ref=e68]: 退出登录
+    - main [ref=e69]:
+      - generic [ref=e208]:
+        - generic [ref=e210]:
+          - button "返回工作台" [ref=e211] [cursor=pointer]:
+            - generic [ref=e213]: 返回工作台
+          - generic [ref=e214]:
+            - button "工作台" [ref=e215] [cursor=pointer]:
+              - generic [ref=e216]: 工作台
+            - button "合同列表" [ref=e217] [cursor=pointer]:
+              - generic [ref=e218]: 合同列表
+            - button "上传合同" [ref=e219] [cursor=pointer]:
+              - generic [ref=e220]: 上传合同
+        - generic [ref=e221]:
+          - generic [ref=e222]:
+            - generic [ref=e223]:
+              - heading [level=2]
+              - generic [ref=e224]:
+                - generic [ref=e226]:
+                  - img [ref=e228]
+                  - text: 2026/04/03
+                - generic [ref=e232]: 9 页
+            - generic [ref=e233]:
+              - generic [ref=e234]:
+                - generic [ref=e235]: 审查状态
+                - generic [ref=e236]: "0"
+              - generic [ref=e237]:
+                - generic [ref=e238]: 置信度
+                - generic [ref=e239]:
+                  - text: "30"
+                  - generic [ref=e240]: "%"
+          - generic [ref=e241]:
+            - generic [ref=e242]:
+              - generic [ref=e243]:
+                - heading "合同原文" [level=3] [ref=e244]
+                - generic [ref=e247]:
+                  - img [ref=e250]
+                  - textbox "搜索合同内容..." [ref=e252]
+              - generic [ref=e253]:
+                - generic [ref=e254] [cursor=pointer]:
+                  - generic [ref=e255]: "1"
+                  - generic [ref=e256]: 联合体协议书
+                - generic [ref=e257] [cursor=pointer]:
+                  - generic [ref=e258]: "2"
+                  - generic [ref=e259]: 艾奕康设计与咨询（深圳）有限公司（以下简称“甲方”）和中国建筑西南设计
+                - generic [ref=e260] [cursor=pointer]:
+                  - generic [ref=e261]: "3"
+                  - generic [ref=e262]: 研究院有限公司（以下简称“乙方”）自愿组成联合体，共同参加成都东部新区会都
+                - generic [ref=e263] [cursor=pointer]:
+                  - generic [ref=e264]: "4"
+                  - generic [ref=e265]: 岛片区策划及概念性规划设计征集 项目投标。现就联合体投标事宜订立如下协议。
+                - generic [ref=e266] [cursor=pointer]:
+                  - generic [ref=e267]: "5"
+                  - generic [ref=e268]: 一. 合作模式
+                - generic [ref=e269] [cursor=pointer]:
+                  - generic [ref=e270]: "6"
+                  - generic [ref=e271]: 中国建筑西南设计研究院有限公司 为联合体牵头方, 艾奕康设计与咨询（深
+                - generic [ref=e272] [cursor=pointer]:
+                  - generic [ref=e273]: "7"
+                  - generic [ref=e274]: 圳）有限公司 为联合体参与方。
+                - generic [ref=e275] [cursor=pointer]:
+                  - generic [ref=e276]: "8"
+                  - generic [ref=e277]: 二. 联合体牵头方职责
+                - generic [ref=e278] [cursor=pointer]:
+                  - generic [ref=e279]: "9"
+                  - generic [ref=e280]: 联合体牵头方合法代表联合体各成员负责本招标项目资格预审申请文件、投标
+                - generic [ref=e281] [cursor=pointer]:
+                  - generic [ref=e282]: "10"
+                  - generic [ref=e283]: 文件编制和合同谈判活动，并代表联合体提交和接受相关的资料、信息及指示，处理
+                - generic [ref=e284] [cursor=pointer]:
+                  - generic [ref=e285]: "11"
+                  - generic [ref=e286]: 与之有关的一切事务，并负责合同实施阶段的主办、组织和协调工作。
+                - generic [ref=e287] [cursor=pointer]:
+                  - generic [ref=e288]: "12"
+                  - generic [ref=e289]: 联合体牵头方在投标过程或是主合同服务过程中提供项目管理和合同管理服务
+                - generic [ref=e290] [cursor=pointer]:
+                  - generic [ref=e291]: "13"
+                  - generic [ref=e292]: 的，并不构成或被视为联合体牵头方应承担因联合体参与方的服务或履约行为而引
+                - generic [ref=e293] [cursor=pointer]:
+                  - generic [ref=e294]: "14"
+                  - generic [ref=e295]: 起或相关的任何损失、损害之共同赔偿责任。
+                - generic [ref=e296] [cursor=pointer]:
+                  - generic [ref=e297]: "15"
+                  - generic [ref=e298]: 联合体牵头方代表联合体就以下重大事项与业主进行协商、做出承诺或签订任
+                - generic [ref=e299] [cursor=pointer]:
+                  - generic [ref=e300]: "16"
+                  - generic [ref=e301]: 何书面协议前，应先与联合体参与方进行协商并达成书面一致，甲方保留否决权。否
+                - generic [ref=e302] [cursor=pointer]:
+                  - generic [ref=e303]: "17"
+                  - generic [ref=e304]: 则，因此导致联合体或联合体参与方对业主或第三方承担任何责任的，联合体参与方
+                - generic [ref=e305] [cursor=pointer]:
+                  - generic [ref=e306]: "18"
+                  - generic [ref=e307]: 有权向联合体牵头方索赔并追偿损失：
+                - generic [ref=e308] [cursor=pointer]:
+                  - generic [ref=e309]: "19"
+                  - generic [ref=e310]: 1）项目服务内容、要求或标准、服务期限的变更或调整；
+                - generic [ref=e311] [cursor=pointer]:
+                  - generic [ref=e312]: "20"
+                  - generic [ref=e313]: 2）服务费用金额、比例及支付方式、期限等的变更或调整；
+                - generic [ref=e314] [cursor=pointer]:
+                  - generic [ref=e315]: "21"
+                  - generic [ref=e316]: 3）联合体牵头方未将项目合同提交联合体参与方审查，未经联合体参与方书
+                - generic [ref=e317] [cursor=pointer]:
+                  - generic [ref=e318]: "22"
+                  - generic [ref=e319]: 面同意擅自与业主签署项目合同的；
+                - generic [ref=e320] [cursor=pointer]:
+                  - generic [ref=e321]: "23"
+                  - generic [ref=e322]: 4）联合体对业主及第三方做出的项目合同约定之外的任何承诺，承担的义务
+                - generic [ref=e323] [cursor=pointer]:
+                  - generic [ref=e324]: "24"
+                  - generic [ref=e325]: 及责任；
+                - generic [ref=e326] [cursor=pointer]:
+                  - generic [ref=e327]: "25"
+                  - generic [ref=e328]: 三. 联合体参与方职责
+                - generic [ref=e329] [cursor=pointer]:
+                  - generic [ref=e330]: "26"
+                  - generic [ref=e331]: 投标过程中，联合体参与方应配合、协助联合体牵头方完成本招标项目资格预审
+                - generic [ref=e332] [cursor=pointer]:
+                  - generic [ref=e333]: "27"
+                  - generic [ref=e334]: 申请文件、投标文件编制和合同谈判活动；主合同服务过程中，联合体参与方应按照
+                - generic [ref=e335] [cursor=pointer]:
+                  - generic [ref=e336]: "28"
+                  - generic [ref=e337]: “附件二：服务范围分工”的约定提供相应的服务。
+                - generic [ref=e338] [cursor=pointer]:
+                  - generic [ref=e339]: "29"
+                  - generic [ref=e340]: 约定联合体参与方项目总负责人为：张祺；业主方要求的重要节点汇报应由联合
+                - generic [ref=e341] [cursor=pointer]:
+                  - generic [ref=e342]: "30"
+                  - generic [ref=e343]: 体参与方项目总负责人参加，如受疫情影响或其他特殊情况确无法参与，应提前告知
+                - generic [ref=e344] [cursor=pointer]:
+                  - generic [ref=e345]: "31"
+                  - generic [ref=e346]: 双方团队。联合体内部关键沟通会议，在无特殊情况存在时，应由联合体参与方项目
+                - generic [ref=e347] [cursor=pointer]:
+                  - generic [ref=e348]: "32"
+                  - generic [ref=e349]: 总负责人带队参加，如受疫情影响或其他特殊情况确无法参与，应提前告知双方团
+                - generic [ref=e350] [cursor=pointer]:
+                  - generic [ref=e351]: "33"
+                  - generic [ref=e352]: "1"
+                - generic [ref=e353] [cursor=pointer]:
+                  - generic [ref=e354]: "34"
+                  - generic [ref=e355]: 队。联合体内部常规技术性沟通会议，由相关专业技术负责人组织参与。
+                - generic [ref=e356] [cursor=pointer]:
+                  - generic [ref=e357]: "35"
+                  - generic [ref=e358]: 四. 投标费用的承担
+                - generic [ref=e359] [cursor=pointer]:
+                  - generic [ref=e360]: "36"
+                  - generic [ref=e361]: 投标过程中，根据招标文件要求提交的标书及其他资料所产生的费用，和其他招
+                - generic [ref=e362] [cursor=pointer]:
+                  - generic [ref=e363]: "37"
+                  - generic [ref=e364]: 标工作中产生的费用按照“附件一：投标费用的承担”的约定由联合体成员承担；未
+                - generic [ref=e365] [cursor=pointer]:
+                  - generic [ref=e366]: "38"
+                  - generic [ref=e367]: 有明确约定的，由联合体成员自行承担。
+                - generic [ref=e368] [cursor=pointer]:
+                  - generic [ref=e369]: "39"
+                  - generic [ref=e370]: 五. 咨询服务分工
+                - generic [ref=e371] [cursor=pointer]:
+                  - generic [ref=e372]: "40"
+                  - generic [ref=e373]: 联合体成员的详细工作分工将按照“附件二：服务范围分工”的约定执行，在提
+                - generic [ref=e374] [cursor=pointer]:
+                  - generic [ref=e375]: "41"
+                  - generic [ref=e376]: 供服务过程中的费用由联合体成员各自承担。
+                - generic [ref=e377] [cursor=pointer]:
+                  - generic [ref=e378]: "42"
+                  - generic [ref=e379]: 六. 咨询服务费用分配与支付
+                - generic [ref=e380] [cursor=pointer]:
+                  - generic [ref=e381]: "43"
+                  - generic [ref=e382]: 咨询服务费用的划分与支付按照“附件三：服务费用的分配与支付”或按照联合
+                - generic [ref=e383] [cursor=pointer]:
+                  - generic [ref=e384]: "44"
+                  - generic [ref=e385]: 体各方与招标方签订的服务合同的约定执行。但是只能采取联合体各方分别开具相
+                - generic [ref=e386] [cursor=pointer]:
+                  - generic [ref=e387]: "45"
+                  - generic [ref=e388]: 应金额发票给招标方，招标方分别向联合体各方支付合同约定金额的方式支付。
+                - generic [ref=e389] [cursor=pointer]:
+                  - generic [ref=e390]: "46"
+                  - generic [ref=e391]: 七. 联合体成员的责任
+                - generic [ref=e392] [cursor=pointer]:
+                  - generic [ref=e393]: "47"
+                  - generic [ref=e394]: 联合体成员仅对自身的工作内容负责，并承担因各自引起或导致的违约金或罚
+                - generic [ref=e395] [cursor=pointer]:
+                  - generic [ref=e396]: "48"
+                  - generic [ref=e397]: 款。联合体的任何成员，在整个投标过程中或提供专业服务的过程中，如果违约或退
+                - generic [ref=e398] [cursor=pointer]:
+                  - generic [ref=e399]: "49"
+                  - generic [ref=e400]: 出，违约方应向守约方承担违约责任；如由此导致联合体或守约方对招标方承担任何
+                - generic [ref=e401] [cursor=pointer]:
+                  - generic [ref=e402]: "50"
+                  - generic [ref=e403]: 赔偿责任的，联合体对招标方承担相应的赔偿责任后，守约方有权向违约方追偿上述
+                - generic [ref=e404] [cursor=pointer]:
+                  - generic [ref=e405]: "51"
+                  - generic [ref=e406]: 全部损失。
+                - generic [ref=e407] [cursor=pointer]:
+                  - generic [ref=e408]: "52"
+                  - generic [ref=e409]: 本协议签订以后，联合体各方及其子公司、关联方不得再以自己的名义单独投
+                - generic [ref=e410] [cursor=pointer]:
+                  - generic [ref=e411]: "53"
+                  - generic [ref=e412]: 标，也不得同时作为其他联合体的成员参加本项目的投标。
+                - generic [ref=e413] [cursor=pointer]:
+                  - generic [ref=e414]: "54"
+                  - generic [ref=e415]: 八. 联合体委员会
+                - generic [ref=e416] [cursor=pointer]:
+                  - generic [ref=e417]: "55"
+                  - generic [ref=e418]: 为推进联合体更好地开展合作，联合体成员各指定一名专门人员成立联合体委
+                - generic [ref=e419] [cursor=pointer]:
+                  - generic [ref=e420]: "56"
+                  - generic [ref=e421]: 员会，建立月度沟通机制，进行全面的深层次沟通。
+                - generic [ref=e422] [cursor=pointer]:
+                  - generic [ref=e423]: "57"
+                  - generic [ref=e424]: 8.1 联合体委员会成员
+                - generic [ref=e425] [cursor=pointer]:
+                  - generic [ref=e426]: "58"
+                  - generic [ref=e427]: 姓名 单位 联系方式
+                - generic [ref=e428] [cursor=pointer]:
+                  - generic [ref=e429]: "59"
+                  - generic [ref=e430]: 组长 巫翔 中国建筑西南设计研 13550061933
+                - generic [ref=e431] [cursor=pointer]:
+                  - generic [ref=e432]: "60"
+                  - generic [ref=e433]: 究院有限公司
+                - generic [ref=e434] [cursor=pointer]:
+                  - generic [ref=e435]: "61"
+                  - generic [ref=e436]: 组员 徐旭 艾奕康设计与咨询 albert.xu@aecom.com
+                - generic [ref=e437] [cursor=pointer]:
+                  - generic [ref=e438]: "62"
+                  - generic [ref=e439]: "2"
+                - generic [ref=e440] [cursor=pointer]:
+                  - generic [ref=e441]: "63"
+                  - generic [ref=e442]: （深圳）有限公司
+                - generic [ref=e443] [cursor=pointer]:
+                  - generic [ref=e444]: "64"
+                  - generic [ref=e445]: 8.2 联合体委员会的职责：举行会议讨论和评估之前的合作活动，并就关于投
+                - generic [ref=e446] [cursor=pointer]:
+                  - generic [ref=e447]: "65"
+                  - generic [ref=e448]: 标工作的策略、措施和行动计划进行沟通与磋商。
+                - generic [ref=e449] [cursor=pointer]:
+                  - generic [ref=e450]: "66"
+                  - generic [ref=e451]: 8.3 联合体委员会的工作机制：采取月例会的沟通机制，每月最后一周周三为
+                - generic [ref=e452] [cursor=pointer]:
+                  - generic [ref=e453]: "67"
+                  - generic [ref=e454]: 工作组月例会，会议由组长主持。会议主持工作包括但不限于：会议前确认会议方式
+                - generic [ref=e455] [cursor=pointer]:
+                  - generic [ref=e456]: "68"
+                  - generic [ref=e457]: 及地点；会议前确认参会人员；搜集会议议题并通知与会者；会后输出会议纪要。
+                - generic [ref=e458] [cursor=pointer]:
+                  - generic [ref=e459]: "69"
+                  - generic [ref=e460]: 九. 协议终止
+                - generic [ref=e461] [cursor=pointer]:
+                  - generic [ref=e462]: "70"
+                  - generic [ref=e463]: 本协议书自协议各方签署之日起生效，并于下列任一情况下终止：
+                - generic [ref=e464] [cursor=pointer]:
+                  - generic [ref=e465]: "71"
+                  - generic [ref=e466]: 9.1如联合体未能中标，本协议在联合体各方按照协议约定结清相关投标费用后
+                - generic [ref=e467] [cursor=pointer]:
+                  - generic [ref=e468]: "72"
+                  - generic [ref=e469]: 终止。
+                - generic [ref=e470] [cursor=pointer]:
+                  - generic [ref=e471]: "73"
+                  - generic [ref=e472]: 9.2如联合体中标，本协议在咨询服务项目完成且服务款项全部结清后终止。
+                - generic [ref=e473] [cursor=pointer]:
+                  - generic [ref=e474]: "74"
+                  - generic [ref=e475]: 9.3如甲方对乙方的尽职调查结果存在较高风险，或中标后合同条款不能通过甲
+                - generic [ref=e476] [cursor=pointer]:
+                  - generic [ref=e477]: "75"
+                  - generic [ref=e478]: 方内部审批，或乙方在履行合同过程中存在违反甲方公司道德与合规条款的行为，甲
+                - generic [ref=e479] [cursor=pointer]:
+                  - generic [ref=e480]: "76"
+                  - generic [ref=e481]: 方具有退出联合体的权利，并不承担任何责任。
+                - generic [ref=e482] [cursor=pointer]:
+                  - generic [ref=e483]: "77"
+                  - generic [ref=e484]: 如乙方对甲方的尽职调查结果存在较高风险，或中标后合同条款不能通过乙方
+                - generic [ref=e485] [cursor=pointer]:
+                  - generic [ref=e486]: "78"
+                  - generic [ref=e487]: 内部审批，或甲方在履行合同过程中存在违反乙方公司道德与合规条款的行为，乙方
+                - generic [ref=e488] [cursor=pointer]:
+                  - generic [ref=e489]: "79"
+                  - generic [ref=e490]: 具有退出联合体的权利，并不承担任何责任。
+                - generic [ref=e491] [cursor=pointer]:
+                  - generic [ref=e492]: "80"
+                  - generic [ref=e493]: 十. 保险
+                - generic [ref=e494] [cursor=pointer]:
+                  - generic [ref=e495]: "81"
+                  - generic [ref=e496]: 自本协议签订之日起直至本协议终止，或服务协议有效期届满时，协议各方均应
+                - generic [ref=e497] [cursor=pointer]:
+                  - generic [ref=e498]: "82"
+                  - generic [ref=e499]: 购买和保持职业赔偿保险，或按照服务协议的要求购买保险。
+                - generic [ref=e500] [cursor=pointer]:
+                  - generic [ref=e501]: "83"
+                  - generic [ref=e502]: 十一. 遵守法律
+                - generic [ref=e503] [cursor=pointer]:
+                  - generic [ref=e504]: "84"
+                  - generic [ref=e505]: 联合体双方同意并约定，双方均声明并约定遵守相关反腐、反贿赂法律、法规
+                - generic [ref=e506] [cursor=pointer]:
+                  - generic [ref=e507]: "85"
+                  - generic [ref=e508]: 的规定。本协议任一方均不得通过或利用其代理、员工、代表或以其他人进行任何违
+                - generic [ref=e509] [cursor=pointer]:
+                  - generic [ref=e510]: "86"
+                  - generic [ref=e511]: 反上述法律、法规的行为。各方将不会为了获得或保持业务而直接或间接地向政府或
+                - generic [ref=e512] [cursor=pointer]:
+                  - generic [ref=e513]: "87"
+                  - generic [ref=e514]: 机构的任何员工、政党或其官员或候选人支付或允诺支付任何费用或转让或允诺转
+                - generic [ref=e515] [cursor=pointer]:
+                  - generic [ref=e516]: "88"
+                  - generic [ref=e517]: 让任何有价物品以影响其决定；且本协议任一方均不得利用或通过其代理、员工、代
+                - generic [ref=e518] [cursor=pointer]:
+                  - generic [ref=e519]: "89"
+                  - generic [ref=e520]: 表或以其他人进行任何违反上述法律规定的其他行为。
+                - generic [ref=e521] [cursor=pointer]:
+                  - generic [ref=e522]: "90"
+                  - generic [ref=e523]: "3"
+                - generic [ref=e524] [cursor=pointer]:
+                  - generic [ref=e525]: "91"
+                  - generic [ref=e526]: 十二. 适用法律和争议解决
+                - generic [ref=e527] [cursor=pointer]:
+                  - generic [ref=e528]: "92"
+                  - generic [ref=e529]: 本协议适用中华人民共和国的法律。凡因本合同引起或与本合同有关的争议，双方
+                - generic [ref=e530] [cursor=pointer]:
+                  - generic [ref=e531]: "93"
+                  - generic [ref=e532]: 应通过友好协商予以解决。协商不成时，双方同意提交【成都仲裁委员会仲裁】，
+                - generic [ref=e533] [cursor=pointer]:
+                  - generic [ref=e534]: "94"
+                  - generic [ref=e535]: 地点在【成都】，包括律师费、鉴定费、翻译费、仲裁/诉讼费在内的各项费用应当
+                - generic [ref=e536] [cursor=pointer]:
+                  - generic [ref=e537]: "95"
+                  - generic [ref=e538]: 由败诉方承担。
+                - generic [ref=e539] [cursor=pointer]:
+                  - generic [ref=e540]: "96"
+                  - generic [ref=e541]: 十三. 本协议书一式叁份，联合体和招标人各执壹份。
+                - generic [ref=e542] [cursor=pointer]:
+                  - generic [ref=e543]: "97"
+                  - generic [ref=e544]: 十四. 以下附件为本协议的有效组成部分：
+                - generic [ref=e545] [cursor=pointer]:
+                  - generic [ref=e546]: "98"
+                  - generic [ref=e547]: 附件一：投标费用的承担
+                - generic [ref=e548] [cursor=pointer]:
+                  - generic [ref=e549]: "99"
+                  - generic [ref=e550]: 附件二：服务范围分工
+                - generic [ref=e551] [cursor=pointer]:
+                  - generic [ref=e552]: "100"
+                  - generic [ref=e553]: 附件三：服务费用的分配与支付
+                - generic [ref=e554] [cursor=pointer]:
+                  - generic [ref=e555]: "101"
+                  - generic [ref=e556]: （本页为签署页）
+                - generic [ref=e557] [cursor=pointer]:
+                  - generic [ref=e558]: "102"
+                  - generic [ref=e559]: 联合体牵头方名称：__中国建筑西南设计研究院有限公司（盖单位章）
+                - generic [ref=e560] [cursor=pointer]:
+                  - generic [ref=e561]: "103"
+                  - generic [ref=e562]: 法定代表人或其委托代理人：_______________________（签字）
+                - generic [ref=e563] [cursor=pointer]:
+                  - generic [ref=e564]: "104"
+                  - generic [ref=e565]: 日期：
+                - generic [ref=e566] [cursor=pointer]:
+                  - generic [ref=e567]: "105"
+                  - generic [ref=e568]: 联合体参与方名称：__艾奕康设计与咨询（深圳）有限公司_（盖单位章）
+                - generic [ref=e569] [cursor=pointer]:
+                  - generic [ref=e570]: "106"
+                  - generic [ref=e571]: 法定代表人或其委托代理人：_______________________（签字）
+                - generic [ref=e572] [cursor=pointer]:
+                  - generic [ref=e573]: "107"
+                  - generic [ref=e574]: 日期：
+                - generic [ref=e575] [cursor=pointer]:
+                  - generic [ref=e576]: "108"
+                  - generic [ref=e577]: 附件一：投标费用的承担
+                - generic [ref=e578] [cursor=pointer]:
+                  - generic [ref=e579]: "109"
+                  - generic [ref=e580]: 如涉及到投标保证金、招标代理费、履约保证金、 专家评审费等由联合体牵头方
+                - generic [ref=e581] [cursor=pointer]:
+                  - generic [ref=e582]: "110"
+                  - generic [ref=e583]: "4"
+                - generic [ref=e584] [cursor=pointer]:
+                  - generic [ref=e585]: "111"
+                  - generic [ref=e586]: 承担。
+                - generic [ref=e587] [cursor=pointer]:
+                  - generic [ref=e588]: "112"
+                  - generic [ref=e589]: 附件二：服务范围分工
+                - generic [ref=e590] [cursor=pointer]:
+                  - generic [ref=e591]: "113"
+                  - generic [ref=e592]: 一、方案征集阶段工作内容划分：
+                - generic [ref=e593] [cursor=pointer]:
+                  - generic [ref=e594]: "114"
+                  - generic [ref=e595]: 第一阶段：定位策划、产品研究与初步概念规划
+                - generic [ref=e596] [cursor=pointer]:
+                  - generic [ref=e597]: "115"
+                  - generic [ref=e598]: 1、联合体牵头方服务内容如下：
+                - generic [ref=e599] [cursor=pointer]:
+                  - generic [ref=e600]: "116"
+                  - generic [ref=e601]: （1）项目启动
+                - generic [ref=e602] [cursor=pointer]:
+                  - generic [ref=e603]: "117"
+                  - generic [ref=e604]: 本阶段为项目起始工作，联合体牵头方团队联同 AECOM团队举行启动会，就本项
+                - generic [ref=e605] [cursor=pointer]:
+                  - generic [ref=e606]: "118"
+                  - generic [ref=e607]: 目的基本工作方向和重点达成一致。具体工作内容包括：
+                - generic [ref=e608] [cursor=pointer]:
+                  - generic [ref=e609]: "119"
+                  - generic [ref=e610]:  会同联合体成员方手机整理详细的资料清单
+                - generic [ref=e611] [cursor=pointer]:
+                  - generic [ref=e612]: "120"
+                  - generic [ref=e613]:  明确各方对项目开发的核心诉求
+                - generic [ref=e614] [cursor=pointer]:
+                  - generic [ref=e615]: "121"
+                  - generic [ref=e616]:  会同联合体成员方安排项目工作计划
+                - generic [ref=e617] [cursor=pointer]:
+                  - generic [ref=e618]: "122"
+                  - generic [ref=e619]:  确定双方技术协调负责人与例行协调方式
+                - generic [ref=e620] [cursor=pointer]:
+                  - generic [ref=e621]: "123"
+                  - generic [ref=e622]: （2）明确场地设计条件分析
+                - generic [ref=e623] [cursor=pointer]:
+                  - generic [ref=e624]: "124"
+                  - generic [ref=e625]:  组织联合体团队进行现场踏勘工作，对基地内的各类建设现状与自然条件
+                - generic [ref=e626] [cursor=pointer]:
+                  - generic [ref=e627]: "125"
+                  - generic [ref=e628]: 进行评估，作为后续项目设计的基础。
+                - generic [ref=e629] [cursor=pointer]:
+                  - generic [ref=e630]: "126"
+                  - generic [ref=e631]:  如受新冠疫情等原因现场踏勘无法进行，则另外协商踏勘方案。
+                - generic [ref=e632] [cursor=pointer]:
+                  - generic [ref=e633]: "127"
+                  - generic [ref=e634]: 2、联合体参与方服务内容如下：
+                - generic [ref=e635] [cursor=pointer]:
+                  - generic [ref=e636]: "128"
+                  - generic [ref=e637]: （1）项目总体策划
+                - generic [ref=e638] [cursor=pointer]:
+                  - generic [ref=e639]: "129"
+                  - generic [ref=e640]: "-发展目标与项目定位"
+                - generic [ref=e641] [cursor=pointer]:
+                  - generic [ref=e642]: "130"
+                  - generic [ref=e643]: "-产业发展策划研究"
+                - generic [ref=e644] [cursor=pointer]:
+                  - generic [ref=e645]: "131"
+                  - generic [ref=e646]: "-业态分析与初步功能布局"
+                - generic [ref=e647] [cursor=pointer]:
+                  - generic [ref=e648]: "132"
+                  - generic [ref=e649]: （2）概念性规划设计
+                - generic [ref=e650] [cursor=pointer]:
+                  - generic [ref=e651]: "133"
+                  - generic [ref=e652]: "-总体空间框架"
+                - generic [ref=e653] [cursor=pointer]:
+                  - generic [ref=e654]: "134"
+                  - generic [ref=e655]: "-交通系统规划"
+                - generic [ref=e656] [cursor=pointer]:
+                  - generic [ref=e657]: "135"
+                  - generic [ref=e658]: "-初步用地布局"
+                - generic [ref=e659] [cursor=pointer]:
+                  - generic [ref=e660]: "136"
+                  - generic [ref=e661]: 第二阶段：概念规划深化与重点建筑概念设计
+                - generic [ref=e662] [cursor=pointer]:
+                  - generic [ref=e663]: "137"
+                  - generic [ref=e664]: 1、联合体牵头方服务内容如下：
+                - generic [ref=e665] [cursor=pointer]:
+                  - generic [ref=e666]: "138"
+                  - generic [ref=e667]: 根据招标方案中对重点建筑概念的要求进行设计(不限于商业、会议接待、居住建筑
+                - generic [ref=e668] [cursor=pointer]:
+                  - generic [ref=e669]: "139"
+                  - generic [ref=e670]: （群）等类型，分别至少各 1 个)，具体要求包括
+                - generic [ref=e671] [cursor=pointer]:
+                  - generic [ref=e672]: "140"
+                  - generic [ref=e673]: A、设计说明及主要经济技术指标
+                - generic [ref=e674] [cursor=pointer]:
+                  - generic [ref=e675]: "141"
+                  - generic [ref=e676]: B、总平面图
+                - generic [ref=e677] [cursor=pointer]:
+                  - generic [ref=e678]: "142"
+                  - generic [ref=e679]: C、分析图，包含但不限于：
+                - generic [ref=e680] [cursor=pointer]:
+                  - generic [ref=e681]: "143"
+                  - generic [ref=e682]: （a）建筑单体的策略及设计分析
+                - generic [ref=e683] [cursor=pointer]:
+                  - generic [ref=e684]: "144"
+                  - generic [ref=e685]: （b）各业态租赁运营模式与建筑平面的落位分析
+                - generic [ref=e686] [cursor=pointer]:
+                  - generic [ref=e687]: "145"
+                  - generic [ref=e688]: （c）建筑单体效果图
+                - generic [ref=e689] [cursor=pointer]:
+                  - generic [ref=e690]: "146"
+                  - generic [ref=e691]: （d）建筑单体重要内部节点及空间效果图
+                - generic [ref=e692] [cursor=pointer]:
+                  - generic [ref=e693]: "147"
+                  - generic [ref=e694]: （e）建筑单体平立剖设计图
+                - generic [ref=e695] [cursor=pointer]:
+                  - generic [ref=e696]: "148"
+                  - generic [ref=e697]: （f）建筑单体相关动线组织、层高控制、平面功能等分析
+                - generic [ref=e698] [cursor=pointer]:
+                  - generic [ref=e699]: "149"
+                  - generic [ref=e700]: "5"
+                - generic [ref=e701] [cursor=pointer]:
+                  - generic [ref=e702]: "150"
+                  - generic [ref=e703]: 2、联合体参与方服务内容如下：
+                - generic [ref=e704] [cursor=pointer]:
+                  - generic [ref=e705]: "151"
+                  - generic [ref=e706]: （1）项目策划深化
+                - generic [ref=e707] [cursor=pointer]:
+                  - generic [ref=e708]: "152"
+                  - generic [ref=e709]: "-功能定位优化与功能布局"
+                - generic [ref=e710] [cursor=pointer]:
+                  - generic [ref=e711]: "153"
+                  - generic [ref=e712]: "-开发规模优化"
+                - generic [ref=e713] [cursor=pointer]:
+                  - generic [ref=e714]: "154"
+                  - generic [ref=e715]: "-重点项目策划"
+                - generic [ref=e716] [cursor=pointer]:
+                  - generic [ref=e717]: "155"
+                  - generic [ref=e718]: "-经济评估与分析（此部分投资分析结论仅供业主参考，不用于指导实际开发投"
+                - generic [ref=e719] [cursor=pointer]:
+                  - generic [ref=e720]: "156"
+                  - generic [ref=e721]: 资建设。）
+                - generic [ref=e722] [cursor=pointer]:
+                  - generic [ref=e723]: "157"
+                  - generic [ref=e724]: "-实施运营及保障措施"
+                - generic [ref=e725] [cursor=pointer]:
+                  - generic [ref=e726]: "158"
+                  - generic [ref=e727]: （2）概念性规划设计（含城市设计）
+                - generic [ref=e728] [cursor=pointer]:
+                  - generic [ref=e729]: "159"
+                  - generic [ref=e730]: "-用地布局方案"
+                - generic [ref=e731] [cursor=pointer]:
+                  - generic [ref=e732]: "160"
+                  - generic [ref=e733]: "-区域交通组织提升"
+                - generic [ref=e734] [cursor=pointer]:
+                  - generic [ref=e735]: "161"
+                  - generic [ref=e736]: "-未来社区方案建议"
+                - generic [ref=e737] [cursor=pointer]:
+                  - generic [ref=e738]: "162"
+                  - generic [ref=e739]: "-分区空间形态引导"
+                - generic [ref=e740] [cursor=pointer]:
+                  - generic [ref=e741]: "163"
+                  - generic [ref=e742]: "-分期实施策略和建设时序安排"
+                - generic [ref=e743] [cursor=pointer]:
+                  - generic [ref=e744]: "164"
+                  - generic [ref=e745]: 第三阶段：最终报告整合
+                - generic [ref=e746] [cursor=pointer]:
+                  - generic [ref=e747]: "165"
+                  - generic [ref=e748]: 基于一、二阶段的成果以及双方沟通意见反馈，联合体最后成果分工如下：
+                - generic [ref=e749] [cursor=pointer]:
+                  - generic [ref=e750]: "166"
+                  - generic [ref=e751]: （1）联合体牵头方：负责重点建筑概念设计成果效果图，并按节点提供对应深度
+                - generic [ref=e752] [cursor=pointer]:
+                  - generic [ref=e753]: "167"
+                  - generic [ref=e754]: 的成果予参与方，如后期需要完成多媒体、动画、展板等内容，由西南院承担费用；。
+                - generic [ref=e755] [cursor=pointer]:
+                  - generic [ref=e756]: "168"
+                  - generic [ref=e757]: （2）联合体参与方：
+                - generic [ref=e758] [cursor=pointer]:
+                  - generic [ref=e759]: "169"
+                  - generic [ref=e760]: "-经济规划策划完整内容；"
+                - generic [ref=e761] [cursor=pointer]:
+                  - generic [ref=e762]: "170"
+                  - generic [ref=e763]: "-概念规划、城市设计中的方案、图纸及文本，对应的效果图、多媒体、动画、展板"
+                - generic [ref=e764] [cursor=pointer]:
+                  - generic [ref=e765]: "171"
+                  - generic [ref=e766]: 等内容,由牵头方提供的第三方委托制作，参与方负责把控质量。
+                - generic [ref=e767] [cursor=pointer]:
+                  - generic [ref=e768]: "172"
+                  - generic [ref=e769]: 补充说明：
+                - generic [ref=e770] [cursor=pointer]:
+                  - generic [ref=e771]: "173"
+                  - generic [ref=e772]: （1）各阶段的意见应由会议组织方进行书面意见整理
+                - generic [ref=e773] [cursor=pointer]:
+                  - generic [ref=e774]: "174"
+                  - generic [ref=e775]: （2） 现场汇报文件，由联合体参与方负责组织最终汇报文件，联合体牵头方提供对
+                - generic [ref=e776] [cursor=pointer]:
+                  - generic [ref=e777]: "175"
+                  - generic [ref=e778]: 应约定深度的完整成果.成果打印由联合体牵头方负责；
+                - generic [ref=e779] [cursor=pointer]:
+                  - generic [ref=e780]: "176"
+                  - generic [ref=e781]: （3）汇报：共同参与，汇报形式协商安排。汇报次数及人数：根据设计任务书要求，
+                - generic [ref=e782] [cursor=pointer]:
+                  - generic [ref=e783]: "177"
+                  - generic [ref=e784]: 联合体参与方可进行投标成果汇报；如后续深化业主方需进行汇报，联合体参与方可
+                - generic [ref=e785] [cursor=pointer]:
+                  - generic [ref=e786]: "178"
+                  - generic [ref=e787]: 协助联合体牵头方向业主、政府进行现场不超过 3次的汇报。
+                - generic [ref=e788] [cursor=pointer]:
+                  - generic [ref=e789]: "179"
+                  - generic [ref=e790]: 二、方案整理、优化阶段工作内容划分：
+                - generic [ref=e791] [cursor=pointer]:
+                  - generic [ref=e792]: "180"
+                  - generic [ref=e793]: 如获得第一名，现任务书界定深化工作包括方案的各项优化、修改以及配合控规
+                - generic [ref=e794] [cursor=pointer]:
+                  - generic [ref=e795]: "181"
+                  - generic [ref=e796]: 编制等其他工作，双方根据实际最终设计任务再详细商议分工，并另行签署补充协
+                - generic [ref=e797] [cursor=pointer]:
+                  - generic [ref=e798]: "182"
+                  - generic [ref=e799]: 议。
+                - generic [ref=e800] [cursor=pointer]:
+                  - generic [ref=e801]: "183"
+                  - generic [ref=e802]: 附件三：服务费用的分配与支付
+                - generic [ref=e803] [cursor=pointer]:
+                  - generic [ref=e804]: "184"
+                  - generic [ref=e805]: "6"
+                - generic [ref=e806] [cursor=pointer]:
+                  - generic [ref=e807]: "185"
+                  - generic [ref=e808]: 1. 如项目未获得第一名，艾奕康设计与咨询（深圳）有限公司获得人民币 90 万元
+                - generic [ref=e809] [cursor=pointer]:
+                  - generic [ref=e810]: "186"
+                  - generic [ref=e811]: （如设计补偿费不足90 万元，需中国建筑西南设计研究院有限公司将剩余费用支付
+                - generic [ref=e812] [cursor=pointer]:
+                  - generic [ref=e813]: "187"
+                  - generic [ref=e814]: 于艾奕康设计与咨询（深圳）有限公司）。
+                - generic [ref=e815] [cursor=pointer]:
+                  - generic [ref=e816]: "188"
+                  - generic [ref=e817]: 2. 如项目获得第一名，费用分配如下：
+                - generic [ref=e818] [cursor=pointer]:
+                  - generic [ref=e819]: "189"
+                  - generic [ref=e820]: 180万元设计补偿费：
+                - generic [ref=e821] [cursor=pointer]:
+                  - generic [ref=e822]: "190"
+                  - generic [ref=e823]: 单位 设计费分配（万元）
+                - generic [ref=e824] [cursor=pointer]:
+                  - generic [ref=e825]: "191"
+                  - generic [ref=e826]: 中国建筑西南设计研究院有限 50
+                - generic [ref=e827] [cursor=pointer]:
+                  - generic [ref=e828]: "192"
+                  - generic [ref=e829]: 公司
+                - generic [ref=e830] [cursor=pointer]:
+                  - generic [ref=e831]: "193"
+                  - generic [ref=e832]: 艾奕康设计与咨询（深圳）有 130
+                - generic [ref=e833] [cursor=pointer]:
+                  - generic [ref=e834]: "194"
+                  - generic [ref=e835]: 限公司
+                - generic [ref=e836] [cursor=pointer]:
+                  - generic [ref=e837]: "195"
+                  - generic [ref=e838]: 180万元方案整理、优化费用分配如下：
+                - generic [ref=e839] [cursor=pointer]:
+                  - generic [ref=e840]: "196"
+                  - generic [ref=e841]: 单位 设计费分配（万元）
+                - generic [ref=e842] [cursor=pointer]:
+                  - generic [ref=e843]: "197"
+                  - generic [ref=e844]: 中国建筑西南设计研究院有限 90
+                - generic [ref=e845] [cursor=pointer]:
+                  - generic [ref=e846]: "198"
+                  - generic [ref=e847]: 公司
+                - generic [ref=e848] [cursor=pointer]:
+                  - generic [ref=e849]: "199"
+                  - generic [ref=e850]: 艾奕康设计与咨询（深圳）有 90
+                - generic [ref=e851] [cursor=pointer]:
+                  - generic [ref=e852]: "200"
+                  - generic [ref=e853]: 限公司
+                - generic [ref=e854] [cursor=pointer]:
+                  - generic [ref=e855]: "201"
+                  - generic [ref=e856]: 鉴于方案整理、优化深化阶段的工作内容尚未明确，方案整理、优化费用为暂定，获
+                - generic [ref=e857] [cursor=pointer]:
+                  - generic [ref=e858]: "202"
+                  - generic [ref=e859]: 得第一名后双方根据实际最终设计任务再详细商议分工及双方费用，并另行签署补
+                - generic [ref=e860] [cursor=pointer]:
+                  - generic [ref=e861]: "203"
+                  - generic [ref=e862]: 充协议。
+                - generic [ref=e863] [cursor=pointer]:
+                  - generic [ref=e864]: "204"
+                  - generic [ref=e865]: 注：以上每个阶段产生的中国境内税费、差旅、长途电话、传真、快递的费用，由双
+                - generic [ref=e866] [cursor=pointer]:
+                  - generic [ref=e867]: "205"
+                  - generic [ref=e868]: 方各自承担。
+                - generic [ref=e869] [cursor=pointer]:
+                  - generic [ref=e870]: "206"
+                  - generic [ref=e871]: "7"
+            - generic [ref=e872]:
+              - generic [ref=e873]:
+                - generic [ref=e874] [cursor=pointer]:
+                  - generic:
+                    - img
+                  - generic [ref=e876]:
+                    - generic [ref=e877]: "4"
+                    - generic [ref=e878]: 风险条款
+                - generic [ref=e879] [cursor=pointer]:
+                  - generic:
+                    - img
+                  - generic [ref=e881]:
+                    - generic [ref=e882]: "4"
+                    - generic [ref=e883]: 缺失条款
+              - generic [ref=e884]:
+                - heading "风险条款" [level=4] [ref=e885]:
+                  - img [ref=e887]
+                  - text: 风险条款
+                - generic [ref=e889]:
+                  - generic [ref=e890] [cursor=pointer]:
+                    - generic [ref=e891]:
+                      - generic [ref=e892]: 联合体牵头方在投标过程或是主合同服务过程中提供项目管理和合同管理服务的，并不构成或被视为联合体牵头方...
+                      - generic [ref=e894]: 高风险
+                    - generic [ref=e895]: "\"联合体牵头方在投标过程或是主合同服务过程中提供项目管理和合同管理服务的，并不构成或被视为联合体牵头方应承担因联合体参与方的服务或履约行为而引起或相关的任何损失、...\""
+                    - generic [ref=e896]: 此条款试图完全免除联合体牵头方的管理责任，可能违反《民法典》中关于共同侵权和连带责任的规定，在法律上可能被认定为无效条款。
+                  - generic [ref=e897] [cursor=pointer]:
+                    - generic [ref=e898]:
+                      - generic [ref=e899]: 如甲方对乙方的尽职调查结果存在较高风险，或中标后合同条款不能通过甲方内部审批，或乙方在履行合同过程中...
+                      - generic [ref=e901]: 高风险
+                    - generic [ref=e902]: "\"如甲方对乙方的尽职调查结果存在较高风险，或中标后合同条款不能通过甲方内部审批，或乙方在履行合同过程中存在违反甲方公司道德与合规条款的行为，甲方具有退出联合体的权...\""
+                    - generic [ref=e903]: 此条款赋予甲方单方面无责退出的权利，但未明确"较高风险"、"不能通过内部审批"等关键概念的具体标准，可能导致甲方滥用权利，损害乙方利益。
+                  - generic [ref=e904] [cursor=pointer]:
+                    - generic [ref=e905]:
+                      - generic [ref=e906]: 如乙方对甲方的尽职调查结果存在较高风险，或中标后合同条款不能通过乙方内部审批，或甲方在履行合同过程中...
+                      - generic [ref=e908]: 高风险
+                    - generic [ref=e909]: "\"如乙方对甲方的尽职调查结果存在较高风险，或中标后合同条款不能通过乙方内部审批，或甲方在履行合同过程中存在违反乙方公司道德与合规条款的行为，乙方具有退出联合体的权...\""
+                    - generic [ref=e910]: 与甲方退出条款相同，此条款赋予乙方单方面无责退出的权利，但未明确关键概念的具体标准，可能导致乙方滥用权利，损害甲方利益。
+                  - generic [ref=e911] [cursor=pointer]:
+                    - generic [ref=e912]:
+                      - generic [ref=e913]: 联合体成员仅对自身的工作内容负责，并承担因各自引起或导致的违约金或罚款。
+                      - generic [ref=e915]: 中风险
+                    - generic [ref=e916]: "\"联合体成员仅对自身的工作内容负责，并承担因各自引起或导致的违约金或罚款。\""
+                    - generic [ref=e917]: 此条款可能违反《招标投标法》关于联合体各方对招标人承担连带责任的规定，可能导致联合体对招标人的责任分担不明确。
+              - generic [ref=e918]:
+                - heading "缺失条款" [level=4] [ref=e919]:
+                  - img [ref=e921]
+                  - text: 缺失条款
+                - generic [ref=e923]:
+                  - generic [ref=e924] [cursor=pointer]:
+                    - generic [ref=e925]:
+                      - generic [ref=e926]: 知识产权条款
+                      - generic [ref=e928]: 缺失
+                    - generic [ref=e929]: 合同未明确约定联合体工作成果的知识产权归属和使用方式，可能导致双方在项目完成后产生知识产权纠纷。
+                    - generic [ref=e930]:
+                      - strong [ref=e931]: 建议：
+                      - text: 增加知识产权条款，明确约定：1)联合体工作成果的知识产权归属；2)各方在项目完成后对知识产权的使用权限；3)第三方使用知识产权的条件和程序。
+                  - generic [ref=e932] [cursor=pointer]:
+                    - generic [ref=e933]:
+                      - generic [ref=e934]: 保密条款
+                      - generic [ref=e936]: 缺失
+                    - generic [ref=e937]: 合同未约定双方对项目相关信息的保密义务，可能导致商业秘密泄露风险。
+                    - generic [ref=e938]:
+                      - strong [ref=e939]: 建议：
+                      - text: 增加保密条款，明确约定：1)双方对项目相关信息的保密义务；2)保密信息的范围；3)保密期限；4)违约责任。
+                  - generic [ref=e940] [cursor=pointer]:
+                    - generic [ref=e941]:
+                      - generic [ref=e942]: 不可抗力条款
+                      - generic [ref=e944]: 缺失
+                    - generic [ref=e945]: 合同未明确约定不可抗力的定义、处理方式和后果，可能导致在发生不可抗力事件时双方责任不明确。
+                    - generic [ref=e946]:
+                      - strong [ref=e947]: 建议：
+                      - text: 增加不可抗力条款，明确约定：1)不可抗力的定义；2)不可抗力发生时的通知义务；3)不可抗力导致的后果处理方式；4)不可抗力期间的合同履行安排。
+                  - generic [ref=e948] [cursor=pointer]:
+                    - generic [ref=e949]:
+                      - generic [ref=e950]: 合同变更条款
+                      - generic [ref=e952]: 缺失
+                    - generic [ref=e953]: 合同未明确约定合同变更的条件和程序，可能导致双方在需要变更合同时产生争议。
+                    - generic [ref=e954]:
+                      - strong [ref=e955]: 建议：
+                      - text: 增加合同变更条款，明确约定：1)合同变更的条件；2)合同变更的程序；3)合同变更的效力；4)合同变更的书面形式要求。
+              - generic [ref=e956]:
+                - heading "修改建议" [level=4] [ref=e957]:
+                  - img [ref=e959]
+                  - text: 修改建议
+                - generic [ref=e962]:
+                  - generic [ref=e963] [cursor=pointer]:
+                    - generic [ref=e964]: 明确联合体牵头方管理责任
+                    - generic [ref=e965]: 修改关于联合体牵头方管理责任的条款，明确牵头方在管理过程中的合理注意义务，而非完全免除责任。
+                  - generic [ref=e966] [cursor=pointer]:
+                    - generic [ref=e967]: 细化退出条件
+                    - generic [ref=e968]: 细化双方退出联合体的具体条件和程序，特别是"较高风险"、"不能通过内部审批"等模糊概念的具体标准。
+                  - generic [ref=e969] [cursor=pointer]:
+                    - generic [ref=e970]: 增加违约责任条款
+                    - generic [ref=e971]: 增加详细的违约责任条款，明确各种违约情形下的责任承担方式和赔偿标准。
+                  - generic [ref=e972] [cursor=pointer]:
+                    - generic [ref=e973]: 完善争议解决机制
+                    - generic [ref=e974]: 完善争议解决机制，增加调解、协商等前置程序，明确仲裁的具体规则和程序。
+              - generic [ref=e975]:
+                - heading "法条引用" [level=4] [ref=e976]:
+                  - img [ref=e978]
+                  - text: 法条引用
+                - generic [ref=e981]:
+                  - generic [ref=e983]: "{ \"law_name\": \"《中华人民共和国民法典》\", \"article\": \"第1168条\", \"content\": \"二人以上共同实施侵权行为，造成他人损害的，应当承担连带责任。\" }"
+                  - generic [ref=e985]: "{ \"law_name\": \"《中华人民共和国民法典》\", \"article\": \"第509条\", \"content\": \"当事人应当按照约定全面履行自己的义务。当事人应当遵循诚信原则，根据合同的性质、目的和交易习惯履行通知、协助、保密等义务。\" }"
+                  - generic [ref=e987]: "{ \"law_name\": \"《中华人民共和国招标投标法》\", \"article\": \"第31条\", \"content\": \"联合体中标的，联合体各方应当共同与招标人签订合同，就中标项目向招标人承担连带责任。\" }"
+                  - generic [ref=e989]: "{ \"law_name\": \"《中华人民共和国民法典》\", \"article\": \"第847条\", \"content\": \"知识产权是权利人依法就下列客体享有的专有的权利：（一）作品；（二）发明、实用新型、外观设计；（三）商标；（四）地理标志；（五）商业秘密；（六）集成电路布图设计；（七）植物新品种；（八）法律规定的其他客体。\" }"
+                  - generic [ref=e991]: "{ \"law_name\": \"《中华人民共和国民法典》\", \"article\": \"第590条\", \"content\": \"当事人一方因不可抗力不能履行合同的，根据不可抗力的影响，部分或者全部免除责任，但是法律另有规定的除外。因不可抗力不能履行合同的，应当及时通知对方，以减轻可能给对方造成的损失，并应当在合理期限内提供证明。\" }"
+                  - generic [ref=e993]: "{ \"law_name\": \"《中华人民共和国民法典》\", \"article\": \"第543条\", \"content\": \"当事人协商一致，可以变更合同。\" }"

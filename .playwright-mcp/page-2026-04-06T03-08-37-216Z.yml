@@ -1,0 +1,14 @@
+- generic [ref=e3]:
+  - generic [ref=e4]: "[plugin:vite:import-analysis] Failed to resolve import \"@radix-vue/toast\" from \"src/components/ui/toast-provider.vue\". Does the file exist?"
+  - generic [ref=e5]: C:/Users/kalvi/Documents/claude application/ai saas legal/frontend/src/components/ui/toast-provider.vue:2:45
+  - generic [ref=e6]: "1 | import { defineComponent as _defineComponent } from \"vue\"; 2 | import { ToastProvider, ToastViewport } from \"@radix-vue/toast\"; | ^ 3 | const className = \"fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]\"; 4 | const _sfc_main = /* @__PURE__ */ _defineComponent({"
+  - generic [ref=e7]: at TransformPluginContext._formatLog (file:///C:/Users/kalvi/Documents/claude%20application/ai%20saas%20legal/frontend/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42528:41) at TransformPluginContext.error (file:///C:/Users/kalvi/Documents/claude%20application/ai%20saas%20legal/frontend/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42525:16) at normalizeUrl (file:///C:/Users/kalvi/Documents/claude%20application/ai%20saas%20legal/frontend/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:40504:23) at process.processTicksAndRejections (node:internal/process/task_queues:104:5) at async file:///C:/Users/kalvi/Documents/claude%20application/ai%20saas%20legal/frontend/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:40623:37 at async Promise.all (index 1) at async TransformPluginContext.transform (file:///C:/Users/kalvi/Documents/claude%20application/ai%20saas%20legal/frontend/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:40550:7) at async EnvironmentPluginContainer.transform (file:///C:/Users/kalvi/Documents/claude%20application/ai%20saas%20legal/frontend/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42323:18) at async loadAndTransform (file:///C:/Users/kalvi/Documents/claude%20application/ai%20saas%20legal/frontend/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:35739:27
+  - generic [ref=e8]:
+    - text: Click outside, press Esc key, or fix the code to dismiss.
+    - text: You can also disable this overlay by setting
+    - code [ref=e9]: server.hmr.overlay
+    - text: to
+    - code [ref=e10]: "false"
+    - text: in
+    - code [ref=e11]: vite.config.js
+    - text: .

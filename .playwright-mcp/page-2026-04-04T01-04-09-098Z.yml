@@ -1,0 +1,19 @@
+- generic [ref=e35]:
+  - heading "登录法务 AI" [level=2] [ref=e36]
+  - generic [ref=e37]:
+    - generic [ref=e38]:
+      - generic [ref=e39]: "* 邮箱"
+      - textbox "* 邮箱" [ref=e43]:
+        - /placeholder: 请输入邮箱
+        - text: kalvinxuxu@163.com
+    - generic [ref=e44]:
+      - generic [ref=e45]: "* 密码"
+      - textbox "* 密码" [ref=e49]:
+        - /placeholder: 请输入密码
+        - text: cherish724
+    - button "登录" [ref=e52] [cursor=pointer]:
+      - generic [ref=e53]: 登录
+    - paragraph [ref=e54]:
+      - text: 还没有账号？
+      - link "立即注册" [ref=e55] [cursor=pointer]:
+        - /url: "#"

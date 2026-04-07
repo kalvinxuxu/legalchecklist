@@ -42,4 +42,4 @@ echo.
 echo === 启动完成 ===
 echo.
 echo 启动后端服务...
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+uvicorn main:app --reload --host 0.0.0.0 --port 8001

@@ -1,0 +1,23 @@
+- generic [ref=e2]:
+  - generic [ref=e4]:
+    - banner [ref=e5]:
+      - heading "法务 AI SaaS" [level=1] [ref=e6]
+      - paragraph [ref=e7]: 智能合同审查，让法律服务触手可及
+      - generic [ref=e8]:
+        - generic [ref=e9]: 登录
+        - generic [ref=e10]: 快速体验
+    - generic [ref=e11]:
+      - generic [ref=e13]:
+        - img [ref=e15]
+        - heading "快速审查" [level=3] [ref=e17]
+        - paragraph [ref=e18]: 30 秒内完成合同审查，输出专业报告
+      - generic [ref=e20]:
+        - img [ref=e22]
+        - heading "可信赖" [level=3] [ref=e25]
+        - paragraph [ref=e26]: RAG + 引用溯源，每条建议都有法条依据
+      - generic [ref=e28]:
+        - img [ref=e30]
+        - heading "可负担" [level=3] [ref=e32]
+        - paragraph [ref=e33]: ¥299 起/月，仅为传统法律服务的 1/10
+  - region "Notifications (F8)":
+    - list

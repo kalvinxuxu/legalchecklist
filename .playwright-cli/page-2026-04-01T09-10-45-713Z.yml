@@ -1,0 +1,25 @@
+- generic [ref=e68]:
+  - heading "注册法务 AI" [level=2] [ref=e69]
+  - generic [ref=e70]:
+    - generic [ref=e71]:
+      - generic [ref=e72]: "* 公司名称"
+      - textbox "* 公司名称" [ref=e76]:
+        - /placeholder: 请输入公司名称
+    - generic [ref=e77]:
+      - generic [ref=e78]: "* 邮箱"
+      - textbox "* 邮箱" [ref=e82]:
+        - /placeholder: 请输入邮箱
+    - generic [ref=e83]:
+      - generic [ref=e84]: "* 密码"
+      - textbox "* 密码" [ref=e88]:
+        - /placeholder: 请输入密码
+    - generic [ref=e89]:
+      - generic [ref=e90]: "* 确认密码"
+      - textbox "* 确认密码" [ref=e94]:
+        - /placeholder: 请再次输入密码
+    - button "注册" [ref=e97] [cursor=pointer]:
+      - generic [ref=e98]: 注册
+    - paragraph [ref=e99]:
+      - text: 已有账号？
+      - link "立即登录" [ref=e100] [cursor=pointer]:
+        - /url: "#"

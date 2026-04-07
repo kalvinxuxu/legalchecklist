@@ -1,0 +1,92 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e6]:
+        - img [ref=e8]
+        - generic [ref=e11]: 法务 AI
+      - generic [ref=e13]:
+        - generic [ref=e14]: U
+        - generic [ref=e15]:
+          - paragraph [ref=e16]: 用户
+          - paragraph
+      - navigation [ref=e17]:
+        - link "工作台" [ref=e18] [cursor=pointer]:
+          - /url: /workspace
+          - img [ref=e19]
+          - text: 工作台
+          - img [ref=e24]
+        - link "合同列表" [ref=e26] [cursor=pointer]:
+          - /url: /workspace/contracts
+          - img [ref=e27]
+          - text: 合同列表
+        - link "上传合同" [ref=e30] [cursor=pointer]:
+          - /url: /workspace/upload
+          - img [ref=e31]
+          - text: 上传合同
+      - button "退出登录" [ref=e35] [cursor=pointer]:
+        - img [ref=e36]
+        - text: 退出登录
+    - main [ref=e39]:
+      - generic [ref=e40]:
+        - generic [ref=e42]:
+          - generic [ref=e43]:
+            - heading "工作台" [level=1] [ref=e44]
+            - paragraph [ref=e45]: 欢迎回来，查看您的合同审查概览
+          - button "上传合同" [ref=e46] [cursor=pointer]:
+            - img [ref=e47]
+            - text: 上传合同
+        - generic [ref=e50]:
+          - generic [ref=e51]:
+            - generic [ref=e52]:
+              - generic [ref=e53]:
+                - generic [ref=e54]:
+                  - paragraph [ref=e55]: 已审查合同
+                  - paragraph [ref=e56]: "0"
+                - img [ref=e58]
+              - generic [ref=e61]:
+                - img [ref=e62]
+                - generic [ref=e65]: 较上月增长 12%
+            - generic [ref=e66]:
+              - generic [ref=e67]:
+                - generic [ref=e68]:
+                  - paragraph [ref=e69]: 高风险条款
+                  - paragraph [ref=e70]: "0"
+                - img [ref=e72]
+              - generic [ref=e74]:
+                - img [ref=e75]
+                - generic [ref=e78]: 需重点关注
+            - generic [ref=e79]:
+              - generic [ref=e80]:
+                - generic [ref=e81]:
+                  - paragraph [ref=e82]: 审查中
+                  - paragraph [ref=e83]: "0"
+                - img [ref=e85]
+              - generic [ref=e88]:
+                - img [ref=e89]
+                - generic [ref=e91]: AI 正在处理中
+          - generic [ref=e94]:
+            - generic [ref=e95]:
+              - img [ref=e97]
+              - generic [ref=e100]:
+                - heading "上传新合同" [level=3] [ref=e101]
+                - paragraph [ref=e102]: 支持 PDF、Word 格式，30 秒完成审查
+            - button "开始上传" [ref=e103] [cursor=pointer]:
+              - text: 开始上传
+              - img [ref=e104]
+          - generic [ref=e106]:
+            - generic [ref=e107]:
+              - generic [ref=e108]:
+                - heading "最近审查" [level=2] [ref=e109]
+                - paragraph [ref=e110]: 您最近的合同审查记录
+              - button "查看全部" [ref=e111] [cursor=pointer]:
+                - text: 查看全部
+                - img [ref=e112]
+            - generic [ref=e114]:
+              - img [ref=e116]
+              - heading "暂无审查记录" [level=3] [ref=e119]
+              - paragraph [ref=e120]: 上传您的第一份合同，开始智能审查
+              - button "上传合同" [ref=e121] [cursor=pointer]:
+                - img [ref=e122]
+                - text: 上传合同
+  - region "Notifications (F8)":
+    - list

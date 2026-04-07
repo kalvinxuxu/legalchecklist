@@ -1,0 +1,54 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - img [ref=e8]
+          - text: 法务 AI
+        - heading "开始您的 智能审查之旅" [level=1] [ref=e11]:
+          - text: 开始您的
+          - text: 智能审查之旅
+        - paragraph [ref=e12]: 首次注册即赠送 10 次免费审查额度，体验 AI 驱动的精准合同分析。
+        - generic [ref=e13]:
+          - generic [ref=e14]:
+            - generic [ref=e15]: 10+
+            - generic [ref=e16]: 免费额度
+          - generic [ref=e17]:
+            - generic [ref=e18]: 30s
+            - generic [ref=e19]: 审查速度
+          - generic [ref=e20]:
+            - generic [ref=e21]: 99%
+            - generic [ref=e22]: 识别准确率
+      - generic [ref=e23]:
+        - text: 已有账号？
+        - button "立即登录" [ref=e24]
+    - generic [ref=e26]:
+      - generic [ref=e27]:
+        - img [ref=e29]
+        - text: 法务 AI
+      - heading "创建账户" [level=2] [ref=e32]
+      - paragraph [ref=e33]: 填写以下信息完成注册
+      - generic [ref=e34]:
+        - generic [ref=e35]:
+          - text: 公司名称
+          - textbox "公司名称" [ref=e36]:
+            - /placeholder: 示例：北京科技有限公司
+        - generic [ref=e37]:
+          - text: 邮箱地址
+          - textbox "邮箱地址" [ref=e38]:
+            - /placeholder: name@company.com
+        - generic [ref=e39]:
+          - text: 设置密码
+          - textbox "设置密码" [ref=e40]:
+            - /placeholder: 至少 8 位，包含字母和数字
+        - paragraph [ref=e41]:
+          - text: 注册即表示同意
+          - button "服务条款" [ref=e42]
+          - text: 和
+          - button "隐私政策" [ref=e43]
+        - button "创建账户" [ref=e44]
+      - paragraph [ref=e46]:
+        - text: 已有账号？
+        - button "立即登录" [ref=e47]
+  - region "Notifications (F8)":
+    - list

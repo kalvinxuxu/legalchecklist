@@ -1,0 +1,43 @@
+- generic [ref=e57]:
+  - complementary [ref=e58]:
+    - generic [ref=e59]: 法务 AI
+    - menubar [ref=e60]:
+      - menuitem "工作台" [ref=e61] [cursor=pointer]
+      - menuitem "合同列表" [ref=e62] [cursor=pointer]
+      - menuitem "上传合同" [active] [ref=e63] [cursor=pointer]
+  - generic [ref=e64]:
+    - generic [ref=e65]:
+      - generic [ref=e66]: 欢迎使用法务 AI SaaS
+      - button "退出登录" [ref=e67] [cursor=pointer]:
+        - generic [ref=e68]: 退出登录
+    - main [ref=e69]:
+      - generic [ref=e537]:
+        - heading "上传合同" [level=2] [ref=e538]
+        - generic [ref=e539]:
+          - generic [ref=e540]:
+            - generic [ref=e541]: 工作区
+            - generic [ref=e544] [cursor=pointer]:
+              - generic:
+                - combobox "工作区" [ref=e546]
+                - generic [ref=e547]: 默认工作区
+              - img [ref=e550]
+          - generic [ref=e552]:
+            - generic [ref=e553]: 合同类型
+            - generic [ref=e556] [cursor=pointer]:
+              - generic:
+                - combobox "合同类型" [ref=e558]
+                - generic [ref=e559]: 选择合同类型
+              - img [ref=e562]
+          - group "* 合同文件" [ref=e564]:
+            - generic [ref=e565]: "* 合同文件"
+            - generic [ref=e567]:
+              - button "拖拽文件到此处或点击上传" [ref=e568] [cursor=pointer]:
+                - generic [ref=e569]:
+                  - img [ref=e571]
+                  - generic [ref=e573]:
+                    - text: 拖拽文件到此处或
+                    - emphasis [ref=e574]: 点击上传
+              - generic [ref=e575]: 支持 PDF 或 .docx 格式，最大 10MB（不支持 .doc 格式）
+              - list
+          - button "开始审查" [ref=e578] [cursor=pointer]:
+            - generic [ref=e579]: 开始审查

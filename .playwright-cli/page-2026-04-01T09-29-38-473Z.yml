@@ -1,0 +1,35 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e165]:
+    - complementary [ref=e166]:
+      - generic [ref=e167]: 法务 AI
+      - menubar [ref=e168]:
+        - menuitem "工作台" [ref=e169] [cursor=pointer]
+        - menuitem "合同列表" [ref=e170] [cursor=pointer]
+        - menuitem "上传合同" [ref=e171] [cursor=pointer]
+    - generic [ref=e172]:
+      - generic [ref=e173]:
+        - generic [ref=e174]: 欢迎使用法务 AI SaaS
+        - button "退出登录" [ref=e175] [cursor=pointer]:
+          - generic [ref=e176]: 退出登录
+      - main [ref=e177]:
+        - generic [ref=e330]:
+          - generic [ref=e332]:
+            - button "返回工作台" [ref=e333] [cursor=pointer]:
+              - generic [ref=e335]: 返回工作台
+            - generic [ref=e336]:
+              - button "工作台" [ref=e337] [cursor=pointer]:
+                - generic [ref=e338]: 工作台
+              - button "合同列表" [ref=e339] [cursor=pointer]:
+                - generic [ref=e340]: 合同列表
+              - button "上传合同" [ref=e341] [cursor=pointer]:
+                - generic [ref=e342]: 上传合同
+          - generic [ref=e344]:
+            - img [ref=e346]
+            - paragraph [ref=e349]: 正在审查合同
+            - paragraph [ref=e351]: 这可能需要 30-60 秒，请耐心等待...
+            - generic [ref=e352]:
+              - progressbar [ref=e353]
+              - paragraph [ref=e357]: 正在解析合同文档...
+  - alert [ref=e358]:
+    - img [ref=e360]
+    - paragraph [ref=e362]: 上传成功，开始审查...

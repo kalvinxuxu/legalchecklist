@@ -1,0 +1,17 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - region "Notifications (F8)":
+      - list
+  - generic [ref=e5]:
+    - generic [ref=e6]: "[plugin:vite:vue] [@vue/compiler-sfc] Failed to resolve extends base type. If this previously worked in 3.2, you can instruct the compiler to ignore this extend by adding /* @vue-ignore */ before it, for example: interface Props extends /* @vue-ignore */ Base {} Note: both in 3.2 or with the ignore, the properties in the base type are treated as fallthrough attrs at runtime. C:/Users/kalvi/Documents/claude application/ai saas legal/frontend/src/components/ui/button.vue 33 | ) 34 | 35 | interface Props extends /* @vue-ignore */ HTMLAttributes, VariantProps<typeof buttonVariants> { | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 36 | loading?: boolean 37 | as?: string | object"
+    - generic [ref=e7]: C:/Users/kalvi/Documents/claude application/ai saas legal/frontend/src/components/ui/button.vue
+    - generic [ref=e9]: at ScriptCompileContext.error (C:\Users\kalvi\Documents\claude application\ai saas legal\frontend\node_modules\@vue\compiler-sfc\dist\compiler-sfc.cjs.js:19824:11) at resolveInterfaceMembers (C:\Users\kalvi\Documents\claude application\ai saas legal\frontend\node_modules\@vue\compiler-sfc\dist\compiler-sfc.cjs.js:22653:15) at innerResolveTypeElements (C:\Users\kalvi\Documents\claude application\ai saas legal\frontend\node_modules\@vue\compiler-sfc\dist\compiler-sfc.cjs.js:22436:14) at resolveTypeElements (C:\Users\kalvi\Documents\claude application\ai saas legal\frontend\node_modules\@vue\compiler-sfc\dist\compiler-sfc.cjs.js:22419:20) at innerResolveTypeElements (C:\Users\kalvi\Documents\claude application\ai saas legal\frontend\node_modules\@vue\compiler-sfc\dist\compiler-sfc.cjs.js:22490:16) at resolveTypeElements (C:\Users\kalvi\Documents\claude application\ai saas legal\frontend\node_modules\@vue\compiler-sfc\dist\compiler-sfc.cjs.js:22419:20) at resolveRuntimePropsFromType (C:\Users\kalvi\Documents\claude application\ai saas legal\frontend\node_modules\@vue\compiler-sfc\dist\compiler-sfc.cjs.js:24182:20) at extractRuntimeProps (C:\Users\kalvi\Documents\claude application\ai saas legal\frontend\node_modules\@vue\compiler-sfc\dist\compiler-sfc.cjs.js:24158:17) at genRuntimeProps (C:\Users\kalvi\Documents\claude application\ai saas legal\frontend\node_modules\@vue\compiler-sfc\dist\compiler-sfc.cjs.js:24146:18) at Object.compileScript (C:\Users\kalvi\Documents\claude application\ai saas legal\frontend\node_modules\@vue\compiler-sfc\dist\compiler-sfc.cjs.js:25212:21
+    - generic [ref=e10]:
+      - text: Click outside, press Esc key, or fix the code to dismiss.
+      - text: You can also disable this overlay by setting
+      - code [ref=e11]: server.hmr.overlay
+      - text: to
+      - code [ref=e12]: "false"
+      - text: in
+      - code [ref=e13]: vite.config.js
+      - text: .

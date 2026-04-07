@@ -1,0 +1,72 @@
+- generic [ref=e33]:
+  - banner [ref=e34]:
+    - alert [ref=e35]:
+      - img [ref=e37]
+      - generic [ref=e39]:
+        - generic [ref=e40]: 体验模式
+        - paragraph [ref=e41]: 这是演示环境，内置了 3 份标准合同样例。您可以查看审查结果，但无法保存或下载。（无需登录，数据不会保存）
+    - button "← 返回首页" [ref=e42] [cursor=pointer]:
+      - generic [ref=e43]: ← 返回首页
+  - main [ref=e44]:
+    - heading "选择示例合同" [level=2] [ref=e45]
+    - generic [ref=e46]:
+      - generic [ref=e49] [cursor=pointer]:
+        - generic [ref=e51]: 技术服务
+        - heading "软件开发合同" [level=3] [ref=e52]
+        - paragraph [ref=e53]: ¥50,000·8页
+        - paragraph [ref=e54]: 定制软件开发服务协议，包含需求变更、知识产权等条款
+      - generic [ref=e57] [cursor=pointer]:
+        - generic [ref=e59]: 房屋租赁
+        - heading "办公场地租赁合同" [level=3] [ref=e60]
+        - paragraph [ref=e61]: ¥20,000/月·6页
+        - paragraph [ref=e62]: 写字楼租赁合同，包含押金、物业费、维修责任等条款
+      - generic [ref=e65] [cursor=pointer]:
+        - generic [ref=e67]: 贸易采购
+        - heading "产品采购合同" [level=3] [ref=e68]
+        - paragraph [ref=e69]: ¥180,000·5页
+        - paragraph [ref=e70]: 批量产品采购协议，含质量标准、交货期限、售后条款
+    - generic [ref=e71]:
+      - heading "审查结果预览" [level=2] [ref=e72]
+      - generic [ref=e73]:
+        - generic [ref=e75]:
+          - generic [ref=e76]: 软件开发合同
+          - generic [ref=e78]: 中风险
+        - generic [ref=e80]:
+          - tablist [ref=e84]:
+            - tab "风险摘要" [selected] [ref=e86]
+            - tab "条款分析" [ref=e87]
+            - tab "合同原文" [ref=e88]
+          - tabpanel "风险摘要" [ref=e90]:
+            - list [ref=e91]:
+              - listitem [ref=e92]:
+                - generic [ref=e99]:
+                  - heading "付款条件不明确" [level=4] [ref=e100]
+                  - paragraph [ref=e101]: 合同约定"项目完成后付款"，但未定义完成标准
+                  - alert [ref=e102]:
+                    - img [ref=e104]
+                    - paragraph [ref=e107]:
+                      - strong [ref=e108]: 建议：
+                      - text: 建议明确验收标准和付款节点，如"验收合格后 5 个工作日内支付尾款"
+              - listitem [ref=e109]:
+                - generic [ref=e116]:
+                  - heading "需求变更流程缺失" [level=4] [ref=e117]
+                  - paragraph [ref=e118]: 未约定需求变更的处理流程和费用调整机制
+                  - alert [ref=e119]:
+                    - img [ref=e121]
+                    - paragraph [ref=e124]:
+                      - strong [ref=e125]: 建议：
+                      - text: 建议增加变更控制条款，约定变更申请、评估、确认的流程
+              - listitem [ref=e126]:
+                - generic [ref=e132]:
+                  - heading "知识产权归属需明确" [level=4] [ref=e133]
+                  - paragraph [ref=e134]: 开发成果的知识产权归属约定不够清晰
+                  - alert [ref=e135]:
+                    - img [ref=e137]
+                    - paragraph [ref=e140]:
+                      - strong [ref=e141]: 建议：
+                      - text: 建议明确约定代码、文档等成果的知识产权归委托方所有
+      - generic [ref=e142]:
+        - heading "想体验完整功能？" [level=3] [ref=e143]
+        - paragraph [ref=e144]: 注册账号即可上传您自己的合同，获取完整的 AI 审查报告
+        - button "免费注册" [ref=e145] [cursor=pointer]:
+          - generic [ref=e146]: 免费注册

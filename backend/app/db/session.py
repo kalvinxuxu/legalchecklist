@@ -1,100 +1,112 @@
 """
-数据库会话管理 - 支持 MySQL 和 SQLite
+SQLAlchemy 异步会话管理 - 支持 MySQL、PostgreSQL 和 SQLite
 """
-import aiomysql
-import aiosqlite
-from typing import AsyncGenerator, Union
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
+from sqlalchemy.orm import sessionmaker, declarative_base
+from typing import AsyncGenerator
 from app.core.config import settings
 
 
 class Database:
-    """数据库连接管理器 - 支持 MySQL 和 SQLite"""
+    """数据库连接管理器"""
 
     def __init__(self):
-        self.mysql_pool: aiomysql.Pool | None = None
-        self.sqlite_path: str | None = None
+        self.engine = None
+        self.async_session_maker = None
 
-    async def connect(self) -> None:
-        """初始化数据库连接"""
+    def connect(self) -> None:
+        """初始化数据库引擎"""
         if settings.is_mysql:
-            await self._connect_mysql()
+            # MySQL 异步连接
+            mysql_url = settings.DATABASE_URL
+            # 转换为异步 URL
+            if mysql_url.startswith("mysql://"):
+                mysql_url = mysql_url.replace("mysql://", "mysql+aiomysql://", 1)
+            elif mysql_url.startswith("mysql+pymysql://"):
+                mysql_url = mysql_url.replace("mysql+pymysql://", "mysql+aiomysql://", 1)
+
+            self.engine = create_async_engine(
+                mysql_url,
+                echo=settings.ENVIRONMENT == "development",
+                pool_pre_ping=True,
+                pool_size=10,
+                max_overflow=20,
+            )
+        elif settings.is_postgresql:
+            # PostgreSQL 异步连接
+            postgres_url = settings.DATABASE_URL
+            # 转换为异步 URL（postgresql+asyncpg://）
+            if postgres_url.startswith("postgresql://"):
+                postgres_url = postgres_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+            elif postgres_url.startswith("postgres://"):
+                postgres_url = postgres_url.replace("postgres://", "postgresql+asyncpg://", 1)
+
+            self.engine = create_async_engine(
+                postgres_url,
+                echo=settings.ENVIRONMENT == "development",
+                pool_pre_ping=True,
+                pool_size=10,
+                max_overflow=20,
+            )
         else:
-            await self._connect_sqlite()
-        print(f"Database connected ({settings.DATABASE_TYPE})")
+            # SQLite 异步连接
+            sqlite_path = settings.sqlite_path
+            self.engine = create_async_engine(
+                f"sqlite+aiosqlite:///{sqlite_path}",
+                echo=settings.ENVIRONMENT == "development",
+            )
+
+        self.async_session_maker = async_sessionmaker(
+            self.engine,
+            class_=AsyncSession,
+            expire_on_commit=False,
+            autocommit=False,
+            autoflush=False,
+        )
 
     async def disconnect(self) -> None:
         """关闭数据库连接"""
-        if self.mysql_pool:
-            self.mysql_pool.close()
-            await self.mysql_pool.wait_closed()
-            print("MySQL disconnected")
-        if self.sqlite_path:
-            print("SQLite disconnected")
+        if self.engine:
+            await self.engine.dispose()
 
-    async def get_mysql_connection(self) -> aiomysql.Connection:
-        """获取 MySQL 连接"""
-        return await self.mysql_pool.acquire()
+    async def create_all_tables(self) -> None:
+        """创建所有表（仅开发环境）"""
+        from app.models.base import Base
+        from app.models import Tenant, User, Workspace, Contract, LegalKnowledge, ContractUnderstanding, ClauseLocation  # noqa: F401
 
-    async def release_mysql_connection(self, conn: aiomysql.Connection) -> None:
-        """释放 MySQL 连接"""
-        self.mysql_pool.release(conn)
+        async with self.engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
 
-    async def get_sqlite_connection(self) -> aiosqlite.Connection:
-        """获取 SQLite 连接"""
-        return await aiosqlite.connect(self.sqlite_path)
+            # PostgreSQL: 启用 pgvector 扩展
+            if settings.is_postgresql:
+                from sqlalchemy import text
+                await conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
 
-    def _connect_mysql(self) -> None:
-        """连接 MySQL"""
-        from urllib.parse import urlparse
+    async def drop_all_tables(self) -> None:
+        """删除所有表（仅开发环境）"""
+        from app.models.base import Base
 
-        parsed = urlparse(settings.DATABASE_URL)
-        self.mysql_pool = None  # 延迟创建
+        async with self.engine.begin() as conn:
+            await conn.run_sync(Base.metadata.drop_all)
 
-    def _connect_sqlite(self) -> None:
-        """连接 SQLite"""
-        self.sqlite_path = settings.SQLITE_PATH
-
-    def _parse_mysql_url(self, url: str) -> dict:
-        """解析 MySQL URL"""
-        from urllib.parse import urlparse
-        parsed = urlparse(url)
-        return {
-            "host": parsed.hostname or "localhost",
-            "port": parsed.port or 3306,
-            "user": parsed.username or "root",
-            "password": parsed.password or "",
-            "db": parsed.path.lstrip("/") or "legal_saas",
-        }
-
-    async def _get_mysql_pool(self) -> aiomysql.Pool:
-        """获取或创建 MySQL 连接池"""
-        if self.mysql_pool is None:
-            params = self._parse_mysql_url(settings.DATABASE_URL)
-            self.mysql_pool = await aiomysql.create_pool(
-                host=params["host"],
-                port=params["port"],
-                user=params["user"],
-                password=params["password"],
-                db=params["db"],
-                autocommit=True,
-                cursorclass=aiomysql.DictCursor,
-            )
-        return self.mysql_pool
+    async def get_session(self) -> AsyncGenerator[AsyncSession, None]:
+        """获取数据库会话"""
+        async with self.async_session_maker() as session:
+            try:
+                yield session
+                await session.commit()
+            except Exception:
+                await session.rollback()
+                raise
+            finally:
+                await session.close()
 
 
 # 全局数据库实例
 db = Database()
 
 
-async def get_db() -> AsyncGenerator[Union[aiomysql.Connection, aiosqlite.Connection], None]:
-    """依赖注入：获取数据库连接"""
-    if settings.is_mysql:
-        pool = await db._get_mysql_pool()
-        conn = await pool.acquire()
-        try:
-            yield conn
-        finally:
-            pool.release(conn)
-    else:
-        async with await db.get_sqlite_connection() as conn:
-            yield conn
+async def get_db() -> AsyncGenerator:
+    """依赖注入：获取数据库会话"""
+    async for session in db.get_session():
+        yield session

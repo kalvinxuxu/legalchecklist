@@ -1,0 +1,48 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e6]:
+        - img [ref=e8]
+        - generic [ref=e11]: 法务 AI
+      - generic [ref=e13]:
+        - generic [ref=e14]: E
+        - generic [ref=e15]:
+          - paragraph [ref=e16]: 用户
+          - paragraph [ref=e17]: e2e@test.com
+      - navigation [ref=e18]:
+        - link "工作台" [ref=e19] [cursor=pointer]:
+          - /url: /workspace
+          - img [ref=e20]
+          - text: 工作台
+        - link "合同列表" [ref=e25] [cursor=pointer]:
+          - /url: /workspace/contracts
+          - img [ref=e26]
+          - text: 合同列表
+        - link "上传合同" [ref=e29] [cursor=pointer]:
+          - /url: /workspace/upload
+          - img [ref=e30]
+          - text: 上传合同
+      - button "退出登录" [ref=e36] [cursor=pointer]:
+        - img [ref=e37]
+        - text: 退出登录
+    - main [ref=e40]:
+      - generic [ref=e73]:
+        - generic [ref=e74]:
+          - generic [ref=e75]:
+            - button [ref=e76] [cursor=pointer]:
+              - img [ref=e77]
+            - heading "审查报告" [level=1] [ref=e79]
+          - generic [ref=e80]:
+            - generic [ref=e81] [cursor=pointer]: 点击设置类型
+            - generic [ref=e82]: "-"
+        - generic [ref=e84]:
+          - img [ref=e85]
+          - paragraph [ref=e87]: 加载中...
+  - generic:
+    - alert: Notification [ "上传成功，开始审查..." ]
+  - region "Notifications (F8)":
+    - list [ref=e89]:
+      - alert [ref=e90]:
+        - generic [ref=e92]: 上传成功，开始审查...
+        - button [ref=e93] [cursor=pointer]:
+          - img [ref=e94]

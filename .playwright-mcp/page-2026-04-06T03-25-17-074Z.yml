@@ -1,0 +1,18 @@
+- generic [ref=e2]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - heading "登录法务 AI" [level=3] [ref=e6]
+      - paragraph [ref=e7]: 智能合同审查平台
+    - generic [ref=e9]:
+      - generic [ref=e10]:
+        - generic [ref=e11]: 邮箱
+        - textbox "邮箱" [ref=e12]:
+          - /placeholder: 请输入邮箱
+      - generic [ref=e13]:
+        - generic [ref=e14]: 密码
+        - textbox "密码" [ref=e15]:
+          - /placeholder: 请输入密码
+      - button "登录" [ref=e16]
+      - paragraph [ref=e17]: 还没有账号？ 立即注册
+  - region "Notifications (F8)":
+    - list

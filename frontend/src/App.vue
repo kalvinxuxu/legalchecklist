@@ -1,25 +1,23 @@
-<template>
-  <div id="app">
-    <router-view />
-  </div>
-</template>
+<script setup lang="ts">
+import { RouterView } from 'vue-router'
+import Toast from '@/components/ui/toast.vue'
+import { useToast } from '@/composables/useToast'
 
-<script setup>
+const { toasts } = useToast()
 </script>
 
-<style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background-color: #f5f5f5;
-}
-
-#app {
-  min-height: 100vh;
-}
-</style>
+<template>
+  <ToastProvider>
+    <RouterView />
+    <div class="fixed top-0 right-0 z-[100] flex flex-col gap-2 p-4 max-w-[420px] w-full pointer-events-none">
+      <Toast
+        v-for="t in toasts"
+        :key="t.id"
+        :title="t.title"
+        :description="t.description"
+        :variant="t.variant"
+        class="pointer-events-auto"
+      />
+    </div>
+  </ToastProvider>
+</template>

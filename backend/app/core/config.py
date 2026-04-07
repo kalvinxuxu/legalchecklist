@@ -9,50 +9,56 @@ from pathlib import Path
 # 获取 backend 目录的绝对路径
 BACKEND_DIR = Path(__file__).resolve().parent.parent.parent
 
+
 class Settings(BaseSettings):
-    # 环境
-    ENVIRONMENT: str = "development"
+    # ========== 环境 ==========
+    ENVIRONMENT: str = "development"  # development / production
 
-    # 数据库 - 支持 MySQL 和 SQLite
-    DATABASE_TYPE: str = "mysql"  # mysql 或 sqlite
-    DATABASE_URL: Optional[str] = None  # MySQL 连接字符串
+    # ========== Celery（已弃用，使用 asyncio）==========
+    USE_CELERY: bool = False  # 是否使用 Celery（默认使用 asyncio）
+
+    # ========== 数据库 ==========
+    DATABASE_TYPE: str = "sqlite"  # sqlite / mysql / postgresql
+    DATABASE_URL: Optional[str] = None  # MySQL/PostgreSQL 连接字符串
     SQLITE_PATH: Optional[str] = None  # SQLite 数据库路径
-    _sqlite_path_default: str = str(Path(__file__).resolve().parent.parent.parent / "legal_saas_new.db")
 
-    # Redis（仅生产环境需要）
-    REDIS_URL: Optional[str] = None  # Redis 连接 URL，用于 Celery 消息队列
+    # ========== 向量维度（pgvector）==========
+    EMBEDDING_DIMENSION: int = 1536  # DeepSeek embedding 维度
 
-    # Celery 配置
-    USE_CELERY: bool = False  # 是否启用 Celery 异步任务队列
-
-    # JWT
+    # ========== JWT ==========
     JWT_SECRET: str
     JWT_ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440  # 24小时
 
-    # 智谱 AI API
-    ZHIPU_API_KEY: Optional[str] = None
-    ZHIPU_BASE_URL: str = "https://open.bigmodel.cn/api/paas/v4"
-    ZHIPU_MODEL: str = "glm-4"
-    ZHIPU_EMBEDDING_MODEL: str = "embedding-2"
-
-    # DeepSeek API（备用）
+    # ========== DeepSeek API (LLM) ==========
     DEEPSEEK_API_KEY: Optional[str] = None
     DEEPSEEK_BASE_URL: str = "https://api.deepseek.com"
-    DEEPSEEK_MODEL: str = "deepseek-chat"
+    DEEPSEEK_MODEL: str = "deepseek-chat"  # deepseek-chat 或 deepseek-coder
     DEEPSEEK_EMBEDDING_MODEL: str = "deepseek-embedding"
 
-    # 阿里云 OSS
+    # ========== MiniMax API (视觉理解) ==========
+    MINIMAX_API_KEY: Optional[str] = None  # 视觉理解用
+    MINIMAX_VISION_MODEL: str = "MiniMax-VL-01"
+
+    # ========== 文件存储 ==========
+    # 本地存储（开发/ Fly.io）：使用 Fly Volumes 挂载点
+    # 生产环境可切换到 S3/R2/OSS
+    STORAGE_TYPE: str = "local"  # local / s3 / r2 / oss
+    STORAGE_PATH: str = os.getenv("STORAGE_PATH", str(BACKEND_DIR / "uploads"))
+
+    # S3 兼容存储（可选）
+    S3_BUCKET: Optional[str] = None
+    S3_ENDPOINT: Optional[str] = None
+    S3_ACCESS_KEY: Optional[str] = None
+    S3_SECRET_KEY: Optional[str] = None
+
+    # 阿里云 OSS（已弃用，保留用于兼容）
     ALIYUN_ACCESS_KEY_ID: Optional[str] = None
     ALIYUN_ACCESS_KEY_SECRET: Optional[str] = None
-    ALIYUN_OSS_BUCKET: str = "legal-saas"
-    ALIYUN_OSS_ENDPOINT: str = "oss-cn-hangzhou.aliyuncs.com"
+    ALIYUN_OSS_BUCKET: Optional[str] = None
+    ALIYUN_OSS_ENDPOINT: Optional[str] = None
 
-    # 文件存储
-    STORAGE_TYPE: str = "local"
-    STORAGE_PATH: str = str(BACKEND_DIR / "uploads")
-
-    # CORS
+    # ========== CORS ==========
     CORS_ORIGINS: List[str] = [
         "http://localhost:5173",
         "http://localhost:3000",
@@ -64,16 +70,32 @@ class Settings(BaseSettings):
         return self.DATABASE_TYPE == "mysql"
 
     @property
+    def is_postgresql(self) -> bool:
+        return self.DATABASE_TYPE == "postgresql"
+
+    @property
     def is_sqlite(self) -> bool:
         return self.DATABASE_TYPE == "sqlite"
+
+    @property
+    def database_url(self) -> str:
+        """Get database URL based on type"""
+        if self.DATABASE_URL:
+            return self.DATABASE_URL
+        if self.is_sqlite:
+            return f"sqlite+aiosqlite:///{self.sqlite_path}"
+        return ""
 
     @property
     def sqlite_path(self) -> str:
         """Get SQLite path, defaulting to backend dir if not set"""
         if self.SQLITE_PATH:
             return self.SQLITE_PATH
-        # 使用 new.db 文件，因为旧的 legal_saas.db 可能被锁定
-        return str(BACKEND_DIR / "legal_saas_new.db")
+        return str(BACKEND_DIR / "legal_saas.db")
+
+    @property
+    def is_production(self) -> bool:
+        return self.ENVIRONMENT == "production"
 
     class Config:
         env_file = str(BACKEND_DIR / ".env")

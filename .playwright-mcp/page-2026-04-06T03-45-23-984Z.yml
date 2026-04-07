@@ -1,0 +1,98 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - navigation [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - img [ref=e8]
+          - text: 法务 AI
+        - generic [ref=e11]:
+          - button "登录" [ref=e12]
+          - button "开始使用" [ref=e13]
+    - generic [ref=e14]:
+      - generic [ref=e29]: RAG 检索中...
+      - generic [ref=e31]:
+        - generic [ref=e32]: AI 驱动的智能合同审查平台
+        - heading "让合同审查 精准高效" [level=1] [ref=e33]:
+          - text: 让合同审查
+          - text: 精准高效
+        - paragraph [ref=e34]: 基于 RAG 检索增强生成技术，30 秒内完成合同分析。 每一条审查建议都附带法条依据，让法律服务触手可及。
+        - generic [ref=e35]:
+          - button "立即开始" [ref=e36]:
+            - text: 立即开始
+            - img [ref=e37]
+          - button "观看演示" [ref=e39]
+    - generic [ref=e42]:
+      - generic [ref=e43]:
+        - generic [ref=e44]: 10,000+
+        - generic [ref=e45]: 审查合同数
+      - generic [ref=e46]:
+        - generic [ref=e47]: 99.2%
+        - generic [ref=e48]: 风险识别准确率
+      - generic [ref=e49]:
+        - generic [ref=e50]: 30s
+        - generic [ref=e51]: 平均审查时间
+      - generic [ref=e52]:
+        - generic [ref=e53]: 20+
+        - generic [ref=e54]: 支持合同类型
+    - generic [ref=e56]:
+      - generic [ref=e57]:
+        - heading "为什么选择法务 AI" [level=2] [ref=e58]
+        - paragraph [ref=e59]: 我们构建了一套完整的智能合同审查系统，从风险识别到条款解读，全程 AI 驱动
+      - generic [ref=e60]:
+        - generic [ref=e62]:
+          - img [ref=e64]
+          - generic [ref=e66]:
+            - heading "30 秒智能审查" [level=3] [ref=e67]
+            - paragraph [ref=e68]: 上传合同，AI 即刻分析条款结构，识别风险点与机会点
+        - generic [ref=e70]:
+          - img [ref=e72]
+          - generic [ref=e75]:
+            - heading "RAG 引用溯源" [level=3] [ref=e76]
+            - paragraph [ref=e77]: 每条建议均附带法条依据，来源可查，结论可信
+        - generic [ref=e79]:
+          - img [ref=e81]
+          - generic [ref=e84]:
+            - heading "风险等级量化" [level=3] [ref=e85]
+            - paragraph [ref=e86]: 将合同风险分为五级，用颜色直观展示风险程度
+        - generic [ref=e88]:
+          - img [ref=e90]
+          - generic [ref=e92]:
+            - heading "法律知识库" [level=3] [ref=e93]
+            - paragraph [ref=e94]: 基于海量法律文书训练的 AI 模型，覆盖 20+ 合同类型
+        - generic [ref=e96]:
+          - img [ref=e98]
+          - generic [ref=e103]:
+            - heading "条款定位" [level=3] [ref=e104]
+            - paragraph [ref=e105]: 自然语言提问，AI 精确定位合同条款并给出解读
+        - generic [ref=e107]:
+          - img [ref=e109]
+          - generic [ref=e112]:
+            - heading "一键导出报告" [level=3] [ref=e113]
+            - paragraph [ref=e114]: 审查完成后生成专业报告，支持 Word 格式导出
+    - generic [ref=e116]:
+      - heading "三步完成合同审查" [level=2] [ref=e118]
+      - generic [ref=e119]:
+        - generic [ref=e120]:
+          - generic [ref=e121]: "1"
+          - heading "上传合同" [level=3] [ref=e122]
+          - paragraph [ref=e123]: 支持 PDF、Word 格式，点击上传或拖拽文件
+        - generic [ref=e124]:
+          - generic [ref=e125]: "2"
+          - heading "AI 分析" [level=3] [ref=e126]
+          - paragraph [ref=e127]: 30 秒内完成条款解析，识别风险并给出建议
+        - generic [ref=e128]:
+          - generic [ref=e129]: "3"
+          - heading "查看报告" [level=3] [ref=e130]
+          - paragraph [ref=e131]: 生成可视化报告，支持导出 Word 文档
+    - generic [ref=e135]:
+      - heading "立即体验智能审查" [level=2] [ref=e136]
+      - paragraph [ref=e137]: 首次注册即送 10 次免费审查额度
+      - button "免费注册" [ref=e138]
+    - contentinfo [ref=e139]:
+      - generic [ref=e140]:
+        - generic [ref=e141]:
+          - img [ref=e143]
+          - text: 法务 AI
+        - paragraph [ref=e146]: © 2024 法务 AI. 智能合同审查服务
+  - region "Notifications (F8)":
+    - list

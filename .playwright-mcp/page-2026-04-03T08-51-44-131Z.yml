@@ -1,0 +1,376 @@
+- generic [ref=e1]:
+  - generic [ref=e5]:
+    - complementary [ref=e6]:
+      - generic [ref=e7]: 法务 AI
+      - menubar [ref=e8]:
+        - menuitem "工作台" [ref=e9] [cursor=pointer]
+        - menuitem "合同列表" [ref=e10] [cursor=pointer]
+        - menuitem "上传合同" [ref=e11] [cursor=pointer]
+    - generic [ref=e12]:
+      - generic [ref=e13]:
+        - generic [ref=e14]: 欢迎使用法务 AI SaaS
+        - button "退出登录" [ref=e15] [cursor=pointer]:
+          - generic [ref=e16]: 退出登录
+      - main [ref=e17]:
+        - generic [ref=e18]:
+          - generic [ref=e20]:
+            - button "返回工作台" [ref=e21] [cursor=pointer]:
+              - generic [ref=e23]: 返回工作台
+            - generic [ref=e24]:
+              - button "工作台" [ref=e25] [cursor=pointer]:
+                - generic [ref=e26]: 工作台
+              - button "合同列表" [ref=e27] [cursor=pointer]:
+                - generic [ref=e28]: 合同列表
+              - button "上传合同" [ref=e29] [cursor=pointer]:
+                - generic [ref=e30]: 上传合同
+          - generic [ref=e40]:
+            - generic [ref=e41]:
+              - generic [ref=e42]:
+                - heading "终版申请签章 - 北京大兴国际机场临空经济区国际会展消费功能区全球创意征集_保密协议-加密版.docx" [level=2] [ref=e43]
+                - generic [ref=e44]:
+                  - generic [ref=e46]:
+                    - img [ref=e48]
+                    - text: 2026/04/03
+                  - generic [ref=e52]: 55 段落
+              - generic [ref=e53]:
+                - button "下载修订文档" [ref=e54] [cursor=pointer]:
+                  - generic [ref=e56]: 下载修订文档
+                - button "采纳全部建议" [active] [ref=e57] [cursor=pointer]:
+                  - generic [ref=e59]: 采纳全部建议
+            - generic [ref=e60]:
+              - generic [ref=e61]:
+                - generic [ref=e62]:
+                  - heading "合同原文" [level=3] [ref=e63]
+                  - generic [ref=e66]:
+                    - img [ref=e69]
+                    - textbox "搜索..." [ref=e71]
+                - generic [ref=e72]:
+                  - generic [ref=e73] [cursor=pointer]:
+                    - generic [ref=e74]: "1"
+                    - generic [ref=e76]: 北京大兴国际机场临空经济区国际会展消费功能区全球创意征集
+                  - generic [ref=e77] [cursor=pointer]:
+                    - generic [ref=e78]: "2"
+                    - generic [ref=e80]: 保密协议
+                  - generic [ref=e81] [cursor=pointer]:
+                    - generic [ref=e82]: "3"
+                    - generic [ref=e84]: 甲方：北京大兴国际机场临空经济区（大兴）管理委员会
+                  - generic [ref=e85] [cursor=pointer]:
+                    - generic [ref=e86]: "4"
+                    - generic [ref=e88]: 地址：北京市大兴区榆垡镇榆顺路12号D座1-4层
+                  - generic [ref=e89] [cursor=pointer]:
+                    - generic [ref=e90]: "5"
+                    - generic [ref=e92]: 联系人：孔颖
+                  - generic [ref=e93] [cursor=pointer]:
+                    - generic [ref=e94]: "6"
+                    - generic [ref=e96]: 联系方式：18510549766
+                  - generic [ref=e97] [cursor=pointer]:
+                    - generic [ref=e98]: "7"
+                    - generic [ref=e100]: 乙方1（联合体牵头方）：艾奕康设计与咨询（深圳）有限公司
+                  - generic [ref=e101] [cursor=pointer]:
+                    - generic [ref=e102]: "8"
+                    - generic [ref=e104]: 地址：深圳市南山区招商街道蛇口南海大道1052号海翔广场9楼
+                  - generic [ref=e105] [cursor=pointer]:
+                    - generic [ref=e106]: "9"
+                    - generic [ref=e108]: 联系人：徐旭
+                  - generic [ref=e109] [cursor=pointer]:
+                    - generic [ref=e110]: "10"
+                    - generic [ref=e112]: 联系方式：18500426827
+                  - generic [ref=e113] [cursor=pointer]:
+                    - generic [ref=e114]: "11"
+                    - generic [ref=e116]: 乙方2（联合体参与方）：中免投资发展有限公司
+                  - generic [ref=e117] [cursor=pointer]:
+                    - generic [ref=e118]: "12"
+                    - generic [ref=e120]: 地址：北京市东城区东直门外小街甲2号A座8层21号房间
+                  - generic [ref=e121] [cursor=pointer]:
+                    - generic [ref=e122]: "13"
+                    - generic [ref=e124]: 联系人：乔聘然
+                  - generic [ref=e125] [cursor=pointer]:
+                    - generic [ref=e126]: "14"
+                    - generic [ref=e128]: 联系方式：13051012958
+                  - generic [ref=e129] [cursor=pointer]:
+                    - generic [ref=e130]: "15"
+                    - generic [ref=e132]: 为保护双方合法权益，本协议双方根据《中华人民共和国保守国家秘密法》《中华人民共和国民法典》《中华人民共和国反不正当竞争法》等相关法律、法规的规定，就保守秘密相关事宜在北京市大兴区达成如下协议：
+                  - generic [ref=e133] [cursor=pointer]:
+                    - generic [ref=e134]: "16"
+                    - generic [ref=e136]: 第一条 本协议所称保密信息，系指与甲方有关、不为公众所知悉、能为权利人\授权持有人带来现时和\或潜在利益的任何资料和信息，其包括但不限于：
+                  - generic [ref=e137] [cursor=pointer]:
+                    - generic [ref=e138]: "17"
+                    - generic [ref=e140]: （一）无论依附于何种载体的有关甲方的文件资料，包括但不限于北京大兴国际机场临空经济区国际会展消费功能区全球创意征集应征协议、北京大兴国际机场临空经济区国际会展消费功能区全球创意征集邀请函、北京大兴国际机场临空经济区国际会展消费功能区全球创意征集指引手册、乙方回复的应征确认函、乙方提交的填写后的应征申请函、授权委托书及联合体协议书（如有）及本协议，除此外还包括与北京大兴国际机场临空经济区国际会展消费功能区全球创意征集相关的上位规划、数据资料、图片信息、矢量文件等；
+                  - generic [ref=e141] [cursor=pointer]:
+                    - generic [ref=e142]: "18"
+                    - generic [ref=e144]: （二）甲方的运营状况、财务状况、人员状况、与任何第三方的合作情况和涉及争议情况；
+                  - generic [ref=e145] [cursor=pointer]:
+                    - generic [ref=e146]: "19"
+                    - generic [ref=e148]: （三）甲方业务资料中涉及的任何其他各方的情况；
+                  - generic [ref=e149] [cursor=pointer]:
+                    - generic [ref=e150]: "20"
+                    - generic [ref=e152]: （四）为甲方提供的法律服务成果；
+                  - generic [ref=e153] [cursor=pointer]:
+                    - generic [ref=e154]: "21"
+                    - generic [ref=e156]: （五）相关上级或行业主管机关的意见、批件或批示内容的部分或全部；
+                  - generic [ref=e157] [cursor=pointer]:
+                    - generic [ref=e158]: "22"
+                    - generic [ref=e160]: （六）甲方和乙方就合作相关事宜签署的文件内容及进行磋商的进展，包括但不限于各方开出的条件、双方已经达成的协议和目前尚存的分歧等；
+                  - generic [ref=e161] [cursor=pointer]:
+                    - generic [ref=e162]: "23"
+                    - generic [ref=e164]: （七）乙方根据、利用甲方提供的前述保密信息中的全部和\或某些部分信息而生成的信息。
+                  - generic [ref=e165] [cursor=pointer]:
+                    - generic [ref=e166]: "24"
+                    - generic [ref=e168]: 第二条 乙方应对本协议第一条所述保密信息（以下简称“保密信息”）恪守保密义务。非经甲方书面同意，乙方不得向第三方泄露、给予或转让保密信息，不得编辑、改写后向第三方披露，不得将保密信息用于协议之外的目的，否则该行为将被视为已经构成了对本协议的违反。
+                  - generic [ref=e169] [cursor=pointer]:
+                    - generic [ref=e170]: "25"
+                    - generic [ref=e172]: 第三条 无论本协议目的是否达成，如甲方提出要求，乙方应将载有甲方保密信息的任何文件、资料或软件及其备份，按甲方要求归还甲方，或予以销毁，并且不得继续使用这些保密信息。协议履行完毕，未经甲方的书面同意，乙方不得保存在履行协议过程中所获得或接触到的任何内部数据资料。
+                  - generic [ref=e173] [cursor=pointer]:
+                    - generic [ref=e174]: "26"
+                    - generic [ref=e176]: 第四条 待甲乙双方正式签署保密协议后，甲方才发放指引手册的附录材料给乙方。
+                  - generic [ref=e177] [cursor=pointer]:
+                    - generic [ref=e178]: "27"
+                    - generic [ref=e179]:
+                      - generic [ref=e180]: 第五条 乙方违约，应向甲方承担违约责任并赔偿违约行为给甲方造成的损失。但下述情况之一发生时，乙方对于相应的保密信息不再受本协议第二条所述义务的约束：
+                      - generic [ref=e183]: 中风险
+                  - generic [ref=e184] [cursor=pointer]:
+                    - generic [ref=e185]: "28"
+                    - generic [ref=e187]: （一）甲方书面许可其向特定或不特定的第三方披露该等保密信息；
+                  - generic [ref=e188] [cursor=pointer]:
+                    - generic [ref=e189]: "29"
+                    - generic [ref=e191]: （二）在本协议生效之日或在其生效之后的任何时候，并非由于乙方本身原因，该等保密信息已经进入公知领域；
+                  - generic [ref=e192] [cursor=pointer]:
+                    - generic [ref=e193]: "30"
+                    - generic [ref=e195]: （三）乙方可以提供令甲方合理满意并信服的证明，显示在乙方向合同一方披露前合同一方已经知晓该等保密信息；
+                  - generic [ref=e196] [cursor=pointer]:
+                    - generic [ref=e197]: "31"
+                    - generic [ref=e199]: （四）在没有违反任何双方之间任何协议（包括本协议）或其他具有法律约束力的契约的前提下从第三方合法获取了该等保密信息；
+                  - generic [ref=e200] [cursor=pointer]:
+                    - generic [ref=e201]: "32"
+                    - generic [ref=e203]: （五）为保障应征协议的签订和履行，乙方在与其受委派而履行本协议或有途径从甲方处获知保密信息的全体人员（包括但不限于其出资人、雇员或其聘请的中介机构等）签订一份与本保密协议内容基本一致的保密协议后接触或使用该等保密信息的，但乙方及以上相关人员仍应采取一切合理措施对甲方的保密信息进行保密；
+                  - generic [ref=e204] [cursor=pointer]:
+                    - generic [ref=e205]: "33"
+                    - generic [ref=e207]: （六）根据国家相关法律、法规之规定应当予以披露；
+                  - generic [ref=e208] [cursor=pointer]:
+                    - generic [ref=e209]: "34"
+                    - generic [ref=e211]: （七）根据有管辖权的司法机关或有关行政管理机关的判决、决定或通知等应当予以披露；
+                  - generic [ref=e212] [cursor=pointer]:
+                    - generic [ref=e213]: "35"
+                    - generic [ref=e215]: （八）双方共同书面认可的其他情况。
+                  - generic [ref=e216] [cursor=pointer]:
+                    - generic [ref=e217]: "36"
+                    - generic [ref=e219]: 第六条 本协议独立于甲乙双方签署的其他任何法律文件。非经双方书面同意，本协议不因双方签署的其他任何法律文件的无效、终止或撤销而丧失其原有效力。
+                  - generic [ref=e220] [cursor=pointer]:
+                    - generic [ref=e221]: "37"
+                    - generic [ref=e222]:
+                      - generic [ref=e223]: 第七条 因本协议的订立、解释、履行和与本协议有关的所有争议，均应由各方协商解决。协商不成的，任何一方均可将争议提交北京市大兴区人民法院诉讼解决。
+                      - generic [ref=e226]: 中风险
+                  - generic [ref=e227] [cursor=pointer]:
+                    - generic [ref=e228]: "38"
+                    - generic [ref=e230]: 第八条 在争议解决期间，除争议所涉条款或保密信息内容外，对于本协议其他条款和保密信息，各方均应继续恪守其保密义务。
+                  - generic [ref=e231] [cursor=pointer]:
+                    - generic [ref=e232]: "39"
+                    - generic [ref=e234]: 第九条 本协议未尽事宜双方另行协商签订补充协议，双方签字盖章后的补充协议与本协议具有同等法律效力。
+                  - generic [ref=e235] [cursor=pointer]:
+                    - generic [ref=e236]: "40"
+                    - generic [ref=e237]:
+                      - generic [ref=e238]: 第十条 本协议中双方填写的地址、电话为日后相关文件和司法文书的有效送达地址。以特快专递（付清邮资）发出的通知，在寄出（以邮戳为凭）后的第 3 日为有效送达。如以快递方式寄出，一方拒绝签收，视为送达。
+                      - generic [ref=e241]: 高风险
+                  - generic [ref=e242] [cursor=pointer]:
+                    - generic [ref=e243]: "41"
+                    - generic [ref=e245]: 第十一条 本协议一式 8 份，甲方持 7 份，乙方持 1 份，具有同等法律效力。
+                  - generic [ref=e246] [cursor=pointer]:
+                    - generic [ref=e247]: "42"
+                    - generic [ref=e249]: 第十二条 本协议由双方签字并盖章之日起生效。
+                  - generic [ref=e250] [cursor=pointer]:
+                    - generic [ref=e251]: "43"
+                    - generic [ref=e253]: 第十三条 若甲方上级主管单位对本协议项下甲方相关工作进行监督审查的，乙方应主动配合并接受结果查究。
+                  - generic [ref=e254] [cursor=pointer]:
+                    - generic [ref=e255]: "44"
+                    - generic [ref=e257]: （以下无正文，下一页为签署页）
+                  - generic [ref=e258] [cursor=pointer]:
+                    - generic [ref=e259]: "45"
+                    - generic [ref=e261]: （签署页）
+                  - generic [ref=e262] [cursor=pointer]:
+                    - generic [ref=e263]: "46"
+                    - generic [ref=e265]: 乙方2：中免投资发展有限公司
+                  - generic [ref=e266] [cursor=pointer]:
+                    - generic [ref=e267]: "47"
+                    - generic [ref=e269]: 法定代表人（签字）：
+                  - generic [ref=e270] [cursor=pointer]:
+                    - generic [ref=e271]: "48"
+                    - generic [ref=e273]: 委托代理人（签字）：
+                  - generic [ref=e274] [cursor=pointer]:
+                    - generic [ref=e275]: "49"
+                    - generic [ref=e277]: 住 所：北京市东城区东直门外小街甲2号A座8层21号房间
+                  - generic [ref=e278] [cursor=pointer]:
+                    - generic [ref=e279]: "50"
+                    - generic [ref=e281]: 电 话：010-84479678
+                  - generic [ref=e282] [cursor=pointer]:
+                    - generic [ref=e283]: "51"
+                    - generic [ref=e285]: 传 真：010-84479678
+                  - generic [ref=e286] [cursor=pointer]:
+                    - generic [ref=e287]: "52"
+                    - generic [ref=e289]: 纳 税 识 别 码:91110000556881106Q
+                  - generic [ref=e290] [cursor=pointer]:
+                    - generic [ref=e291]: "53"
+                    - generic [ref=e293]: 开 户 银 行:招商银行北京东三环支行
+                  - generic [ref=e294] [cursor=pointer]:
+                    - generic [ref=e295]: "54"
+                    - generic [ref=e297]: 账 号：110907170210303
+                  - generic [ref=e298] [cursor=pointer]:
+                    - generic [ref=e299]: "55"
+                    - generic [ref=e301]: 本协议签订时间：2022 年 月 日
+              - generic [ref=e302]:
+                - generic [ref=e303]:
+                  - generic [ref=e304]:
+                    - generic:
+                      - img
+                    - generic [ref=e306]:
+                      - generic [ref=e307]: "4"
+                      - generic [ref=e308]: 风险条款
+                  - generic [ref=e309]:
+                    - generic:
+                      - img
+                    - generic [ref=e311]:
+                      - generic [ref=e312]: "4"
+                      - generic [ref=e313]: 已采纳
+                - generic [ref=e314]:
+                  - heading "风险建议" [level=4] [ref=e315]:
+                    - img [ref=e317]
+                    - text: 风险建议
+                  - generic [ref=e320]:
+                    - generic [ref=e321]:
+                      - generic [ref=e322]:
+                        - generic [ref=e323]:
+                          - generic [ref=e324]: "1"
+                          - generic [ref=e325]: 第一条 本协议所称保密信息，系指与甲方有关、不为公众所知悉、能为权利人\授权持有人带来现时和\或潜在...
+                        - generic [ref=e327]: 高风险
+                      - generic [ref=e328]:
+                        - generic [ref=e329]:
+                          - img [ref=e331]
+                          - generic [ref=e333]: 原文
+                        - generic [ref=e334]: 第一条 本协议所称保密信息，系指与甲方有关、不为公众所知悉、能为权利人\授权持有人带来现时和\或潜在利益的任何资料和信息，其包括但不限于：
+                      - generic [ref=e335]:
+                        - generic [ref=e336]:
+                          - img [ref=e338]
+                          - generic [ref=e340]: 风险分析
+                        - generic [ref=e341]: 保密信息的定义过于宽泛，可能导致乙方承担过重的保密义务，且与商业秘密的法定要件不完全一致。
+                      - generic [ref=e342]:
+                        - generic [ref=e343]:
+                          - img [ref=e345]
+                          - generic [ref=e348]: 修改建议
+                        - generic [ref=e349]: 建议修改保密信息的定义，明确其必须符合商业秘密的构成要件：不为公众所知悉、具有商业价值、权利人采取了相应保密措施。
+                      - generic [ref=e350]:
+                        - button "已采纳" [disabled] [ref=e505]:
+                          - img [ref=e353]
+                          - generic [ref=e355]: 已采纳
+                        - button "拒绝" [ref=e356] [cursor=pointer]:
+                          - img [ref=e358]
+                          - generic [ref=e360]: 拒绝
+                        - button "编辑" [ref=e361] [cursor=pointer]:
+                          - img [ref=e363]
+                          - generic [ref=e366]: 编辑
+                      - generic [ref=e508]:
+                        - img [ref=e510] [cursor=pointer]
+                        - text: 已采纳
+                    - generic [ref=e367]:
+                      - generic [ref=e368]:
+                        - generic [ref=e369]:
+                          - generic [ref=e370]: "2"
+                          - generic [ref=e371]: 第五条 乙方违约，应向甲方承担违约责任并赔偿违约行为给甲方造成的损失。
+                        - generic [ref=e373]: 中风险
+                      - generic [ref=e374]:
+                        - generic [ref=e375]:
+                          - img [ref=e377]
+                          - generic [ref=e379]: 原文
+                        - generic [ref=e380]: 第五条 乙方违约，应向甲方承担违约责任并赔偿违约行为给甲方造成的损失。
+                      - generic [ref=e381]:
+                        - generic [ref=e382]:
+                          - img [ref=e384]
+                          - generic [ref=e386]: 风险分析
+                        - generic [ref=e387]: 未明确违约责任的具体形式和赔偿范围，可能导致争议时难以确定责任。
+                      - generic [ref=e388]:
+                        - generic [ref=e389]:
+                          - img [ref=e391]
+                          - generic [ref=e394]: 修改建议
+                        - generic [ref=e395]: 建议明确违约责任的具体形式，如违约金、赔偿损失等，并明确赔偿范围包括直接损失和间接损失。
+                      - generic [ref=e396]:
+                        - button "已采纳" [disabled] [ref=e512]:
+                          - img [ref=e399]
+                          - generic [ref=e401]: 已采纳
+                        - button "拒绝" [ref=e402] [cursor=pointer]:
+                          - img [ref=e404]
+                          - generic [ref=e406]: 拒绝
+                        - button "编辑" [ref=e407] [cursor=pointer]:
+                          - img [ref=e409]
+                          - generic [ref=e412]: 编辑
+                      - generic [ref=e515]:
+                        - img [ref=e517] [cursor=pointer]
+                        - text: 已采纳
+                    - generic [ref=e413]:
+                      - generic [ref=e414]:
+                        - generic [ref=e415]:
+                          - generic [ref=e416]: "3"
+                          - generic [ref=e417]: 第七条 因本协议的订立、解释、履行和与本协议有关的所有争议，均应由各方协商解决。协商不成的，任何一方...
+                        - generic [ref=e419]: 中风险
+                      - generic [ref=e420]:
+                        - generic [ref=e421]:
+                          - img [ref=e423]
+                          - generic [ref=e425]: 原文
+                        - generic [ref=e426]: 第七条 因本协议的订立、解释、履行和与本协议有关的所有争议，均应由各方协商解决。协商不成的，任何一方均可将争议提交北京市大兴区人民法院诉讼解决。
+                      - generic [ref=e427]:
+                        - generic [ref=e428]:
+                          - img [ref=e430]
+                          - generic [ref=e432]: 风险分析
+                        - generic [ref=e433]: 未约定仲裁作为争议解决方式，可能导致诉讼周期长、成本高。
+                      - generic [ref=e434]:
+                        - generic [ref=e435]:
+                          - img [ref=e437]
+                          - generic [ref=e440]: 修改建议
+                        - generic [ref=e441]: 建议增加仲裁条款，约定提交仲裁委员会仲裁，明确仲裁地点和机构。
+                      - generic [ref=e442]:
+                        - button "已采纳" [disabled] [ref=e519]:
+                          - img [ref=e445]
+                          - generic [ref=e447]: 已采纳
+                        - button "拒绝" [ref=e448] [cursor=pointer]:
+                          - img [ref=e450]
+                          - generic [ref=e452]: 拒绝
+                        - button "编辑" [ref=e453] [cursor=pointer]:
+                          - img [ref=e455]
+                          - generic [ref=e458]: 编辑
+                      - generic [ref=e522]:
+                        - img [ref=e524] [cursor=pointer]
+                        - text: 已采纳
+                    - generic [ref=e459]:
+                      - generic [ref=e460]:
+                        - generic [ref=e461]:
+                          - generic [ref=e462]: "4"
+                          - generic [ref=e463]: 第十条 本协议中双方填写的地址、电话为日后相关文件和司法文书的有效送达地址。以特快专递（付清邮资）发...
+                        - generic [ref=e465]: 高风险
+                      - generic [ref=e466]:
+                        - generic [ref=e467]:
+                          - img [ref=e469]
+                          - generic [ref=e471]: 原文
+                        - generic [ref=e472]: 第十条 本协议中双方填写的地址、电话为日后相关文件和司法文书的有效送达地址。以特快专递（付清邮资）发出的通知，在寄出（以邮戳为凭）后的第 3 日为有效送达。如以快递方式寄出，一方拒绝签收，视为送达。
+                      - generic [ref=e473]:
+                        - generic [ref=e474]:
+                          - img [ref=e476]
+                          - generic [ref=e478]: 风险分析
+                        - generic [ref=e479]: 送达条款过于简单，未考虑多种送达方式，且"视为送达"的规定可能不符合法律程序要求。
+                      - generic [ref=e480]:
+                        - generic [ref=e481]:
+                          - img [ref=e483]
+                          - generic [ref=e486]: 修改建议
+                        - generic [ref=e487]: 建议完善送达条款，明确多种送达方式及其效力，并规定拒绝签收后的处理程序。
+                      - generic [ref=e488]:
+                        - button "已采纳" [disabled] [ref=e526]:
+                          - img [ref=e491]
+                          - generic [ref=e493]: 已采纳
+                        - button "拒绝" [ref=e494] [cursor=pointer]:
+                          - img [ref=e496]
+                          - generic [ref=e498]: 拒绝
+                        - button "编辑" [ref=e499] [cursor=pointer]:
+                          - img [ref=e501]
+                          - generic [ref=e504]: 编辑
+                      - generic [ref=e529]:
+                        - img [ref=e531] [cursor=pointer]
+                        - text: 已采纳
+  - alert [ref=e533]:
+    - img [ref=e535]
+    - paragraph [ref=e537]: 已采纳全部建议
