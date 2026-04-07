@@ -54,6 +54,7 @@ class Database:
             self.engine = create_async_engine(
                 f"sqlite+aiosqlite:///{sqlite_path}",
                 echo=settings.ENVIRONMENT == "development",
+                connect_args={"check_same_thread": False, "timeout": 30},
             )
 
         self.async_session_maker = async_sessionmaker(

@@ -2,6 +2,8 @@
 认证相关 API
 """
 import uuid
+import traceback
+import logging
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from typing import Optional
@@ -94,54 +96,71 @@ async def register(
     db: AsyncSession = Depends(get_db)
 ):
     """用户注册 - 自动创建租户"""
-    # 检查邮箱是否已存在
-    result = await db.execute(
-        select(UserModel).where(UserModel.email == user_in.email)
-    )
-    if result.scalar_one_or_none():
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="邮箱已被注册"
+    import logging
+    logger = logging.getLogger(__name__)
+
+    try:
+        # 检查邮箱是否已存在
+        result = await db.execute(
+            select(UserModel).where(UserModel.email == user_in.email)
         )
+        if result.scalar_one_or_none():
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="邮箱已被注册"
+            )
 
-    # 生成 ID
-    tenant_id = str(uuid.uuid4())
-    user_id = str(uuid.uuid4())
-    password_hash = get_password_hash(user_in.password)
+        # 生成 ID
+        tenant_id = str(uuid.uuid4())
+        user_id = str(uuid.uuid4())
+        logger.info(f"Registering new user: {user_in.email}, tenant_id: {tenant_id}")
 
-    # 创建租户
-    tenant = Tenant(
-        id=tenant_id,
-        name=f"{user_in.email.split('@')[0]} 的租户",  # 默认租户名
-        plan=TenantPlan.free,
-        contract_quota=10,
-    )
-    db.add(tenant)
+        password_hash = get_password_hash(user_in.password)
 
-    # 创建用户
-    user = UserModel(
-        id=user_id,
-        tenant_id=tenant_id,
-        email=user_in.email,
-        password_hash=password_hash,
-        role=UserRole.admin,  # 首个用户为管理员
-    )
-    db.add(user)
+        # 创建租户
+        tenant = Tenant(
+            id=tenant_id,
+            name=f"{user_in.email.split('@')[0]} 的租户",  # 默认租户名
+            plan=TenantPlan.free,
+            contract_quota=10,
+        )
+        db.add(tenant)
 
-    # 创建默认工作区
-    workspace = Workspace(
-        id=str(uuid.uuid4()),
-        tenant_id=tenant_id,
-        name="默认工作区",
-    )
-    db.add(workspace)
+        # 创建用户
+        user = UserModel(
+            id=user_id,
+            tenant_id=tenant_id,
+            email=user_in.email,
+            password_hash=password_hash,
+            role=UserRole.admin,  # 首个用户为管理员
+        )
+        db.add(user)
 
-    # 提交事务
-    await db.commit()
+        # 创建默认工作区
+        workspace = Workspace(
+            id=str(uuid.uuid4()),
+            tenant_id=tenant_id,
+            name="默认工作区",
+        )
+        db.add(workspace)
 
-    # 生成 Token
-    access_token = create_access_token(data={"sub": user_id})
-    return {"access_token": access_token, "token_type": "bearer"}
+        # 提交事务
+        await db.commit()
+        logger.info(f"User registered successfully: {user_in.email}")
+
+        # 生成 Token
+        access_token = create_access_token(data={"sub": user_id})
+        return {"access_token": access_token, "token_type": "bearer"}
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Registration failed for {user_in.email}: {e}\n{traceback.format_exc()}")
+        await db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"注册失败: {str(e)}"
+        )
 
 
 @router.post("/login", response_model=Token)
