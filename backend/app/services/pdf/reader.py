@@ -3,6 +3,7 @@ PDF 文本提取服务
 提取 PDF 文本并记录位置信息
 """
 import fitz  # pymupdf
+import io
 from typing import List, Dict, Any, Optional
 from pathlib import Path
 
@@ -112,13 +113,13 @@ class PdfReader:
         Returns:
             OCR 提取结果
         """
+        import os
         try:
             import pytesseract
             from PIL import Image
             import fitz
 
             # 配置 tesseract 路径（Windows 安装路径）
-            import os
             tesseract_path = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
             if os.path.exists(tesseract_path):
                 pytesseract.pytesseract.tesseract_cmd = tesseract_path

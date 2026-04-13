@@ -4,11 +4,14 @@ Celery 异步任务队列配置
 from celery import Celery
 from app.core.config import settings
 
+# Celery 配置（当 REDIS_URL 未配置时使用默认本地 Redis）
+broker_url = getattr(settings, 'REDIS_URL', None) or "redis://localhost:6379/0"
+
 # Celery 配置
 celery_app = Celery(
     "legal_saas",
-    broker=settings.REDIS_URL or "redis://localhost:6379/0",
-    backend=settings.REDIS_URL or "redis://localhost:6379/0",
+    broker=broker_url,
+    backend=broker_url,
     include=["app.services.review.tasks"]
 )
 

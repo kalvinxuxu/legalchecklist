@@ -22,8 +22,14 @@ class Settings(BaseSettings):
     DATABASE_URL: Optional[str] = None  # MySQL/PostgreSQL 连接字符串
     SQLITE_PATH: Optional[str] = None  # SQLite 数据库路径
 
-    # ========== 向量维度（pgvector）==========
-    EMBEDDING_DIMENSION: int = 1536  # DeepSeek embedding 维度
+    # ========== 向量数据库（Chroma）==========
+    EMBEDDING_DIMENSION: int = 1024  # 智谱 embedding-2 维度
+    CHROMA_PERSIST_DIR: str = os.getenv("CHROMA_PERSIST_DIR", "/app/data/chroma")
+
+    # ========== 智谱 AI Embedding ==========
+    ZHIPU_EMBEDDING_API_KEY: str = "041eaab02d734ad0a3a0cce4ae063830.gQwbnbaDidReZ5Hx"
+    ZHIPU_EMBEDDING_MODEL: str = "embedding-2"
+    ZHIPU_EMBEDDING_BASE_URL: str = "https://open.bigmodel.cn/api/paas/v4"
 
     # ========== JWT ==========
     JWT_SECRET: str
@@ -44,7 +50,8 @@ class Settings(BaseSettings):
     # 本地存储（开发/ Fly.io）：使用 Fly Volumes 挂载点
     # 生产环境可切换到 S3/R2/OSS
     STORAGE_TYPE: str = "local"  # local / s3 / r2 / oss
-    STORAGE_PATH: str = os.getenv("STORAGE_PATH", str(BACKEND_DIR / "uploads"))
+    # Fly.io 容器中 /app/data 是持久化存储的挂载点
+    STORAGE_PATH: str = os.getenv("STORAGE_PATH", "/app/data/uploads")
 
     # S3 兼容存储（可选）
     S3_BUCKET: Optional[str] = None
@@ -81,7 +88,11 @@ class Settings(BaseSettings):
     def database_url(self) -> str:
         """Get database URL based on type"""
         if self.DATABASE_URL:
-            return self.DATABASE_URL
+            # Fly.io injects postgres:// but SQLAlchemy async driver needs postgresql+asyncpg://
+            url = self.DATABASE_URL
+            if url.startswith("postgres://"):
+                url = url.replace("postgres://", "postgresql+asyncpg://", 1)
+            return url
         if self.is_sqlite:
             return f"sqlite+aiosqlite:///{self.sqlite_path}"
         return ""
@@ -98,8 +109,10 @@ class Settings(BaseSettings):
         return self.ENVIRONMENT == "production"
 
     class Config:
-        env_file = str(BACKEND_DIR / ".env")
+        # 本地开发使用 .env，Fly.io 生产环境使用 .env.fly
+        env_file = str(BACKEND_DIR / ".env") if os.getenv("ENVIRONMENT", "development") != "production" else str(BACKEND_DIR / ".env.fly")
         case_sensitive = True
+        extra = "ignore"  # 允许 .env 中存在未定义的字段
 
 
 settings = Settings()

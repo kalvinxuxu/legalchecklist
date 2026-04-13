@@ -34,162 +34,125 @@ function getRiskBenefitVariant(b?: string) {
 </script>
 
 <template>
-  <div class="space-y-6 max-w-4xl">
+  <div class="p-6">
     <!-- Loading -->
-    <div v-if="isLoading" class="space-y-4">
-      <div class="h-32 bg-muted rounded-lg animate-pulse" />
-      <div class="h-48 bg-muted rounded-lg animate-pulse" />
+    <div v-if="isLoading" class="space-y-3">
+      <div class="h-20 bg-muted rounded-lg animate-pulse" />
+      <div class="h-28 bg-muted rounded-lg animate-pulse" />
     </div>
 
     <!-- Error -->
-    <UiCard v-else-if="isError">
-      <UiCardContent class="py-12 text-center">
-        <AlertTriangle class="w-10 h-10 text-danger-500 mx-auto mb-4" />
-        <h3 class="text-base font-medium mb-2">理解分析失败</h3>
-        <p class="text-sm text-muted-foreground">{{ (error as Error)?.message || '暂无法加载理解分析' }}</p>
-      </UiCardContent>
-    </UiCard>
+    <div v-else-if="isError" class="py-12 text-center">
+      <AlertTriangle class="w-8 h-8 text-danger-500 mx-auto mb-3" />
+      <h3 class="text-sm font-medium mb-1">理解分析失败</h3>
+      <p class="text-xs text-muted-foreground">{{ (error as Error)?.message || '暂无法加载理解分析' }}</p>
+    </div>
 
     <!-- Empty -->
-    <UiCard v-else-if="!data">
-      <UiCardContent class="py-12 text-center">
-        <FileText class="w-10 h-10 text-muted-foreground/30 mx-auto mb-4" />
-        <h3 class="text-base font-medium mb-2">暂无理解分析结果</h3>
-      </UiCardContent>
-    </UiCard>
+    <div v-else-if="!data" class="py-12 text-center">
+      <FileText class="w-8 h-8 text-muted-foreground/30 mx-auto mb-3" />
+      <h3 class="text-sm font-medium mb-1">暂无理解分析结果</h3>
+    </div>
 
     <!-- Content -->
     <template v-else>
       <!-- Quick Cards -->
       <div v-if="data.quick_cards">
-        <h3 class="text-base font-semibold mb-3 flex items-center gap-2">
+        <h3 class="text-sm font-semibold mb-3 flex items-center gap-2 text-muted-foreground">
           <FileText class="w-4 h-4" />
           快速理解
         </h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <UiCard v-if="data.quick_cards.contract_purpose">
-            <UiCardHeader class="pb-2">
-              <UiCardTitle class="text-sm flex items-center gap-2">
-                <FileText class="w-3.5 h-3.5" />
-                合同用途
-              </UiCardTitle>
-            </UiCardHeader>
-            <UiCardContent>
-              <p class="text-sm">{{ data.quick_cards.contract_purpose }}</p>
-            </UiCardContent>
-          </UiCard>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div v-if="data.quick_cards.contract_purpose" class="p-3 rounded-lg bg-blue-50 border border-blue-200">
+            <p class="text-xs text-blue-600 mb-1">合同用途</p>
+            <p class="text-sm text-foreground">{{ data.quick_cards.contract_purpose }}</p>
+          </div>
 
-          <UiCard v-if="data.quick_cards.key_dates?.length">
-            <UiCardHeader class="pb-2">
-              <UiCardTitle class="text-sm flex items-center gap-2">
-                <Calendar class="w-3.5 h-3.5" />
-                关键日期
-              </UiCardTitle>
-            </UiCardHeader>
-            <UiCardContent>
-              <ul class="text-sm space-y-1 list-disc list-inside">
-                <li v-for="(d, i) in data.quick_cards.key_dates" :key="i">{{ d }}</li>
-              </ul>
-            </UiCardContent>
-          </UiCard>
+          <div v-if="data.quick_cards.key_dates?.length" class="p-3 rounded-lg bg-orange-50 border border-orange-200">
+            <p class="text-xs text-orange-600 mb-1">关键日期</p>
+            <ul class="text-xs space-y-0.5 list-disc list-inside">
+              <li v-for="(d, i) in data.quick_cards.key_dates" :key="i">{{ d }}</li>
+            </ul>
+          </div>
 
-          <UiCard v-if="data.quick_cards.payment_summary" class="border-l-4 border-l-success-500">
-            <UiCardHeader class="pb-2">
-              <UiCardTitle class="text-sm flex items-center gap-2">
-                <CreditCard class="w-3.5 h-3.5" />
-                支付条款
-              </UiCardTitle>
-            </UiCardHeader>
-            <UiCardContent>
-              <p class="text-sm">{{ data.quick_cards.payment_summary }}</p>
-              <div v-if="data.summary?.payment_terms" class="mt-2 pt-2 border-t border-border text-xs text-muted-foreground space-y-1">
-                <p v-if="data.summary.payment_terms.amount">金额: {{ data.summary.payment_terms.amount }}</p>
-                <p v-if="data.summary.payment_terms.payment_method">方式: {{ data.summary.payment_terms.payment_method }}</p>
-              </div>
-            </UiCardContent>
-          </UiCard>
+          <div v-if="data.quick_cards.payment_summary" class="p-3 rounded-lg bg-green-50 border border-green-200">
+            <p class="text-xs text-green-600 mb-1">支付条款</p>
+            <p class="text-sm text-foreground">{{ data.quick_cards.payment_summary }}</p>
+            <div v-if="data.summary?.payment_terms" class="mt-1.5 pt-1.5 border-t border-green-200">
+              <p v-if="data.summary.payment_terms.amount" class="text-xs text-muted-foreground">金额: {{ data.summary.payment_terms.amount }}</p>
+              <p v-if="data.summary.payment_terms.payment_method" class="text-xs text-muted-foreground">方式: {{ data.summary.payment_terms.payment_method }}</p>
+            </div>
+          </div>
 
-          <UiCard v-if="data.quick_cards.breach_summary" class="border-l-4 border-l-danger-500">
-            <UiCardHeader class="pb-2">
-              <UiCardTitle class="text-sm flex items-center gap-2">
-                <AlertTriangle class="w-3.5 h-3.5" />
-                违约责任
-              </UiCardTitle>
-            </UiCardHeader>
-            <UiCardContent>
-              <p class="text-sm">{{ data.quick_cards.breach_summary }}</p>
-              <p v-if="data.summary?.breach_liability?.compensation_range" class="mt-2 pt-2 border-t border-border text-xs text-muted-foreground">
-                赔偿范围: {{ data.summary.breach_liability.compensation_range }}
-              </p>
-            </UiCardContent>
-          </UiCard>
+          <div v-if="data.quick_cards.breach_summary" class="p-3 rounded-lg bg-red-50 border border-red-200">
+            <p class="text-xs text-red-600 mb-1">违约责任</p>
+            <p class="text-sm text-foreground">{{ data.quick_cards.breach_summary }}</p>
+            <p v-if="data.summary?.breach_liability?.compensation_range" class="text-xs text-muted-foreground mt-1.5 pt-1.5 border-t border-red-200">
+              赔偿范围: {{ data.summary.breach_liability.compensation_range }}
+            </p>
+          </div>
 
-          <UiCard v-if="data.quick_cards.core_obligations?.length" class="border-l-4 border-l-primary-500">
-            <UiCardHeader class="pb-2">
-              <UiCardTitle class="text-sm flex items-center gap-2">
-                <List class="w-3.5 h-3.5" />
-                双方核心义务
-              </UiCardTitle>
-            </UiCardHeader>
-            <UiCardContent>
-              <ul class="text-sm space-y-1 list-disc list-inside">
-                <li v-for="(ob, i) in data.quick_cards.core_obligations" :key="i">{{ ob }}</li>
-              </ul>
-            </UiCardContent>
-          </UiCard>
+          <div v-if="data.quick_cards.core_obligations?.length" class="p-3 rounded-lg bg-purple-50 border border-purple-200">
+            <p class="text-xs text-purple-600 mb-1">双方核心义务</p>
+            <ul class="text-xs space-y-0.5 list-disc list-inside">
+              <li v-for="(ob, i) in data.quick_cards.core_obligations" :key="i">{{ ob }}</li>
+            </ul>
+          </div>
         </div>
       </div>
 
       <!-- Structure -->
-      <div v-if="data.structure?.sections?.length">
-        <h3 class="text-base font-semibold mb-3 flex items-center gap-2">
+      <div v-if="data.structure?.sections?.length" class="mt-5">
+        <h3 class="text-sm font-semibold mb-3 flex items-center gap-2 text-muted-foreground">
           <FolderOpen class="w-4 h-4" />
           合同结构
         </h3>
-        <div v-if="data.structure.structure_summary" class="bg-muted rounded-lg p-3 text-sm text-muted-foreground mb-3">
+        <div v-if="data.structure.structure_summary" class="bg-muted/50 rounded-md px-3 py-2 text-xs text-muted-foreground mb-3">
           {{ data.structure.structure_summary }}
         </div>
-        <div class="relative border-l-2 border-border pl-6 space-y-4">
-          <div v-for="(section, idx) in data.structure.sections" :key="idx" class="relative">
+        <div class="flex flex-wrap gap-2">
+          <div
+            v-for="(section, idx) in data.structure.sections"
+            :key="idx"
+            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-card border border-border text-xs"
+          >
             <div
-              class="absolute -left-[29px] w-4 h-4 rounded-full border-2 border-card"
+              class="w-2 h-2 rounded-full"
               :style="{ backgroundColor: getSectionColor(section.title) }"
             />
-            <div>
-              <span class="text-sm font-medium">{{ section.title }}</span>
-              <p v-if="section.content" class="text-xs text-muted-foreground mt-0.5">{{ section.content }}</p>
-            </div>
+            <span class="font-medium">{{ section.title }}</span>
+            <span v-if="section.content" class="text-muted-foreground truncate max-w-[120px]">{{ section.content }}</span>
           </div>
         </div>
       </div>
 
       <!-- Key Clauses -->
-      <div v-if="data.summary?.key_clauses?.length">
-        <h3 class="text-base font-semibold mb-3 flex items-center gap-2">
+      <div v-if="data.summary?.key_clauses?.length" class="mt-5">
+        <h3 class="text-sm font-semibold mb-3 flex items-center gap-2 text-muted-foreground">
           <BookOpen class="w-4 h-4" />
           重要条款摘要
         </h3>
-        <div class="space-y-3">
-          <UiCard
+        <div class="space-y-2">
+          <div
             v-for="(clause, idx) in data.summary.key_clauses"
             :key="idx"
+            class="flex items-start gap-3 p-3 rounded-lg bg-card border border-l-3"
             :class="[
-              'border-l-4',
               clause.risk_benefit === 'risk' ? 'border-l-danger-500' :
               clause.risk_benefit === 'benefit' ? 'border-l-success-500' :
               'border-l-muted-foreground',
             ]"
           >
-            <UiCardContent class="pt-4">
-              <div class="flex items-start justify-between gap-2 mb-1">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-1">
                 <span class="text-sm font-medium">{{ clause.title }}</span>
-                <UiBadge :variant="getRiskBenefitVariant(clause.risk_benefit)">
+                <UiBadge :variant="getRiskBenefitVariant(clause.risk_benefit)" class="text-xs px-1.5 py-0">
                   {{ clause.risk_benefit === 'risk' ? '风险' : clause.risk_benefit === 'benefit' ? '利好' : '中性' }}
                 </UiBadge>
               </div>
-              <p v-if="clause.summary" class="text-sm text-muted-foreground">{{ clause.summary }}</p>
-            </UiCardContent>
-          </UiCard>
+              <p v-if="clause.summary" class="text-xs text-muted-foreground">{{ clause.summary }}</p>
+            </div>
+          </div>
         </div>
       </div>
     </template>

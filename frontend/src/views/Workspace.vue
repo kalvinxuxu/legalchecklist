@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRouter, useRoute, RouterView, RouterLink } from 'vue-router'
-import { LayoutDashboard, FileText, Upload, LogOut, Settings, ChevronRight } from 'lucide-vue-next'
+import { LayoutDashboard, FileText, Upload, LogOut, Settings, ChevronRight, BookOpen } from 'lucide-vue-next'
 import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
@@ -12,6 +12,7 @@ const navItems = [
   { key: 'dashboard', label: '工作台', icon: LayoutDashboard, to: '/workspace' },
   { key: 'contracts', label: '合同列表', icon: FileText, to: '/workspace/contracts' },
   { key: 'upload', label: '上传合同', icon: Upload, to: '/workspace/upload' },
+  { key: 'policies', label: '公司政策库', icon: BookOpen, to: '/workspace/policies' },
 ]
 
 function isActive(to: string) {

@@ -22,6 +22,7 @@ import UiTabsList from './components/ui/tabs-list.vue'
 import UiTabsTrigger from './components/ui/tabs-trigger.vue'
 import UiTabsContent from './components/ui/tabs-content.vue'
 import UiDialog from './components/ui/dialog.vue'
+import UiModal from './components/ui/modal.vue'
 import UiSelect from './components/ui/select.vue'
 import UiSelectItem from './components/ui/select-item.vue'
 import ToastProvider from './components/ui/toast-provider.vue'
@@ -60,6 +61,7 @@ app.component('UiTabsList', UiTabsList)
 app.component('UiTabsTrigger', UiTabsTrigger)
 app.component('UiTabsContent', UiTabsContent)
 app.component('UiDialog', UiDialog)
+app.component('UiModal', UiModal)
 app.component('UiSelect', UiSelect)
 app.component('UiSelectItem', UiSelectItem)
 app.component('ToastProvider', ToastProvider)

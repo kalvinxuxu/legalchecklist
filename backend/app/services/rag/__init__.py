@@ -2,7 +2,7 @@
 RAG 服务模块
 """
 from app.services.rag.vector_retriever import retriever as vector_retriever, VectorRAGRetriever
-from app.services.rag.embedder import embedder, DeepSeekEmbedder
+from app.services.rag.embedder import embedder, ZhipuEmbedder
 
 # 默认导出：向量检索器
 # 自动根据数据库类型选择：
@@ -14,5 +14,5 @@ __all__ = [
     "retriever",
     "VectorRAGRetriever",
     "embedder",
-    "DeepSeekEmbedder",
+    "ZhipuEmbedder",
 ]

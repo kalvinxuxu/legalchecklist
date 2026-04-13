@@ -32,11 +32,31 @@ if settings.USE_CELERY:
 router = APIRouter()
 
 
-from fastapi import Depends
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-
 # 创建一个独立的 security scheme 用于公开端点
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 optional_security = HTTPBearer(auto_error=False)
+
+
+def resolve_contract_file_path(file_path: str) -> Path:
+    """
+    解析合同文件路径，支持相对路径和绝对路径
+
+    相对路径：相对于 STORAGE_PATH
+    绝对路径：直接使用
+    """
+    path_obj = Path(file_path)
+    if path_obj.is_absolute():
+        return path_obj
+
+    # 检查是否已经包含 STORAGE_PATH（避免双重路径）
+    normalized_path = path_obj.as_posix() if hasattr(path_obj, 'as_posix') else str(path_obj)
+    storage_posix = Path(settings.STORAGE_PATH).as_posix()
+
+    if normalized_path.startswith(storage_posix):
+        # 路径已经包含 STORAGE_PATH，直接返回
+        return path_obj
+
+    return Path(settings.STORAGE_PATH) / file_path
 
 
 @router.get("/test-llm", dependencies=[])
@@ -79,6 +99,7 @@ def trigger_contract_review(contract_id: str, file_path: str) -> None:
     根据配置使用 Celery 或 asyncio 后台任务
     """
     import logging
+    import asyncio
     logger = logging.getLogger(__name__)
 
     if settings.USE_CELERY:
@@ -86,14 +107,16 @@ def trigger_contract_review(contract_id: str, file_path: str) -> None:
         process_contract_review_task.delay(contract_id, file_path)
         logger.info(f"[Review] Contract {contract_id} submitted to Celery queue")
     else:
-        # 使用 asyncio 后台任务（开发环境）
-        import asyncio
-        task = asyncio.create_task(process_contract_upload(contract_id, file_path))
-        # 添加错误回调以便追踪失败
-        task.add_done_callback(
-            lambda t: logger.info(f"[Review] Contract {contract_id} task completed")
-            if not t.exception() else logger.error(f"[Review] Contract {contract_id} failed: {t.exception()}")
-        )
+        # 检查是否已经在 event loop 中
+        try:
+            loop = asyncio.get_running_loop()
+            # 已在 event loop 中，直接创建 task
+            loop.create_task(process_contract_upload(contract_id, file_path))
+            logger.info(f"[Review] Contract {contract_id} review triggered (in existing loop)")
+        except RuntimeError:
+            # 不在 event loop 中，可以使用 asyncio.run
+            asyncio.run(process_contract_upload(contract_id, file_path))
+            logger.info(f"[Review] Contract {contract_id} review triggered")
 
 
 async def process_contract_upload(
@@ -107,6 +130,10 @@ async def process_contract_upload(
     """
     import logging
     logger = logging.getLogger(__name__)
+
+    # 解析文件路径（使用公共函数）
+    file_path = str(resolve_contract_file_path(file_path))
+    logger.info(f"[Review] Resolved path to: {file_path}")
 
     logger.info(f"[Review] Starting review for contract {contract_id}")
 
@@ -164,26 +191,51 @@ async def process_contract_upload(
 
             await session.commit()
 
-            # 5. 执行审查
-            logger.info(f"[Review] Running LLM review for contract {contract_id}")
-            review_result = await review_service.review_contract(
-                contract_text=contract.content_text,
-                contract_type=contract_type_str
+            # 获取 tenant_id 用于检索公司政策
+            workspace_result = await session.execute(
+                select(Workspace).where(Workspace.id == contract.workspace_id)
             )
-            logger.info(f"[Review] Review completed for contract {contract_id}")
+            workspace = workspace_result.scalar_one_or_none()
+            tenant_id = workspace.tenant_id if workspace else None
+            logger.info(f"[Review] Using tenant_id: {tenant_id} for contract {contract_id}")
 
-            # 6. 启动理解分析（后台异步执行）
+            # 5. 合同理解分析（第一步）- 在审查之前执行，即使审查失败也能展示理解结果
+            logger.info(f"[Review] Starting contract understanding analysis for {contract_id}")
             from app.services.analysis.understanding import understanding_service
-            asyncio.create_task(
-                understanding_service.generate_understanding(
+            try:
+                await understanding_service.generate_understanding(
                     contract_id=contract_id,
                     contract_text=contract.content_text,
                     contract_type=contract_type_str,
-                    review_result=review_result
+                    review_result=None  # 先不传审查结果，独立生成
                 )
-            )
+                logger.info(f"[Review] Understanding analysis completed for contract {contract_id}")
+            except Exception as understanding_error:
+                # 理解分析失败不应该阻止后续流程
+                logger.error(f"[Review] Understanding analysis failed for contract {contract_id}: {understanding_error}")
 
-            # 7. 确定风险等级
+            # 6. 执行审查（第二步，传递 tenant_id 以检索公司政策库）
+            logger.info(f"[Review] Running LLM review for contract {contract_id}")
+            review_result = await review_service.review_contract(
+                contract_text=contract.content_text,
+                contract_type=contract_type_str,
+                tenant_id=tenant_id
+            )
+            logger.info(f"[Review] Review completed for contract {contract_id}")
+
+            # 7. 更新理解分析（补充审查结果）
+            try:
+                await understanding_service.generate_understanding(
+                    contract_id=contract_id,
+                    contract_text=contract.content_text,
+                    contract_type=contract_type_str,
+                    review_result=review_result  # 带上审查结果完善理解
+                )
+                logger.info(f"[Review] Understanding analysis updated with review results for contract {contract_id}")
+            except Exception as understanding_error:
+                logger.error(f"[Review] Understanding analysis update failed for contract {contract_id}: {understanding_error}")
+
+            # 8. 确定风险等级
             risk_clauses = review_result.get("risk_clauses", [])
             if any(c.get("risk_level") == "high" for c in risk_clauses):
                 risk_level = "high"
@@ -192,7 +244,7 @@ async def process_contract_upload(
             else:
                 risk_level = "low"
 
-            # 8. 保存审查结果
+            # 9. 保存审查结果
             contract.review_result = review_result
             contract.risk_level = risk_level
             contract.review_status = ReviewStatusEnum.completed
@@ -200,6 +252,15 @@ async def process_contract_upload(
             await session.commit()
 
             logger.info(f"[Review] Successfully completed review for contract {contract_id}, risk_level: {risk_level}")
+
+            # 10. PDF 条款定位（仅 PDF 文件，且审查有风险条款）
+            if file_path.endswith(".pdf") and risk_clauses:
+                from app.services.review.tasks import _locate_clauses_in_pdf
+                try:
+                    await _locate_clauses_in_pdf(contract_id, file_path, risk_clauses)
+                    logger.info(f"[Review] Clause location completed for contract {contract_id}")
+                except Exception as locate_error:
+                    logger.error(f"[Review] Clause location failed for contract {contract_id}: {locate_error}")
 
         except Exception as e:
             # 处理失败
@@ -334,6 +395,7 @@ async def upload_contract(
         return existing_contract
 
     # 保存文件（本地存储，生产环境使用 OSS）
+    # 使用相对路径存储在数据库中，确保在不同环境下都能正确解析
     upload_dir = Path(settings.STORAGE_PATH) / workspace_id
     upload_dir.mkdir(parents=True, exist_ok=True)
 
@@ -343,6 +405,10 @@ async def upload_contract(
 
     with open(file_path, "wb") as f:
         f.write(file_bytes)
+
+    # 存储相对路径（相对于 STORAGE_PATH），便于跨环境迁移
+    # 例如：workspace_id/file_id.ext
+    relative_file_path = str(Path(workspace_id) / f"{file_id}.{file_extension}")
 
     # 解析合同类型
     contract_type_enum = None
@@ -358,7 +424,7 @@ async def upload_contract(
         workspace_id=workspace_id,
         user_id=current_user.id,
         file_name=file.filename,
-        file_path=str(file_path),
+        file_path=relative_file_path,  # 使用相对路径，便于跨环境迁移
         file_hash=file_hash,
         contract_type=contract_type_enum,
         review_status=ReviewStatusEnum.pending,
@@ -367,9 +433,15 @@ async def upload_contract(
     await db.commit()
     await db.refresh(contract)
 
-    # 异步处理合同（解析 + 审查）
-    # 使用 Celery 或 asyncio 后台任务
-    trigger_contract_review(contract.id, str(file_path))
+    # 同步处理合同（解析 + 审查）- 直接await而非后台任务
+    # 后台任务在容器环境中会丢失，所以这里同步执行
+    await process_contract_upload(contract.id, str(file_path))
+
+    # 重新获取最新状态
+    result = await db.execute(
+        select(Contract).where(Contract.id == contract.id)
+    )
+    contract = result.scalar_one()
 
     return contract
 
@@ -417,11 +489,13 @@ async def get_contract_file(
             detail="文件不存在"
         )
 
-    file_path = Path(contract.file_path)
+    # 解析文件路径（使用公共函数）
+    file_path = resolve_contract_file_path(contract.file_path)
+
     if not file_path.exists():
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="文件不存在"
+            detail=f"文件不存在: {file_path}"
         )
 
     # 根据文件扩展名确定 media type
@@ -604,12 +678,15 @@ async def get_pdf_text_positions(
     from sqlalchemy import select
     from app.models.clause_location import ClauseLocation
 
+    # 解析文件路径（支持相对路径）
+    resolved_file_path = str(resolve_contract_file_path(contract.file_path))
+
     # 提取 PDF 文本和位置
-    pdf_data = pdf_reader.extract_text_with_positions(contract.file_path)
+    pdf_data = pdf_reader.extract_text_with_positions(resolved_file_path)
 
     # 如果文本过少，尝试 OCR
     if pdf_data.get("needs_ocr"):
-        pdf_data = await pdf_reader.extract_with_ocr(contract.file_path)
+        pdf_data = await pdf_reader.extract_with_ocr(resolved_file_path)
 
     # 获取条款定位
     async with db.async_session_maker() as session:
@@ -685,14 +762,17 @@ async def get_highlighted_pdf(
             })
 
     # 生成高亮 PDF
+    # 解析文件路径（支持相对路径）
+    resolved_file_path = str(resolve_contract_file_path(contract.file_path))
+
     if clause_positions:
         pdf_bytes = pdf_highlighter.highlight_clauses(
-            contract.file_path,
+            resolved_file_path,
             clause_positions
         )
     else:
         # 无定位信息，返回原始 PDF
-        with open(contract.file_path, "rb") as f:
+        with open(resolved_file_path, "rb") as f:
             pdf_bytes = f.read()
 
     from fastapi.responses import StreamingResponse
@@ -735,8 +815,11 @@ async def get_word_paragraphs(
 
     from app.services.word import word_indexer
 
+    # 解析文件路径（支持相对路径）
+    resolved_file_path = str(resolve_contract_file_path(contract.file_path))
+
     result = await word_indexer.parse_word_paragraphs(
-        contract.file_path,
+        resolved_file_path,
         contract.id
     )
 
@@ -784,9 +867,12 @@ async def apply_word_suggestions(
 
     from app.services.word import revision_doc_generator
 
+    # 解析文件路径（支持相对路径）
+    resolved_file_path = str(resolve_contract_file_path(contract.file_path))
+
     # 生成修订文档
     revised_bytes = revision_doc_generator.apply_suggestions_to_document(
-        contract.file_path,
+        resolved_file_path,
         accepted_suggestions
     )
 

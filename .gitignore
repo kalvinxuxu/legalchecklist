@@ -91,3 +91,23 @@ temp/
 # Logs
 logs/
 *.log
+
+# Environment
+.env.fly
+.env.example
+
+# Database
+*.db
+*.db-journal
+
+# Playwright
+.playwright-mcp/
+.playwright-cli/
+playwright-report/
+
+# Claude
+.claude/
+
+# OS
+Thumbs.db
+.DS_Store

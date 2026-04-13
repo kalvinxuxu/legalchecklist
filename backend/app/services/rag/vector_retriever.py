@@ -1,25 +1,23 @@
 """
-RAG 检索器：法律知识检索（PostgreSQL + pgvector 向量版）
+RAG 检索器：法律知识检索（Chroma 向量数据库）
 """
 from typing import List, Dict, Any, Optional
-from sqlalchemy import text
 from app.db.session import db as database
 from app.models.legal_knowledge import LegalKnowledge
+from app.services.rag.chroma_store import chroma_store, TenantAwareChromaStore
 from app.services.rag.embedder import embedder
 from app.core.config import settings
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class VectorRAGRetriever:
-    """法律知识 RAG 检索器 - PostgreSQL + pgvector 向量版"""
+    """法律知识 RAG 检索器 - Chroma 向量版"""
 
     def __init__(self):
         self.embedding_dimension = settings.EMBEDDING_DIMENSION
-        self._has_pgvector = self._check_pgvector()
-
-    def _check_pgvector(self) -> bool:
-        """检查是否启用了 pgvector"""
-        return settings.is_postgresql and hasattr(LegalKnowledge, 'embedding')
 
     async def retrieve(
         self,
@@ -31,68 +29,83 @@ class VectorRAGRetriever:
     ) -> List[Dict[str, Any]]:
         """
         检索相关法律知识
-
-        Args:
-            query: 查询文本
-            content_type: 内容类型过滤 (law/case/template/rule)
-            top_k: 返回结果数量
-            tenant_id: 租户 ID（用于私有库检索）
-            use_vector: 是否使用向量检索（False 则降级为 LIKE 搜索）
-
-        Returns:
-            检索结果列表
         """
-        if use_vector and self._has_pgvector:
-            return await self._vector_search(query, content_type, top_k, tenant_id)
+        if use_vector:
+            return await self._chroma_search(query, content_type, top_k, tenant_id)
         else:
-            return await self._fallback_like_search(query, content_type, top_k, tenant_id)
+            return await self._fallback_db_search(query, content_type, top_k, tenant_id)
 
-    async def _vector_search(
+    async def _chroma_search(
         self,
         query: str,
         content_type: Optional[str],
         top_k: int,
         tenant_id: Optional[str]
     ) -> List[Dict[str, Any]]:
-        """
-        基于 pgvector 的向量语义检索
-        """
-        # 1. 将查询文本向量化
-        query_vector = await embedder.embed(query)
-        query_vector_str = "[" + ",".join(str(v) for v in query_vector) + "]"
+        """基于 Chroma 的向量语义检索"""
+        try:
+            store = TenantAwareChromaStore(tenant_id=tenant_id)
+            results = await store.query(
+                query_text=query,
+                n_results=top_k,
+                content_type=content_type,
+                include_private=True
+            )
 
-        # 2. 构建 SQL 查询（使用余弦距离 <=>）
-        conditions = ["(embedding IS NOT NULL)"]
-        params: Dict[str, Any] = {
-            "query_vector": query_vector_str,
-            "limit": top_k
-        }
+            formatted = []
+            for r in results:
+                formatted.append({
+                    "id": r["id"],
+                    "title": r["metadata"].get("title", ""),
+                    "content": r["content"],
+                    "content_type": r["metadata"].get("content_type", ""),
+                    "metadata": r["metadata"],
+                    "score": r["score"],
+                    "tenant_id": r.get("tenant_id")
+                })
 
-        # 内容类型过滤
+            logger.info(f"[VectorRAG] Chroma search returned {len(formatted)} results")
+            return formatted
+
+        except Exception as e:
+            logger.warning(f"[VectorRAG] Chroma search failed: {e}, falling back to DB")
+            return await self._fallback_db_search(query, content_type, top_k, tenant_id)
+
+    async def _fallback_db_search(
+        self,
+        query: str,
+        content_type: Optional[str],
+        top_k: int,
+        tenant_id: Optional[str]
+    ) -> List[Dict[str, Any]]:
+        """降级方案：数据库 LIKE 模糊搜索"""
+        from sqlalchemy import select, or_
+
+        conditions = [
+            or_(
+                LegalKnowledge.title.ilike(f"%{query}%"),
+                LegalKnowledge.content.ilike(f"%{query}%")
+            )
+        ]
+
         if content_type:
-            conditions.append("content_type = :content_type")
-            params["content_type"] = content_type
+            conditions.append(LegalKnowledge.content_type == content_type)
 
-        # 租户隔离
         if tenant_id:
-            conditions.append("(tenant_id IS NULL OR tenant_id = :tenant_id)")
-            params["tenant_id"] = tenant_id
+            conditions.append(
+                or_(
+                    LegalKnowledge.tenant_id == tenant_id,
+                    LegalKnowledge.tenant_id.is_(None)
+                )
+            )
         else:
-            conditions.append("tenant_id IS NULL")
+            conditions.append(LegalKnowledge.tenant_id.is_(None))
 
-        # PostgreSQL 向量检索：余弦距离 (<=>)
-        sql = f"""
-            SELECT id, title, content, content_type, metadata_json, tenant_id,
-                   1 - (embedding <=> :query_vector::vector) AS similarity
-            FROM legal_knowledge
-            WHERE {' AND '.join(conditions)}
-            ORDER BY embedding <=> :query_vector::vector
-            LIMIT :limit
-        """
+        stmt = select(LegalKnowledge).where(*conditions).limit(top_k)
 
         async with database.async_session_maker() as session:
-            result = await session.execute(text(sql), params)
-            rows = result.fetchall()
+            result = await session.execute(stmt)
+            rows = result.scalars().all()
 
             return [
                 {
@@ -101,57 +114,7 @@ class VectorRAGRetriever:
                     "content": row.content,
                     "content_type": row.content_type,
                     "metadata": json.loads(row.metadata_json) if row.metadata_json else {},
-                    "score": float(row.similarity) if row.similarity else 0.0,
-                    "tenant_id": row.tenant_id
-                }
-                for row in rows
-            ]
-
-    async def _fallback_like_search(
-        self,
-        query: str,
-        content_type: Optional[str],
-        top_k: int,
-        tenant_id: Optional[str]
-    ) -> List[Dict[str, Any]]:
-        """
-        降级方案：LIKE 模糊搜索（SQLite/MySQL 无 pgvector 时使用）
-        """
-        conditions = ["(title LIKE :query OR content LIKE :query)"]
-        params: Dict[str, Any] = {"query": f"%{query}%"}
-
-        if content_type:
-            conditions.append("content_type = :content_type")
-            params["content_type"] = content_type
-
-        if tenant_id:
-            conditions.append("(tenant_id IS NULL OR tenant_id = :tenant_id)")
-            params["tenant_id"] = tenant_id
-        else:
-            conditions.append("tenant_id IS NULL")
-
-        sql = f"""
-            SELECT id, title, content, content_type, metadata_json, tenant_id,
-                   LENGTH(title) + LENGTH(content) AS relevance
-            FROM legal_knowledge
-            WHERE {' AND '.join(conditions)}
-            ORDER BY relevance ASC
-            LIMIT :limit
-        """
-        params["limit"] = top_k
-
-        async with database.async_session_maker() as session:
-            result = await session.execute(text(sql), params)
-            rows = result.fetchall()
-
-            return [
-                {
-                    "id": str(row.id),
-                    "title": row.title,
-                    "content": row.content,
-                    "content_type": row.content_type,
-                    "metadata": json.loads(row.metadata_json) if row.metadata_json else {},
-                    "score": 1.0 / (row.relevance + 1) if row.relevance else 0.0,
+                    "score": 0.5,
                     "tenant_id": row.tenant_id
                 }
                 for row in rows
@@ -164,33 +127,36 @@ class VectorRAGRetriever:
         content_type: str,
         metadata: Optional[dict] = None,
         tenant_id: Optional[str] = None,
-        generate_embedding: bool = True
+        generate_embedding: bool = True,
+        knowledge_id: Optional[str] = None
     ) -> str:
-        """
-        添加法律知识到库中（自动生成向量）
-
-        Args:
-            title: 标题
-            content: 内容
-            content_type: 类型 (law/case/template/rule)
-            metadata: 元数据
-            tenant_id: 租户 ID（私有库）
-            generate_embedding: 是否自动生成向量
-
-        Returns:
-            新知识 ID
-        """
+        """添加法律知识到向量库"""
         import uuid
 
-        knowledge_id = str(uuid.uuid4())
-        embedding_vector = None
+        knowledge_id = knowledge_id or str(uuid.uuid4())
+        text_to_embed = f"{title} {content}"
 
-        # 自动生成向量
-        if generate_embedding and self._has_pgvector:
-            text_to_embed = f"{title} {content}"
-            embedding_vector = await embedder.embed(text_to_embed)
+        full_metadata = {
+            **(metadata or {}),
+            "title": title,
+            "content_type": content_type,
+            "tenant_id": tenant_id
+        }
 
-        async for session in database.async_session_maker():
+        # 添加到 Chroma
+        if generate_embedding:
+            try:
+                await chroma_store.add(
+                    texts=[text_to_embed],
+                    metadatas=[full_metadata],
+                    ids=[knowledge_id]
+                )
+                logger.info(f"[VectorRAG] Added to Chroma: {knowledge_id}")
+            except Exception as e:
+                logger.warning(f"[VectorRAG] Failed to add to Chroma: {e}")
+
+        # 同步到关系数据库
+        async with database.async_session_maker() as session:
             from app.models.legal_knowledge import LegalKnowledge
 
             knowledge = LegalKnowledge(
@@ -198,70 +164,75 @@ class VectorRAGRetriever:
                 title=title,
                 content=content,
                 content_type=content_type,
-                metadata_json=metadata or {},
-                tenant_id=tenant_id,
-                embedding=embedding_vector
+                metadata_json=full_metadata,
+                tenant_id=tenant_id
             )
             session.add(knowledge)
             await session.commit()
-            return knowledge_id
+            logger.info(f"[VectorRAG] Added to DB: {knowledge_id}")
+
+        return knowledge_id
 
     async def batch_add_knowledge(
         self,
         knowledge_list: List[Dict[str, Any]],
         generate_embeddings: bool = True
     ) -> List[str]:
-        """
-        批量添加法律知识
-
-        Args:
-            knowledge_list: 知识列表
-            generate_embeddings: 是否批量生成向量
-
-        Returns:
-            新知识 ID 列表
-        """
+        """批量添加法律知识"""
         import uuid
 
         ids = []
+        chroma_texts = []
+        chroma_metadatas = []
+        chroma_ids = []
 
-        # 批量生成向量（如启用）
-        embeddings_map: Dict[str, List[float]] = {}
-        if generate_embeddings and self._has_pgvector:
-            texts_to_embed = [
-                f"{item['title']} {item['content']}"
-                for item in knowledge_list
-            ]
-            # 批量向量化（分批避免超时）
-            all_embeddings = []
-            batch_size = 32
-            for i in range(0, len(texts_to_embed), batch_size):
-                batch = texts_to_embed[i:i+batch_size]
-                batch_embeddings = await embedder.embed_batch(batch)
-                all_embeddings.extend(batch_embeddings)
-
-            for idx, item in enumerate(knowledge_list):
-                embeddings_map[item.get('title', '')] = all_embeddings[idx]
-
-        async for session in database.async_session_maker():
-            from app.models.legal_knowledge import LegalKnowledge
-
+        if generate_embeddings:
             for item in knowledge_list:
                 knowledge_id = str(uuid.uuid4())
+                text_to_embed = f"{item['title']} {item['content']}"
+                full_metadata = {
+                    **(item.get("metadata", {})),
+                    "title": item["title"],
+                    "content_type": item["content_type"],
+                    "tenant_id": item.get("tenant_id")
+                }
+                chroma_texts.append(text_to_embed)
+                chroma_metadatas.append(full_metadata)
+                chroma_ids.append(knowledge_id)
+
+        # 批量添加到 Chroma
+        if generate_embeddings and chroma_texts:
+            try:
+                await chroma_store.add(
+                    texts=chroma_texts,
+                    metadatas=chroma_metadatas,
+                    ids=chroma_ids
+                )
+                logger.info(f"[VectorRAG] Batch added {len(chroma_ids)} to Chroma")
+            except Exception as e:
+                logger.warning(f"[VectorRAG] Batch Chroma add failed: {e}")
+
+        # 同步到关系数据库
+        async with database.async_session_maker() as session:
+            from app.models.legal_knowledge import LegalKnowledge
+
+            for i, item in enumerate(knowledge_list):
+                knowledge_id = chroma_ids[i] if generate_embeddings else str(uuid.uuid4())
+                ids.append(knowledge_id)
+
                 knowledge = LegalKnowledge(
                     id=knowledge_id,
                     title=item["title"],
                     content=item["content"],
                     content_type=item["content_type"],
                     metadata_json=item.get("metadata", {}),
-                    tenant_id=item.get("tenant_id"),
-                    embedding=embeddings_map.get(item.get('title', ''))
+                    tenant_id=item.get("tenant_id")
                 )
                 session.add(knowledge)
-                ids.append(knowledge_id)
 
             await session.commit()
 
+        logger.info(f"[VectorRAG] Batch added {len(ids)} to DB")
         return ids
 
 

@@ -55,6 +55,11 @@ const router = createRouter({
           name: 'ReviewWord',
           component: () => import('@/views/ReviewWord.vue'),
         },
+        {
+          path: 'policies',
+          name: 'Policies',
+          component: () => import('@/views/Policies.vue'),
+        },
       ],
     },
   ],

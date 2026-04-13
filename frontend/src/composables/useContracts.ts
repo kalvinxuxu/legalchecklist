@@ -25,14 +25,23 @@ export interface ReviewResult {
     risk_description?: string
     risk_level?: 'high' | 'medium' | 'low'
     suggestion?: string
+    legal_reference?: string
+    policy_reference?: string
   }>
   missing_clauses: Array<{
     title?: string
     description?: string
     suggestion?: string
+    legal_reference?: string
+    policy_reference?: string
   }>
   suggestions: Array<{ title?: string; content?: string }>
   legal_references?: string[]
+  policy_references?: Array<{
+    policy_name?: string
+    section?: string
+    content?: string
+  }>
 }
 
 export interface ContractUnderstanding {

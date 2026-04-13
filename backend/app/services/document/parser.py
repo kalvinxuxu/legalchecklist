@@ -180,12 +180,17 @@ class AliyunDocumentParser:
                         text_parts.append(page_text)
 
             if text_parts and len("\n".join(text_parts).strip()) > 100:
-                return {
-                    "text": "\n\n".join(text_parts),
-                    "pages": pages,
-                    "elements": [],
-                    "source": "local_pdfplumber"
-                }
+                full_text = "\n\n".join(text_parts)
+                # 检测是否为乱码（包含过多不可见字符或特殊字符）
+                if self._is_garbled_text(full_text):
+                    print(f"pdfplumber 提取的文本疑似乱码，尝试 OCR...")
+                else:
+                    return {
+                        "text": full_text,
+                        "pages": pages,
+                        "elements": [],
+                        "source": "local_pdfplumber"
+                    }
         except Exception as e:
             print(f"pdfplumber 解析失败: {e}")
 
@@ -206,12 +211,17 @@ class AliyunDocumentParser:
             doc.close()
 
             if text_parts and len("\n".join(text_parts).strip()) > 100:
-                return {
-                    "text": "\n\n".join(text_parts),
-                    "pages": pages,
-                    "elements": [],
-                    "source": "local_pymupdf"
-                }
+                full_text = "\n\n".join(text_parts)
+                # 检测是否为乱码
+                if self._is_garbled_text(full_text):
+                    print(f"pymupdf 提取的文本疑似乱码，尝试 OCR...")
+                else:
+                    return {
+                        "text": full_text,
+                        "pages": pages,
+                        "elements": [],
+                        "source": "local_pymupdf"
+                    }
         except Exception as e:
             print(f"pymupdf 解析失败: {e}")
 
@@ -407,6 +417,45 @@ class AliyunDocumentParser:
             "tables": tables,
             "source": "local_python_docx"
         }
+
+    def _is_garbled_text(self, text: str) -> bool:
+        """
+        检测文本是否为乱码
+
+        判断逻辑：
+        1. 替换字符（U+FFFD �）比例过高
+        2. 不可见字符（如 \x00-\x08）比例过高
+        3. 连续 ASCII 字符（如 I、█）比例过高
+        4. 中文字符比例为 0 且文本较长
+        """
+        if not text:
+            return True
+
+        # 统计各类字符
+        total = len(text)
+        replacement_char = '\ufffd'  # U+FFFD 替换字符
+        replacement_count = text.count(replacement_char)
+        invisible = sum(1 for c in text if ord(c) < 0x20 and c not in '\n\r\t')
+        ascii_count = sum(1 for c in text if 32 <= ord(c) < 127 and c not in '\n\r\t ')
+        chinese_count = sum(1 for c in text if '\u4e00' <= c <= '\u9fff')
+
+        # 替换字符超过 10%（PDF 字体无法识别的标志）
+        if replacement_count / total > 0.1:
+            return True
+
+        # 不可见字符超过 5%
+        if invisible / total > 0.05:
+            return True
+
+        # 纯 ASCII 字符（可能是乱码如 █████ 或 IIIIIII）
+        if ascii_count / total > 0.7 and chinese_count == 0:
+            return True
+
+        # 中文字符为 0 且文本长度 > 50（正常中文文本应有中文）
+        if chinese_count == 0 and total > 50:
+            return True
+
+        return False
 
     def _get_timestamp(self) -> str:
         """获取 ISO8601 格式时间戳"""

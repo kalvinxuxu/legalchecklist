@@ -3,13 +3,13 @@ LLM 客户端单元测试
 """
 import pytest
 from unittest.mock import AsyncMock, patch, MagicMock
-from app.services.llm.client import zhipu_llm, ZhipuLLMClient
+from app.services.llm.client import zhipu_llm, DeepSeekLLMClient
 
 
 @pytest.fixture
 def llm_client():
     """创建 LLM 客户端实例"""
-    return ZhipuLLMClient()
+    return DeepSeekLLMClient()
 
 
 @pytest.mark.asyncio
@@ -159,7 +159,7 @@ class TestZhipuLLMConfiguration:
 
     async def test_default_timeout(self, llm_client):
         """测试默认超时设置"""
-        assert llm_client.timeout == 60.0
+        assert llm_client.timeout == 180.0
 
     async def test_default_temperature(self, llm_client):
         """测试默认温度值"""

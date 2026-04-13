@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
+import { ref, shallowRef, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import * as pdfjsLib from 'pdfjs-dist'
 import api from '@/lib/api'
 import { cn } from '@/lib/utils'
@@ -38,7 +38,7 @@ const loading = ref(true)
 const error = ref(false)
 const errorMessage = ref('')
 
-const pdfDoc = ref<pdfjsLib.PDFDocumentProxy | null>(null)
+const pdfDoc = shallowRef<pdfjsLib.PDFDocumentProxy | null>(null)
 const currentPage = ref(1)
 const totalPages = ref(0)
 const scale = ref(1.0)
@@ -47,8 +47,23 @@ const canvasHeight = ref(0)
 
 const showHighlightLayer = ref(true)
 
+// 竞态保护：跟踪当前加载任务
+let currentLoadingTask: pdfjsLib.PDFDocumentLoadingTask | null = null
+
 // Load PDF
 const loadPdf = async () => {
+  // 取消上一个还在加载中的任务
+  if (currentLoadingTask) {
+    try {
+      await currentLoadingTask.destroy()
+    } catch (e) {
+      // ignore
+    }
+    currentLoadingTask = null
+  }
+
+  await destroyPdf()
+
   loading.value = true
   error.value = false
 
@@ -58,18 +73,32 @@ const loadPdf = async () => {
       { responseType: 'arraybuffer' }
     ) as ArrayBuffer
 
-    const loadingTask = pdfjsLib.getDocument({ data: response })
-    pdfDoc.value = await loadingTask.promise
+    currentLoadingTask = pdfjsLib.getDocument({ data: response })
+    pdfDoc.value = await currentLoadingTask.promise
+    currentLoadingTask = null
     totalPages.value = pdfDoc.value.numPages
 
     await renderPage(1)
-  } catch (err) {
-    console.error('PDF load failed:', err)
-    error.value = true
-    errorMessage.value = 'PDF加载失败'
+  } catch (err: any) {
+    if (err?.name !== 'AbortException') {
+      console.error('PDF load failed:', err)
+      error.value = true
+      errorMessage.value = 'PDF加载失败'
+    }
   } finally {
     loading.value = false
   }
+}
+
+// 安全销毁 PDF
+async function destroyPdf() {
+  if (!pdfDoc.value) return
+  try {
+    await pdfDoc.value.destroy()
+  } catch (e) {
+    console.warn('PDF destroy warning:', e)
+  }
+  pdfDoc.value = null
 }
 
 // Render page
@@ -207,9 +236,16 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  if (pdfDoc.value) {
-    pdfDoc.value.destroy()
+  // 取消正在加载的任务
+  if (currentLoadingTask) {
+    try {
+      currentLoadingTask.destroy()
+    } catch (e) {
+      // ignore
+    }
+    currentLoadingTask = null
   }
+  destroyPdf()
 })
 
 defineExpose({ jumpToClause })

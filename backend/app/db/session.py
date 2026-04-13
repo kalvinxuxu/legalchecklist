@@ -71,17 +71,12 @@ class Database:
             await self.engine.dispose()
 
     async def create_all_tables(self) -> None:
-        """创建所有表（仅开发环境）"""
+        """创建所有表"""
         from app.models.base import Base
         from app.models import Tenant, User, Workspace, Contract, LegalKnowledge, ContractUnderstanding, ClauseLocation  # noqa: F401
 
         async with self.engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
-
-            # PostgreSQL: 启用 pgvector 扩展
-            if settings.is_postgresql:
-                from sqlalchemy import text
-                await conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
 
     async def drop_all_tables(self) -> None:
         """删除所有表（仅开发环境）"""

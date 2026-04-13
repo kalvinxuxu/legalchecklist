@@ -30,10 +30,14 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     environment:
-      - DATABASE_URL=mysql://root:${MYSQL_PASSWORD}@db:3306/legal_saas
+      - DATABASE_TYPE=postgresql
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/legal_saas
+      - CHROMA_PERSIST_DIR=/app/data/chroma
       - REDIS_URL=redis://redis:6379
-      - ZHIPU_API_KEY=${ZHIPU_API_KEY}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
       - JWT_SECRET=${JWT_SECRET}
+    volumes:
+      - chroma_data:/app/data/chroma
     depends_on:
       - db
       - redis
@@ -41,15 +45,27 @@ services:
       - legal-net
     restart: unless-stopped
 
-  db:
-    image: mysql:8.0
-    environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_DATABASE=legal_saas
-      - MYSQL_CHARSET=utf8mb4
-      - MYSQL_COLLATION=utf8mb4_unicode_ci
+  # Chroma 向量数据库（独立服务）
+  chroma:
+    image: ghcr.io/chroma-core/chroma:0.4.22
     volumes:
-      - mysql_data:/var/lib/mysql
+      - chroma_data:/chroma/chroma_data
+    networks:
+      - legal-net
+    restart: unless-stopped
+    # 如需 API 访问，可暴露端口
+    # ports:
+    #   - "8000:8000"
+
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=legal_saas
+      - POSTGRES_INITDB_ARGS=--encoding=UTF8 --lc-collate=C --lc-ctype=C
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
       - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - legal-net
@@ -64,8 +80,9 @@ services:
     restart: unless-stopped
 
 volumes:
-  mysql_data:
+  postgres_data:
   redis_data:
+  chroma_data:
 
 networks:
   legal-net:
