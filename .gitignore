@@ -94,7 +94,6 @@ logs/
 
 # Environment
 .env.fly
-.env.example
 
 # Database
 *.db
