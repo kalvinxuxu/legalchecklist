@@ -68,6 +68,11 @@ def create_app() -> FastAPI:
     # 注册路由
     app.include_router(api_router, prefix="/api/v1")
 
+    # 健康检查端点（必须在静态文件路由之前）
+    @app.get("/health")
+    async def health_check():
+        return {"status": "healthy"}
+
     # 服务前端静态文件（生产环境）
     static_path = Path("/app/static")
     if static_path.exists():
@@ -95,10 +100,6 @@ def create_app() -> FastAPI:
             if index_path.exists():
                 return FileResponse(index_path)
             return {"status": "frontend not built"}
-
-    @app.get("/health")
-    async def health_check():
-        return {"status": "healthy"}
 
     return app
 
