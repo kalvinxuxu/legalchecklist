@@ -22,7 +22,7 @@ const steps = [
   {
     number: '2',
     title: 'AI 智能审查',
-    description: '30 秒内完成条款解析，识别风险点并给出修改建议',
+    description: '2-3 分钟内完成深度条款解析，识别风险点并给出修改建议',
     icon: 'search' as const,
   },
   {
@@ -49,8 +49,8 @@ const currentSample = computed(() => {
 const highlights = [
   {
     icon: Sparkles,
-    title: '30 秒智能审查',
-    description: 'AI 驱动的条款解析，快速识别风险点',
+    title: 'AI 智能审查',
+    description: '深度条款解析，快速识别风险点',
     color: 'bg-blue-50',
     iconColor: 'text-blue-600',
   },
@@ -96,7 +96,7 @@ const highlights = [
               />
             </svg>
           </div>
-          <span class="text-sm font-semibold tracking-tight text-gray-900">法务 AI</span>
+          <span class="text-sm font-semibold tracking-tight text-gray-900">法务AI Box</span>
         </div>
         <div class="flex items-center gap-6">
           <button
@@ -128,7 +128,7 @@ const highlights = [
           体验 AI 合同审查<br class="hidden md:block" />全流程
         </h1>
         <p class="text-lg text-gray-500 leading-relaxed max-w-xl mx-auto">
-          了解如何通过法务 AI 平台完成合同审查，从上传到报告只需三步。
+          了解如何通过法务AI Box 平台完成合同审查，从上传到报告只需三步。
         </p>
       </div>
     </section>
@@ -264,9 +264,9 @@ const highlights = [
               />
             </svg>
           </div>
-          <span class="text-xs font-medium text-gray-500">法务 AI</span>
+          <span class="text-xs font-medium text-gray-500">法务AI Box</span>
         </div>
-        <p class="text-xs text-gray-400">© 2024 法务 AI. 智能合同审查服务</p>
+        <p class="text-xs text-gray-400">© 2024 法务AI Box. 智能合同审查服务</p>
       </div>
     </footer>
   </div>
