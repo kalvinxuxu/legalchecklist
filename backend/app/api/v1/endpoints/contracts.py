@@ -16,6 +16,7 @@ from sqlalchemy import select
 
 from app.db.session import get_db, db
 from app.schemas import ContractResponse, ContractCreate, ReviewStatus, ContractType
+from app.schemas import ReviewConfig  # 审查立场配置
 from app.api.v1.endpoints.auth import get_current_user
 from app.middleware.tenant_isolation import verify_contract_access, verify_workspace_access
 from app.models.contract import Contract, ContractType as ContractTypeEnum, ReviewStatus as ReviewStatusEnum
@@ -162,7 +163,16 @@ async def process_contract_upload(
 
             logger.info(f"[Review] Parsing document for contract {contract_id}")
 
-            # 2. 解析文档
+            # 2. 检查文件是否存在
+            import os
+            if not os.path.exists(file_path):
+                logger.error(f"[Review] File not found: {file_path}")
+                contract.review_status = ReviewStatusEnum.failed
+                contract.review_error = f"文件不存在或已被删除: {file_path}"
+                await session.commit()
+                return
+
+            # 3. 解析文档
             if file_path.endswith(".pdf"):
                 parse_result = await document_parser.parse_pdf(file_path)
             else:
@@ -214,12 +224,21 @@ async def process_contract_upload(
                 # 理解分析失败不应该阻止后续流程
                 logger.error(f"[Review] Understanding analysis failed for contract {contract_id}: {understanding_error}")
 
-            # 6. 执行审查（第二步，传递 tenant_id 以检索公司政策库）
+            # 获取审查配置（从合同记录中读取）
+            review_config = contract.review_config or {}
+            party_position = review_config.get("party_position")
+            contract_amount = review_config.get("contract_amount")
+            risk_preference = review_config.get("risk_preference")
+
+            # 6. 执行审查（第二步，传递 tenant_id 和审查立场配置）
             logger.info(f"[Review] Running LLM review for contract {contract_id}")
             review_result = await review_service.review_contract(
                 contract_text=contract.content_text,
                 contract_type=contract_type_str,
-                tenant_id=tenant_id
+                tenant_id=tenant_id,
+                party_position=party_position,
+                contract_amount=contract_amount,
+                risk_preference=risk_preference
             )
             logger.info(f"[Review] Review completed for contract {contract_id}")
 
@@ -337,10 +356,20 @@ async def upload_contract(
     file: UploadFile = File(...),
     workspace_id: str = Form(...),
     contract_type: str | None = Form(None),
+    # 审查立场配置
+    party_position: str | None = Form(None),
+    contract_amount: float | None = Form(None),
+    risk_preference: str | None = Form(None),
+    # 是否自动触发审查，默认为 True（保持向后兼容）
+    # 注意：FormData 发送的是字符串，需要手动转换布尔值
+    auto_review_str: str = Form('true'),
     current_user: UserModel = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
     """上传合同文件"""
+    # 将字符串 'true'/'false' 转换为布尔值
+    auto_review = auto_review_str.lower() == 'true'
+
     # 验证文件扩展名
     file_extension = file.filename.split(".")[-1].lower() if "." in file.filename else ""
     allowed_extensions = ["pdf", "docx"]
@@ -418,6 +447,15 @@ async def upload_contract(
         except ValueError:
             contract_type_enum = ContractTypeEnum.other
 
+    # 审查立场配置
+    review_config = {}
+    if party_position or contract_amount or risk_preference:
+        review_config = {
+            "party_position": party_position,
+            "contract_amount": contract_amount,
+            "risk_preference": risk_preference
+        }
+
     # 创建合同记录
     contract = Contract(
         id=str(uuid.uuid4()),
@@ -428,20 +466,26 @@ async def upload_contract(
         file_hash=file_hash,
         contract_type=contract_type_enum,
         review_status=ReviewStatusEnum.pending,
+        review_config=review_config,  # 保存审查立场配置
     )
     db.add(contract)
     await db.commit()
     await db.refresh(contract)
 
-    # 同步处理合同（解析 + 审查）- 直接await而非后台任务
-    # 后台任务在容器环境中会丢失，所以这里同步执行
-    await process_contract_upload(contract.id, str(file_path))
+# 根据 auto_review 参数决定是否立即触发审查
+    if auto_review:
+        # 同步处理合同（解析 + 审查）- 直接await而非后台任务
+        # 后台任务在容器环境中会丢失，所以这里同步执行
+        await process_contract_upload(contract.id, str(file_path))
 
-    # 重新获取最新状态
-    result = await db.execute(
-        select(Contract).where(Contract.id == contract.id)
-    )
-    contract = result.scalar_one()
+        # 重新获取最新状态
+        result = await db.execute(
+            select(Contract).where(Contract.id == contract.id)
+        )
+        contract = result.scalar_one()
+    else:
+        # 不自动审查，仅保存合同，状态保持为 pending
+        pass
 
     return contract
 
@@ -548,6 +592,82 @@ async def update_contract_type(
     await db.commit()
     await db.refresh(contract)
     return {"message": "更新成功", "contract_type": contract.contract_type.value}
+
+
+@router.post("/{contract_id}/review-config")
+async def update_review_config(
+    config: ReviewConfig,
+    contract: Contract = Depends(verify_contract_access),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    更新审查立场配置（甲乙方立场、合同金额、风险偏好）
+
+    配置后将用于 AI 审查，实现「站在你这边的 AI 法务」功能
+    """
+    # 保存配置到数据库
+    config_dict = {
+        "party_position": config.party_position,
+        "contract_amount": config.contract_amount,
+        "risk_preference": config.risk_preference
+    }
+    contract.review_config = config_dict
+    await db.commit()
+
+    return {
+        "message": "配置已保存",
+        "config": config_dict
+    }
+
+
+@router.get("/{contract_id}/review-config")
+async def get_review_config(
+    contract: Contract = Depends(verify_contract_access)
+):
+    """获取审查立场配置"""
+    return {
+        "party_position": contract.review_config.get("party_position") if contract.review_config else None,
+        "contract_amount": contract.review_config.get("contract_amount") if contract.review_config else None,
+        "risk_preference": contract.review_config.get("risk_preference") if contract.review_config else None
+    }
+
+
+@router.post("/{contract_id}/rerun-review")
+async def rerun_review(
+    contract: Contract = Depends(verify_contract_access),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    重新审查合同（使用当前配置的立场）
+    """
+    import logging
+    import os
+    logger = logging.getLogger(__name__)
+
+    # 检查文件是否存在
+    file_path = str(resolve_contract_file_path(contract.file_path))
+    if not os.path.exists(file_path):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"文件不存在或已被删除，无法重新审查"
+        )
+
+    # 更新状态为 pending
+    contract.review_status = ReviewStatusEnum.pending
+    contract.review_result = None  # 清除旧结果
+    await db.commit()
+
+    # 触发审查流程
+    try:
+        trigger_contract_review(contract.id, contract.file_path)
+        logger.info(f"[Rerun] Review triggered for contract {contract.id}")
+        return {"message": "重新审查已启动", "status": contract.review_status.value}
+    except Exception as e:
+        logger.error(f"[Rerun] Failed to trigger review for contract {contract.id}: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"启动重新审查失败: {str(e)}"
+        )
 
 
 @router.get("/{contract_id}/review", response_model=dict)
@@ -948,6 +1068,102 @@ async def get_revised_word(
 
     return StreamingResponse(
         io.BytesIO(revised_bytes),
+        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        headers={
+            "Content-Disposition": f"attachment; filename*=UTF-8''{encoded_filename}"
+        }
+    )
+
+
+@router.post("/{contract_id}/export-review-report")
+async def export_review_report(
+    options: Dict[str, Any],
+    contract: Contract = Depends(verify_contract_access)
+):
+    """
+    导出审查报告为 Word 文档
+
+    支持两种导出模式:
+    - export_type="review_report": 结构化审查报告（默认）
+    - export_type="original_with_comments": 原文+审批批注（仅限.docx文件）
+
+    审查报告模式支持:
+    - 风险条款
+    - 缺失条款
+    - 修改建议
+    - 规则判定结果
+    - 政策参考
+    """
+    if contract.review_status != ReviewStatusEnum.completed:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"合同尚未完成审查，当前状态：{contract.review_status.value}"
+        )
+
+    if not contract.review_result:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="未找到审查结果"
+        )
+
+    from fastapi.responses import StreamingResponse
+    import io
+    from urllib.parse import quote
+    import logging
+
+    logger = logging.getLogger(__name__)
+
+    export_type = options.get("export_type", "review_report")
+    logger.info(f"[Export] export_type={export_type}, file_path={contract.file_path}")
+
+    # 原文+审批批注模式（仅限.docx文件）
+    if export_type == "original_with_comments":
+        if not contract.file_path.endswith(".docx"):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="原文+审批批注功能仅支持 Word (.docx) 文件"
+            )
+
+        from app.services.word import revision_doc_generator
+        from app.api.v1.endpoints.contracts import resolve_contract_file_path
+
+        # 解析文件路径
+        resolved_file_path = str(resolve_contract_file_path(contract.file_path))
+
+        # 生成带批注的文档
+        revised_bytes = revision_doc_generator.add_review_comments_to_document(
+            resolved_file_path,
+            contract.review_result
+        )
+
+        # 生成文件名
+        safe_filename = f"批注版_{contract.file_name}"
+        encoded_filename = quote(safe_filename)
+
+        return StreamingResponse(
+            io.BytesIO(revised_bytes),
+            media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            headers={
+                "Content-Disposition": f"attachment; filename*=UTF-8''{encoded_filename}"
+            }
+        )
+
+    # 默认：审查报告模式
+    from app.services.word import review_report_exporter
+
+    # 生成审查报告
+    report_bytes = review_report_exporter.generate_review_report(
+        contract.file_name,
+        contract.review_result,
+        options
+    )
+
+    # 生成报告文件名
+    safe_filename = f"审查报告_{contract.file_name.replace('.pdf', '').replace('.docx', '')}.docx"
+    encoded_filename = quote(safe_filename)
+
+    return StreamingResponse(
+        io.BytesIO(report_bytes),
         media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         headers={
             "Content-Disposition": f"attachment; filename*=UTF-8''{encoded_filename}"
