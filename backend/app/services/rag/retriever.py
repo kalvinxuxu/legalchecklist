@@ -5,6 +5,7 @@ RAG 检索器 - 兼容性别名
 实际检索逻辑已迁移到 vector_retriever.py
 """
 # 重新导出，保持向后兼容
-from app.services.rag.vector_retriever import retriever, VectorRAGRetriever
+from app.services.rag.hybrid_retriever import retriever, HybridRetriever
+from app.services.rag.vector_retriever import VectorRAGRetriever
 
-__all__ = ["retriever", "VectorRAGRetriever"]
+__all__ = ["retriever", "HybridRetriever", "VectorRAGRetriever"]

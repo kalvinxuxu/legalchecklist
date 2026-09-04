@@ -60,6 +60,11 @@ const router = createRouter({
           name: 'Policies',
           component: () => import('@/views/Policies.vue'),
         },
+        {
+          path: 'profile',
+          name: 'Profile',
+          component: () => import('@/views/Profile.vue'),
+        },
       ],
     },
   ],

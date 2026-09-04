@@ -9,10 +9,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
 from pathlib import Path
+from sqlalchemy import select
 
 from app.core.config import settings
 from app.api.v1 import api_router
 from app.db.session import db
+from app.models.contract import Contract, ReviewStatus as ReviewStatusEnum
+from app.models.review_run import ReviewRun
 
 # 配置日志
 logging.basicConfig(
@@ -26,16 +29,88 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     """应用生命周期管理"""
     # 启动时连接数据库并创建表
+    settings.require_postgresql()
     db.connect()
-    logger.info(f"Database connected. Type: {settings.DATABASE_TYPE}, Path: {settings.sqlite_path}")
-    # 开发环境或 SQLite 生产环境自动创建表
-    if settings.ENVIRONMENT == "development" or (settings.is_sqlite and settings.sqlite_path.startswith("/")):
+    logger.info("Database connected. Type: PostgreSQL")
+    # 开发环境或 PostgreSQL 生产环境自动创建表
+    if settings.ENVIRONMENT == "development" or not settings.is_sqlite:
         logger.info("Creating database tables...")
+        # PostgreSQL 环境先尝试修复不完整的表结构
+        if settings.is_postgresql:
+            await fix_postgres_schema()
         await db.create_all_tables()
+        await recover_legacy_processing_contracts()
         logger.info("Database tables created/verified")
     yield
     # 关闭时断开数据库连接
     await db.disconnect()
+
+
+async def fix_postgres_schema():
+    """修复早期 PostgreSQL 表结构问题。"""
+    try:
+        from sqlalchemy import text
+        async with db.engine.connect() as conn:
+            # create_all 不会修改已有表；这些字段需要兼容旧 Docker volume。
+            await conn.execute(text(
+                "ALTER TABLE contracts ADD COLUMN IF NOT EXISTS review_config JSONB"
+            ))
+            await conn.commit()
+            # 检查 users 表是否有 name 列
+            result = await conn.execute(text("""
+                SELECT column_name FROM information_schema.columns
+                WHERE table_name = 'users' AND column_name = 'name'
+            """))
+            has_name_column = result.fetchone() is not None
+
+            if not has_name_column:
+                logger.warning("PostgreSQL: users table missing 'name' column, adding it...")
+                # 检查 tenants 表是否存在
+                result = await conn.execute(text("""
+                    SELECT table_name FROM information_schema.tables
+                    WHERE table_name = 'tenants'
+                """))
+                tenants_exists = result.fetchone() is not None
+
+                if not tenants_exists:
+                    # 表结构完全不完整，需要重建
+                    logger.warning("PostgreSQL: tables are incomplete, will recreate...")
+                    await conn.execute(text("DROP TABLE IF EXISTS users CASCADE"))
+                    await conn.execute(text("DROP TABLE IF EXISTS workspaces CASCADE"))
+                    await conn.execute(text("DROP TABLE IF EXISTS contracts CASCADE"))
+                    await conn.execute(text("DROP TABLE IF EXISTS legal_knowledge CASCADE"))
+                    await conn.execute(text("DROP TABLE IF EXISTS tenants CASCADE"))
+                    await conn.execute(text("DROP TABLE IF EXISTS contract_understandings CASCADE"))
+                    await conn.execute(text("DROP TABLE IF EXISTS clause_locations CASCADE"))
+                    await conn.commit()
+                    logger.info("PostgreSQL: dropped incomplete tables, will recreate...")
+                else:
+                    #  tenants 存在，只是 users 缺少 name 列
+                    await conn.execute(text("ALTER TABLE users ADD COLUMN name VARCHAR(100)"))
+                    await conn.commit()
+                    logger.info("PostgreSQL: added 'name' column to users table")
+    except Exception as e:
+        logger.error(f"PostgreSQL schema fix failed: {e}")
+
+
+async def recover_legacy_processing_contracts():
+    """Mark pre-checkpoint processing jobs as recoverable instead of hiding them."""
+    async with db.async_session_maker() as session:
+        result = await session.execute(
+            select(Contract).where(Contract.review_status == ReviewStatusEnum.processing)
+        )
+        changed = 0
+        for contract in result.scalars().all():
+            run_result = await session.execute(
+                select(ReviewRun.id).where(ReviewRun.contract_id == contract.id).limit(1)
+            )
+            if run_result.scalar_one_or_none() is None:
+                contract.review_status = ReviewStatusEnum.failed
+                contract.review_error = "旧版审查任务已中断，请点击从断点继续重新执行"
+                changed += 1
+        if changed:
+            await session.commit()
+            logger.warning("Recovered %s legacy processing contracts", changed)
 
 
 def create_app() -> FastAPI:

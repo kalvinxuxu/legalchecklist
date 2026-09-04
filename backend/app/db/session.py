@@ -3,6 +3,7 @@ SQLAlchemy 异步会话管理 - 支持 MySQL、PostgreSQL 和 SQLite
 """
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy import inspect, text
 from typing import AsyncGenerator
 from app.core.config import settings
 
@@ -73,10 +74,21 @@ class Database:
     async def create_all_tables(self) -> None:
         """创建所有表"""
         from app.models.base import Base
-        from app.models import Tenant, User, Workspace, Contract, LegalKnowledge, ContractUnderstanding, ClauseLocation  # noqa: F401
+        from app.models import Tenant, User, Workspace, Contract, LegalKnowledge, ContractUnderstanding, ClauseLocation, ReviewRun, ReviewStep, DocumentRecord, DocumentVersion, ParseAttempt, DocumentPage, DocumentBlock, DocumentSpan, DocumentChunk, ReviewEvidence  # noqa: F401
 
         async with self.engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
+            # SQLAlchemy 的 create_all 不会更新已经存在的旧表。补齐早期
+            # SQLite 数据库缺失的 users.name 列，否则注册时查询用户会直接 500。
+            if self.engine.dialect.name == "sqlite":
+                columns = await conn.run_sync(
+                    lambda sync_conn: {
+                        column["name"]
+                        for column in inspect(sync_conn).get_columns("users")
+                    }
+                )
+                if "name" not in columns:
+                    await conn.execute(text("ALTER TABLE users ADD COLUMN name VARCHAR(100)"))
 
     async def drop_all_tables(self) -> None:
         """删除所有表（仅开发环境）"""

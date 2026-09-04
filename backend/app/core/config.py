@@ -14,20 +14,18 @@ class Settings(BaseSettings):
     # ========== 环境 ==========
     ENVIRONMENT: str = "development"  # development / production
 
-    # ========== Celery（已弃用，使用 asyncio）==========
-    USE_CELERY: bool = False  # 是否使用 Celery（默认使用 asyncio）
-
     # ========== 数据库 ==========
-    DATABASE_TYPE: str = "sqlite"  # sqlite / mysql / postgresql
+    DATABASE_TYPE: str = "postgresql"
     DATABASE_URL: Optional[str] = None  # MySQL/PostgreSQL 连接字符串
     SQLITE_PATH: Optional[str] = None  # SQLite 数据库路径
 
     # ========== 向量数据库（Chroma）==========
     EMBEDDING_DIMENSION: int = 1024  # 智谱 embedding-2 维度
     CHROMA_PERSIST_DIR: str = os.getenv("CHROMA_PERSIST_DIR", "/app/data/chroma")
+    VECTOR_STORE: str = "pgvector"  # pgvector / chroma
 
     # ========== 智谱 AI Embedding ==========
-    ZHIPU_EMBEDDING_API_KEY: str = "041eaab02d734ad0a3a0cce4ae063830.gQwbnbaDidReZ5Hx"
+    ZHIPU_EMBEDDING_API_KEY: Optional[str] = None
     ZHIPU_EMBEDDING_MODEL: str = "embedding-2"
     ZHIPU_EMBEDDING_BASE_URL: str = "https://open.bigmodel.cn/api/paas/v4"
 
@@ -46,11 +44,56 @@ class Settings(BaseSettings):
     MINIMAX_API_KEY: Optional[str] = None  # 视觉理解用
     MINIMAX_VISION_MODEL: str = "MiniMax-VL-01"
 
+    # ========== 统一文档摄取 ==========
+    DOCUMENT_AST_ENABLED: bool = True
+    DOCLING_ENABLED: bool = False
+    MINERU_ENABLED: bool = False
+    LINUX_OCR_ENABLED: bool = False
+    DOCUMENT_PARSE_QUALITY_THRESHOLD: float = 0.75
+    OCR_LANGUAGES: str = "chi_sim+eng"
+    RAG_HYBRID_ENABLED: bool = True
+    RAG_BM25_CANDIDATE_K: int = 20
+    RAG_VECTOR_CANDIDATE_K: int = 20
+    RAG_RRF_K: int = 60
+    RAG_RERANK_TOP_K: int = 8
+    RAG_RERANKER_PROVIDER: str = "bge_local"
+    RAG_RERANKER_MODEL: str = "BAAI/bge-reranker-v2-m3"
+    RAG_RERANKER_TIMEOUT_SECONDS: float = 8.0
+    RAG_RERANKER_BATCH_SIZE: int = 8
+    RAG_RERANKER_CANDIDATE_K: int = 40
+    RAG_CONTRACT_CANDIDATE_K: int = 12
+    RAG_CONTRACT_TOP_K: int = 8
+    RAG_CHUNK_MAX_CHARS: int = 1800
+    RAG_CHUNK_OVERLAP_CHARS: int = 200
+    RAG_CHUNK_TARGET_TOKENS: int = 700
+    RAG_CHUNK_MAX_TOKENS: int = 1200
+    RAG_CHUNK_OVERLAP_TOKENS: int = 100
+    RAG_SEMANTIC_CHUNKING_ENABLED: bool = False
+    RAG_SEMANTIC_BOUNDARY_THRESHOLD: float = 0.35
+    EMBEDDING_PROVIDER: str = "zhipu"  # zhipu / local
+    EMBEDDING_MODEL_VERSION: str = "v1"
+    EMBEDDING_NORMALIZE: bool = True
+    LOCAL_EMBEDDING_MODEL: str = "BAAI/bge-m3"
+    RAG_RERANKER_CACHE_DIR: Optional[str] = None
+    RAG_RERANKER_SCORE_NORMALIZATION: str = "sigmoid"
+    JINA_API_KEY: Optional[str] = None
+    JINA_RERANKER_MODEL: str = "jina-reranker-v2-base-multilingual"
+    JINA_BASE_URL: str = "https://api.jina.ai/v1/rerank"
+    MAIL_PROVIDER: str = "mock"  # mock / qq_imap
+    QQ_IMAP_HOST: str = "imap.qq.com"
+    QQ_IMAP_PORT: int = 993
+    # 兼容现有本地/部署环境中的通用邮件变量。
+    QQ_MAIL_USERNAME: Optional[str] = os.getenv("QQ_MAIL_USERNAME") or os.getenv("MAIL_USER")
+    QQ_MAIL_APP_PASSWORD: Optional[str] = os.getenv("QQ_MAIL_APP_PASSWORD") or os.getenv("MAIL_PASSWORD")
+    QQ_MAIL_DRAFTS_FOLDER: str = "草稿箱"
+    RAG_FTS_LANGUAGE: str = "simple"
+    RAG_P95_LATENCY_MS: int = 1200
+
     # ========== 文件存储 ==========
-    # 本地存储（开发/ Fly.io）：使用 Fly Volumes 挂载点
+    # 本地存储（开发环境或 Railway 持久化卷）
     # 生产环境可切换到 S3/R2/OSS
     STORAGE_TYPE: str = "local"  # local / s3 / r2 / oss
-    # Fly.io 容器中 /app/data 是持久化存储的挂载点
+    # Railway 中建议挂载 Volume 到 /app/data
     STORAGE_PATH: str = os.getenv("STORAGE_PATH", "/app/data/uploads")
 
     # S3 兼容存储（可选）
@@ -80,6 +123,13 @@ class Settings(BaseSettings):
     def is_postgresql(self) -> bool:
         return self.DATABASE_TYPE == "postgresql"
 
+    def require_postgresql(self) -> None:
+        """Fail fast: durable review cannot run without PostgreSQL."""
+        if not self.is_postgresql:
+            raise RuntimeError("PostgreSQL is required; set DATABASE_TYPE=postgresql")
+        if not self.DATABASE_URL:
+            raise RuntimeError("PostgreSQL is required; set DATABASE_URL")
+
     @property
     def is_sqlite(self) -> bool:
         return self.DATABASE_TYPE == "sqlite"
@@ -88,7 +138,7 @@ class Settings(BaseSettings):
     def database_url(self) -> str:
         """Get database URL based on type"""
         if self.DATABASE_URL:
-            # Fly.io injects postgres:// but SQLAlchemy async driver needs postgresql+asyncpg://
+            # Railway/PostgreSQL 可能注入 postgres://，SQLAlchemy async driver 需要转换。
             url = self.DATABASE_URL
             if url.startswith("postgres://"):
                 url = url.replace("postgres://", "postgresql+asyncpg://", 1)
@@ -109,8 +159,8 @@ class Settings(BaseSettings):
         return self.ENVIRONMENT == "production"
 
     class Config:
-        # 本地开发使用 .env，Fly.io 生产环境使用 .env.fly
-        env_file = str(BACKEND_DIR / ".env") if os.getenv("ENVIRONMENT", "development") != "production" else str(BACKEND_DIR / ".env.fly")
+        # 本地开发使用 .env；Railway 生产环境直接注入环境变量。
+        env_file = str(BACKEND_DIR / ".env")
         case_sensitive = True
         extra = "ignore"  # 允许 .env 中存在未定义的字段
 

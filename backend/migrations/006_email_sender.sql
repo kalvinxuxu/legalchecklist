@@ -1,0 +1,2 @@
+ALTER TABLE email_drafts ADD COLUMN IF NOT EXISTS sender_email VARCHAR(320);
+ALTER TABLE email_drafts ADD COLUMN IF NOT EXISTS attachments JSONB NOT NULL DEFAULT '[]'::jsonb;

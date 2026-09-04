@@ -14,7 +14,7 @@ from sqlalchemy.orm import selectinload
 from app.core.security import create_access_token, get_password_hash
 from app.core.config import settings
 from app.db.session import get_db
-from app.schemas import UserCreate, UserLogin, UserResponse, Token
+from app.schemas import UserCreate, UserLogin, UserResponse, Token, TokenWithUser
 from app.models.tenant import Tenant, TenantPlan
 from app.models.user import User as UserModel, UserRole
 from app.models.workspace import Workspace
@@ -63,34 +63,7 @@ async def get_current_user(
     return user
 
 
-@router.get("/test-llm")
-async def test_llm_connection():
-    """
-    测试 LLM API 连接（无需认证）
-
-    用于诊断审查报告无法生成的问题
-    """
-    from app.services.llm.client import zhipu_llm
-
-    try:
-        result = await zhipu_llm.chat_with_json_output([
-            {"role": "user", "content": '{"status": "ok", "message": "LLM connection successful"}'}
-        ])
-        return {
-            "status": "success",
-            "message": "LLM API connection successful",
-            "result": result
-        }
-    except Exception as e:
-        import traceback
-        return {
-            "status": "error",
-            "message": f"LLM API call failed: {str(e)}",
-            "traceback": traceback.format_exc()
-        }
-
-
-@router.post("/register", response_model=Token)
+@router.post("/register", response_model=TokenWithUser)
 async def register(
     user_in: UserCreate,
     db: AsyncSession = Depends(get_db)
@@ -117,10 +90,11 @@ async def register(
 
         password_hash = get_password_hash(user_in.password)
 
-        # 创建租户
+        # 创建租户 - 如果提供了公司名称则使用，否则使用默认名称
+        tenant_name = user_in.company_name if hasattr(user_in, 'company_name') and user_in.company_name else f"{user_in.email.split('@')[0]} 的租户"
         tenant = Tenant(
             id=tenant_id,
-            name=f"{user_in.email.split('@')[0]} 的租户",  # 默认租户名
+            name=tenant_name,
             plan=TenantPlan.free,
             contract_quota=10,
         )
@@ -131,6 +105,7 @@ async def register(
             id=user_id,
             tenant_id=tenant_id,
             email=user_in.email,
+            name=user_in.name,  # 用户姓名
             password_hash=password_hash,
             role=UserRole.admin,  # 首个用户为管理员
         )
@@ -150,7 +125,25 @@ async def register(
 
         # 生成 Token
         access_token = create_access_token(data={"sub": user_id})
-        return {"access_token": access_token, "token_type": "bearer"}
+        return {
+            "access_token": access_token,
+            "token_type": "bearer",
+            "user": {
+                "id": user_id,
+                "email": user.email,
+                "name": user.name,
+                "role": user.role,
+                "tenant_id": tenant_id,
+                "created_at": user.created_at,
+                "tenant": {
+                    "id": tenant_id,
+                    "name": tenant.name,
+                    "plan": tenant.plan,
+                    "contract_quota": tenant.contract_quota,
+                    "created_at": tenant.created_at,
+                }
+            }
+        }
 
     except HTTPException:
         raise
@@ -163,7 +156,7 @@ async def register(
         )
 
 
-@router.post("/login", response_model=Token)
+@router.post("/login", response_model=TokenWithUser)
 async def login(
     credentials: UserLogin,
     db: AsyncSession = Depends(get_db)
@@ -173,7 +166,9 @@ async def login(
 
     # 查询用户
     result = await db.execute(
-        select(UserModel).where(UserModel.email == credentials.email)
+        select(UserModel)
+        .options(selectinload(UserModel.tenant))
+        .where(UserModel.email == credentials.email)
     )
     user = result.scalar_one_or_none()
 
@@ -185,7 +180,25 @@ async def login(
 
     # 生成 Token
     access_token = create_access_token(data={"sub": user.id})
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user": {
+            "id": user.id,
+            "email": user.email,
+            "name": user.name,
+            "role": user.role,
+            "tenant_id": user.tenant_id,
+            "created_at": user.created_at,
+            "tenant": {
+                "id": user.tenant.id,
+                "name": user.tenant.name,
+                "plan": user.tenant.plan,
+                "contract_quota": user.tenant.contract_quota,
+                "created_at": user.tenant.created_at,
+            } if user.tenant else None
+        }
+    }
 
 
 @router.get("/me", response_model=UserResponse)

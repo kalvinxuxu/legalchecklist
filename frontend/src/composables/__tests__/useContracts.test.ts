@@ -109,7 +109,9 @@ describe('useContracts composables', () => {
         missing_clauses: [],
         suggestions: [],
       }
-      mockApi.get.mockResolvedValue(mockReview)
+      mockApi.get.mockImplementation((path: string) =>
+        Promise.resolve(path.endsWith('/review-status') ? { review_status: 'completed' } : mockReview)
+      )
 
       const wrapper = mountWithQuery(createTestWrapper(() => useReviewResult('contract-123')))
       await new Promise(resolve => setTimeout(resolve, 50))

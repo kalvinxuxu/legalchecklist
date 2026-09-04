@@ -1,0 +1,28 @@
+{
+  "name": "review-evidence",
+  "version": "v1",
+  "purpose": "Additive review result contract for auditable source evidence.",
+  "risk_clause_additions": {
+    "risk_id": "string",
+    "evidence": [
+      {
+        "document_id": "string",
+        "version_id": "string",
+        "chunk_id": "string|null",
+        "block_ids": ["string"],
+        "span_ids": ["string"],
+        "quote": "string",
+        "locations": [
+          {
+            "page": "integer",
+            "bbox": "[number, number, number, number]|null",
+            "span_id": "string|null"
+          }
+        ],
+        "match_type": "id_exact|offset_exact|fuzzy_legacy|page_only",
+        "confidence": "number"
+      }
+    ]
+  },
+  "compatibility": "Existing original_text remains readable during migration; new clients prefer evidence."
+}

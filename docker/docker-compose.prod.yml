@@ -90,6 +90,31 @@ services:
       retries: 3
       start_period: 40s
 
+  # ============ 可恢复合同审查 Worker ============
+  review-worker:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    command: python review_worker.py
+    env_file:
+      - .env
+    environment:
+      - DATABASE_TYPE=postgresql
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/legal_saas
+      - CHROMA_PERSIST_DIR=/app/data/chroma
+      - REDIS_URL=redis://redis:6379
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      - JWT_SECRET=${JWT_SECRET}
+    volumes:
+      - chroma_data:/app/data/chroma
+      - uploads_data:/app/data/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - legal-net
+    restart: unless-stopped
+
   # ============ Chroma 向量数据库 ============
   chroma:
     image: ghcr.io/chroma-core/chroma:0.5.4

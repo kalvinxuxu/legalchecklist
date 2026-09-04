@@ -1,0 +1,26 @@
+[
+  {"query": "违约责任", "relevant_ids": ["risk-1"], "candidates": [
+    {"id": "risk-1", "content": "违约责任及违约金", "vector_score": 0.82, "authority_level": "statute", "source_status": "effective"},
+    {"id": "other-1", "content": "合同定义", "vector_score": 0.91, "authority_level": "article", "source_status": "effective"}
+  ]},
+  {"query": "保密义务", "relevant_ids": ["risk-2"], "candidates": [
+    {"id": "other-2", "content": "一般合作义务", "vector_score": 0.90, "authority_level": "article", "source_status": "effective"},
+    {"id": "risk-2", "content": "保密义务和商业秘密", "vector_score": 0.78, "authority_level": "statute", "source_status": "effective"}
+  ]},
+  {"query": "付款期限", "relevant_ids": ["risk-3"], "candidates": [
+    {"id": "other-3", "content": "项目交付与验收", "vector_score": 0.93, "authority_level": "article", "source_status": "effective"},
+    {"id": "risk-3", "content": "付款期限及付款条件", "vector_score": 0.81, "authority_level": "regulation", "source_status": "effective"}
+  ]},
+  {"query": "合同解除", "relevant_ids": ["risk-4"], "candidates": [
+    {"id": "risk-4", "content": "合同解除与终止", "vector_score": 0.79, "authority_level": "statute", "source_status": "effective"},
+    {"id": "other-4", "content": "通知送达", "vector_score": 0.86, "authority_level": "article", "source_status": "expired"}
+  ]},
+  {"query": "争议解决", "relevant_ids": ["risk-5"], "candidates": [
+    {"id": "other-5", "content": "合同签署流程", "vector_score": 0.88, "authority_level": "article", "source_status": "effective"},
+    {"id": "risk-5", "content": "争议解决与管辖法院", "vector_score": 0.80, "authority_level": "statute", "source_status": "effective"}
+  ]},
+  {"query": "知识产权", "relevant_ids": ["risk-6"], "candidates": [
+    {"id": "risk-6", "content": "知识产权归属与许可", "vector_score": 0.84, "authority_level": "regulation", "source_status": "effective"},
+    {"id": "other-6", "content": "项目资料交付", "vector_score": 0.87, "authority_level": "article", "source_status": "effective"}
+  ]}
+]

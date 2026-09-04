@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref, shallowRef, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import * as pdfjsLib from 'pdfjs-dist'
+import { Loader2, AlertTriangle } from 'lucide-vue-next'
 import api from '@/lib/api'
 import { cn } from '@/lib/utils'
+import type { BBox, EvidenceLocation } from '@/types/document'
 
 // Configure pdf.js worker - use local worker file via Vite ?url import
 pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
@@ -14,9 +16,12 @@ interface Props {
   contractId: string
   highlights?: Array<{
     page: number
-    bbox?: { x0: number; y0: number; x1: number; y1: number }
+    bbox?: BBox
+    locations?: EvidenceLocation[]
     risk_level?: string
     clause_title?: string
+    evidence_id?: string
+    resolution_status?: 'resolved' | 'fuzzy_fallback' | 'page_only' | 'unresolved'
   }>
   highlightClauseId?: string | null
 }
@@ -46,6 +51,8 @@ const canvasWidth = ref(0)
 const canvasHeight = ref(0)
 
 const showHighlightLayer = ref(true)
+const activeEvidenceId = ref<string | null>(null)
+const activeEvidenceLocationIndex = ref(0)
 
 // 竞态保护：跟踪当前加载任务
 let currentLoadingTask: pdfjsLib.PDFDocumentLoadingTask | null = null
@@ -79,6 +86,8 @@ const loadPdf = async () => {
     totalPages.value = pdfDoc.value.numPages
 
     await renderPage(1)
+    // 首次打开时直接按查看区域宽度渲染，避免 A4 页面以固定 100% 缩放显示过小。
+    await fitWidthWhenReady()
   } catch (err: any) {
     if (err?.name !== 'AbortException') {
       console.error('PDF load failed:', err)
@@ -134,12 +143,13 @@ const renderPage = async (pageNum: number) => {
 const currentHighlights = computed(() => {
   if (!showHighlightLayer.value) return []
 
-  return props.highlights
+  return props.highlights.flatMap(h => (h.locations?.length ? h.locations.map(location => ({ ...h, page: location.page, bbox: location.bbox })) : [h]))
     .filter(h => h.page === currentPage.value - 1 && h.bbox)
     .map(h => {
       const bbox = h.bbox!
       return {
         ...h,
+        active: !!h.evidence_id && h.evidence_id === activeEvidenceId.value,
         x: bbox.x0 * scale.value,
         y: bbox.y0 * scale.value,
         width: (bbox.x1 - bbox.x0) * scale.value,
@@ -194,8 +204,21 @@ const zoomOut = () => {
 const fitWidth = () => {
   if (containerRef.value && pdfDoc.value) {
     const containerWidth = containerRef.value.clientWidth - 40
+    if (containerWidth <= 0) return
     scale.value = containerWidth / 595
     renderPage(currentPage.value)
+  }
+}
+
+// PDF 可能在 Tabs/Flex 布局完成前加载，此时容器宽度为 0；等待布局完成后重试。
+const fitWidthWhenReady = async () => {
+  await nextTick()
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    if (containerRef.value?.clientWidth && pdfDoc.value) {
+      fitWidth()
+      return
+    }
+    await new Promise<void>(resolve => requestAnimationFrame(() => resolve()))
   }
 }
 
@@ -209,11 +232,39 @@ const handleHighlightClick = (h: (typeof props.highlights)[0]) => {
 // Expose method to jump to a specific clause
 const jumpToClause = (page: number, bbox: { x0: number; y0: number; x1: number; y1: number }) => {
   goToPage(page + 1)
-  // Scroll highlight into view would need container scroll
-  if (containerRef.value) {
-    const y = bbox.y0 * scale.value
-    containerRef.value.scrollTo({ top: y - 100, behavior: 'smooth' })
+  // The current viewer renders one bounded page canvas; changing the page is
+  // the reliable navigation primitive and the SVG overlay renders the bbox.
+}
+
+const evidenceLocations = (evidenceId: string) => {
+  const locations = props.highlights
+    .filter(item => item.evidence_id === evidenceId)
+    .flatMap(item => item.locations?.length ? item.locations : [{ page: item.page, bbox: item.bbox }])
+    .filter(location => location.bbox)
+  return locations.filter((location, index, all) =>
+    all.findIndex(candidate => candidate.page === location.page &&
+      candidate.bbox?.x0 === location.bbox?.x0 && candidate.bbox?.y0 === location.bbox?.y0 &&
+      candidate.bbox?.x1 === location.bbox?.x1 && candidate.bbox?.y1 === location.bbox?.y1) === index,
+  )
+}
+
+const jumpToEvidence = (evidenceId: string) => {
+  const locations = evidenceLocations(evidenceId)
+  const location = locations[0]
+  if (location?.bbox) {
+    activeEvidenceId.value = evidenceId
+    activeEvidenceLocationIndex.value = 0
+    jumpToClause(location.page, location.bbox)
   }
+}
+
+const moveEvidenceLocation = (direction: 1 | -1) => {
+  if (!activeEvidenceId.value) return
+  const locations = evidenceLocations(activeEvidenceId.value)
+  if (!locations.length) return
+  activeEvidenceLocationIndex.value = (activeEvidenceLocationIndex.value + direction + locations.length) % locations.length
+  const location = locations[activeEvidenceLocationIndex.value]
+  if (location?.bbox) jumpToClause(location.page, location.bbox)
 }
 
 // Watch for highlight changes
@@ -248,7 +299,7 @@ onUnmounted(() => {
   destroyPdf()
 })
 
-defineExpose({ jumpToClause })
+defineExpose({ jumpToClause, jumpToEvidence })
 </script>
 
 <template>
@@ -283,6 +334,18 @@ defineExpose({ jumpToClause })
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>
+        </UiButton>
+      </div>
+
+      <div v-if="activeEvidenceId && evidenceLocations(activeEvidenceId).length > 1" class="flex items-center gap-1">
+        <UiButton variant="outline" size="icon" title="上一处证据" @click="moveEvidenceLocation(-1)">
+          <span class="text-sm">‹</span>
+        </UiButton>
+        <span class="text-xs text-muted-foreground">
+          证据 {{ activeEvidenceLocationIndex + 1 }} / {{ evidenceLocations(activeEvidenceId).length }}
+        </span>
+        <UiButton variant="outline" size="icon" title="下一处证据" @click="moveEvidenceLocation(1)">
+          <span class="text-sm">›</span>
         </UiButton>
       </div>
 
@@ -328,10 +391,10 @@ defineExpose({ jumpToClause })
             :width="h.width"
             :height="h.height"
             :fill="getHighlightColor(h.risk_level)"
-            fill-opacity="0.3"
+            :fill-opacity="h.active ? 0.55 : 0.22"
             :stroke="getHighlightColor(h.risk_level)"
-            stroke-width="2"
-            class="cursor-pointer pointer-events-auto hover:fill-opacity-50 transition-all"
+            :stroke-width="h.active ? 4 : 2"
+            class="cursor-pointer pointer-events-auto transition-all"
             @click.stop="handleHighlightClick(h)"
           />
         </svg>

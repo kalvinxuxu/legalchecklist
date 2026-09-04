@@ -22,20 +22,42 @@ from app.middleware.tenant_isolation import verify_contract_access, verify_works
 from app.models.contract import Contract, ContractType as ContractTypeEnum, ReviewStatus as ReviewStatusEnum
 from app.models.workspace import Workspace
 from app.models.user import User as UserModel
+from app.models.review_run import ReviewRun, ReviewStep, ReviewRunStatus, ReviewStepStatus
 from app.core.config import settings
-from app.services.document.parser import document_parser
 from app.services.review import review_service
-
-# Celery 任务导入（条件导入）
-if settings.USE_CELERY:
-    from app.services.review.tasks import process_contract_review_task
 
 router = APIRouter()
 
 
-# 创建一个独立的 security scheme 用于公开端点
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-optional_security = HTTPBearer(auto_error=False)
+def _review_run_payload(run: ReviewRun, steps: list) -> dict:
+    from app.services.review.durable_graph import STAGE_LABELS
+    return {
+        "run_id": run.id,
+        "status": run.status.value,
+        "current_stage": run.current_stage,
+        "stage_label": STAGE_LABELS.get(run.current_stage) if run.current_stage else None,
+        "progress": 100 if run.status == ReviewRunStatus.completed else run.progress,
+        "attempt": run.attempt,
+        "last_heartbeat_at": run.last_heartbeat_at,
+        "started_at": run.started_at,
+        "completed_at": run.completed_at,
+        "last_error": run.last_error,
+        "resumable_from": run.current_stage if run.status in {ReviewRunStatus.failed, ReviewRunStatus.stalled} else None,
+        "steps": [
+            {
+                "stage": step.stage,
+                "stage_label": STAGE_LABELS.get(step.stage),
+                "status": step.status.value,
+                "attempt": step.attempt,
+                "started_at": step.started_at,
+                "completed_at": step.completed_at,
+                "error": step.error,
+                "metadata": step.step_metadata,
+            }
+            for step in steps
+        ],
+    }
+
 
 
 def resolve_contract_file_path(file_path: str) -> Path:
@@ -60,238 +82,9 @@ def resolve_contract_file_path(file_path: str) -> Path:
     return Path(settings.STORAGE_PATH) / file_path
 
 
-@router.get("/test-llm", dependencies=[])
-async def test_llm_connection():
-    """
-    测试 LLM API 连接（无需认证）
-
-    用于诊断审查报告无法生成的问题
-    """
-    from app.services.llm.client import zhipu_llm
-
-    try:
-        # 简单的测试 prompt
-        result = await zhipu_llm.chat_with_json_output([
-            {"role": "user", "content": '请以 JSON 格式回复：{"status": "ok", "message": "LLM 连接正常"}'}
-        ])
-        return {
-            "status": "success",
-            "message": "LLM API 连接正常",
-            "result": result
-        }
-    except Exception as e:
-        import traceback
-        return {
-            "status": "error",
-            "message": f"LLM API 调用失败: {str(e)}",
-            "traceback": traceback.format_exc()
-        }
-
-
 def calculate_file_hash(file_bytes: bytes) -> str:
     """计算文件哈希值（用于去重）"""
     return hashlib.sha256(file_bytes).hexdigest()
-
-
-def trigger_contract_review(contract_id: str, file_path: str) -> None:
-    """
-    触发合同审查任务
-
-    根据配置使用 Celery 或 asyncio 后台任务
-    """
-    import logging
-    import asyncio
-    logger = logging.getLogger(__name__)
-
-    if settings.USE_CELERY:
-        # 使用 Celery 异步任务
-        process_contract_review_task.delay(contract_id, file_path)
-        logger.info(f"[Review] Contract {contract_id} submitted to Celery queue")
-    else:
-        # 检查是否已经在 event loop 中
-        try:
-            loop = asyncio.get_running_loop()
-            # 已在 event loop 中，直接创建 task
-            loop.create_task(process_contract_upload(contract_id, file_path))
-            logger.info(f"[Review] Contract {contract_id} review triggered (in existing loop)")
-        except RuntimeError:
-            # 不在 event loop 中，可以使用 asyncio.run
-            asyncio.run(process_contract_upload(contract_id, file_path))
-            logger.info(f"[Review] Contract {contract_id} review triggered")
-
-
-async def process_contract_upload(
-    contract_id: str,
-    file_path: str
-):
-    """
-    处理合同上传：解析和审查
-
-    后续将迁移到 Celery 异步任务
-    """
-    import logging
-    logger = logging.getLogger(__name__)
-
-    # 解析文件路径（使用公共函数）
-    file_path = str(resolve_contract_file_path(file_path))
-    logger.info(f"[Review] Resolved path to: {file_path}")
-
-    logger.info(f"[Review] Starting review for contract {contract_id}")
-
-    # 确保数据库连接已初始化
-    if db.async_session_maker is None:
-        db.connect()
-
-    contract = None  # 预先声明，避免作用域问题
-
-    # 创建新的数据库会话
-    async with db.async_session_maker() as session:
-        try:
-            # 查询合同
-            result = await session.execute(
-                select(Contract).where(Contract.id == contract_id)
-            )
-            contract = result.scalar_one_or_none()
-
-            if not contract:
-                logger.error(f"[Review] Contract {contract_id} not found")
-                return
-
-            # 1. 更新状态为 processing
-            contract.review_status = ReviewStatusEnum.processing
-            await session.commit()
-
-            logger.info(f"[Review] Parsing document for contract {contract_id}")
-
-            # 2. 检查文件是否存在
-            import os
-            if not os.path.exists(file_path):
-                logger.error(f"[Review] File not found: {file_path}")
-                contract.review_status = ReviewStatusEnum.failed
-                contract.review_error = f"文件不存在或已被删除: {file_path}"
-                await session.commit()
-                return
-
-            # 3. 解析文档
-            if file_path.endswith(".pdf"):
-                parse_result = await document_parser.parse_pdf(file_path)
-            else:
-                parse_result = await document_parser.parse_word(file_path)
-
-            extracted_text = parse_result.get("text", "")
-            logger.info(f"[Review] Extracted {len(extracted_text)} characters for contract {contract_id}")
-
-            if not extracted_text or len(extracted_text.strip()) < 50:
-                logger.warning(f"[Review] Insufficient text extracted from contract {contract_id}, text length: {len(extracted_text)}")
-
-            # 3. 更新合同内容
-            contract.content_text = extracted_text
-
-            # 4. 自动检测合同类型（如果未设置或为"其他"）
-            original_type = contract.contract_type.value if contract.contract_type else "其他"
-            if original_type == "其他":
-                detected_type = detect_contract_type(contract.content_text)
-                from app.models.contract import ContractType as ContractTypeEnum
-                contract.contract_type = ContractTypeEnum(detected_type)
-                contract_type_str = detected_type
-            else:
-                contract_type_str = original_type
-
-            logger.info(f"[Review] Contract type: {contract_type_str} for contract {contract_id}")
-
-            await session.commit()
-
-            # 获取 tenant_id 用于检索公司政策
-            workspace_result = await session.execute(
-                select(Workspace).where(Workspace.id == contract.workspace_id)
-            )
-            workspace = workspace_result.scalar_one_or_none()
-            tenant_id = workspace.tenant_id if workspace else None
-            logger.info(f"[Review] Using tenant_id: {tenant_id} for contract {contract_id}")
-
-            # 5. 合同理解分析（第一步）- 在审查之前执行，即使审查失败也能展示理解结果
-            logger.info(f"[Review] Starting contract understanding analysis for {contract_id}")
-            from app.services.analysis.understanding import understanding_service
-            try:
-                await understanding_service.generate_understanding(
-                    contract_id=contract_id,
-                    contract_text=contract.content_text,
-                    contract_type=contract_type_str,
-                    review_result=None  # 先不传审查结果，独立生成
-                )
-                logger.info(f"[Review] Understanding analysis completed for contract {contract_id}")
-            except Exception as understanding_error:
-                # 理解分析失败不应该阻止后续流程
-                logger.error(f"[Review] Understanding analysis failed for contract {contract_id}: {understanding_error}")
-
-            # 获取审查配置（从合同记录中读取）
-            review_config = contract.review_config or {}
-            party_position = review_config.get("party_position")
-            contract_amount = review_config.get("contract_amount")
-            risk_preference = review_config.get("risk_preference")
-
-            # 6. 执行审查（第二步，传递 tenant_id 和审查立场配置）
-            logger.info(f"[Review] Running LLM review for contract {contract_id}")
-            review_result = await review_service.review_contract(
-                contract_text=contract.content_text,
-                contract_type=contract_type_str,
-                tenant_id=tenant_id,
-                party_position=party_position,
-                contract_amount=contract_amount,
-                risk_preference=risk_preference
-            )
-            logger.info(f"[Review] Review completed for contract {contract_id}")
-
-            # 7. 更新理解分析（补充审查结果）
-            try:
-                await understanding_service.generate_understanding(
-                    contract_id=contract_id,
-                    contract_text=contract.content_text,
-                    contract_type=contract_type_str,
-                    review_result=review_result  # 带上审查结果完善理解
-                )
-                logger.info(f"[Review] Understanding analysis updated with review results for contract {contract_id}")
-            except Exception as understanding_error:
-                logger.error(f"[Review] Understanding analysis update failed for contract {contract_id}: {understanding_error}")
-
-            # 8. 确定风险等级
-            risk_clauses = review_result.get("risk_clauses", [])
-            if any(c.get("risk_level") == "high" for c in risk_clauses):
-                risk_level = "high"
-            elif any(c.get("risk_level") == "medium" for c in risk_clauses):
-                risk_level = "medium"
-            else:
-                risk_level = "low"
-
-            # 9. 保存审查结果
-            contract.review_result = review_result
-            contract.risk_level = risk_level
-            contract.review_status = ReviewStatusEnum.completed
-
-            await session.commit()
-
-            logger.info(f"[Review] Successfully completed review for contract {contract_id}, risk_level: {risk_level}")
-
-            # 10. PDF 条款定位（仅 PDF 文件，且审查有风险条款）
-            if file_path.endswith(".pdf") and risk_clauses:
-                from app.services.review.tasks import _locate_clauses_in_pdf
-                try:
-                    await _locate_clauses_in_pdf(contract_id, file_path, risk_clauses)
-                    logger.info(f"[Review] Clause location completed for contract {contract_id}")
-                except Exception as locate_error:
-                    logger.error(f"[Review] Clause location failed for contract {contract_id}: {locate_error}")
-
-        except Exception as e:
-            # 处理失败
-            logger.error(f"[Review] Review failed for contract {contract_id}: {e}")
-            import traceback
-            traceback.print_exc()
-
-            if contract:
-                contract.review_status = ReviewStatusEnum.failed
-                contract.review_error = str(e)
-                await session.commit()
-            raise e
 
 
 def detect_contract_type(text: str) -> str:
@@ -420,7 +213,8 @@ async def upload_contract(
     if existing_contract:
         # 如果旧合同未完成审查，重新启动审查
         if existing_contract.review_status != ReviewStatusEnum.completed:
-            trigger_contract_review(existing_contract.id, existing_contract.file_path)
+            from app.services.review.durable_graph import create_review_run
+            await create_review_run(existing_contract.id)
         return existing_contract
 
     # 保存文件（本地存储，生产环境使用 OSS）
@@ -472,20 +266,10 @@ async def upload_contract(
     await db.commit()
     await db.refresh(contract)
 
-# 根据 auto_review 参数决定是否立即触发审查
+# 根据 auto_review 参数决定是否创建持久化审查任务
     if auto_review:
-        # 同步处理合同（解析 + 审查）- 直接await而非后台任务
-        # 后台任务在容器环境中会丢失，所以这里同步执行
-        await process_contract_upload(contract.id, str(file_path))
-
-        # 重新获取最新状态
-        result = await db.execute(
-            select(Contract).where(Contract.id == contract.id)
-        )
-        contract = result.scalar_one()
-    else:
-        # 不自动审查，仅保存合同，状态保持为 pending
-        pass
+        from app.services.review.durable_graph import create_review_run
+        await create_review_run(contract.id)
 
     return contract
 
@@ -632,6 +416,72 @@ async def get_review_config(
     }
 
 
+@router.post("/{contract_id}/review/start")
+async def start_review(
+    contract: Contract = Depends(verify_contract_access),
+    db_session: AsyncSession = Depends(get_db),
+):
+    """Create a durable review run; execution is owned by review_worker."""
+    from app.services.review.durable_graph import create_review_run
+    run = await create_review_run(contract.id, force_new=contract.review_status == ReviewStatusEnum.completed)
+    contract.review_status = ReviewStatusEnum.pending
+    contract.review_error = None
+    await db_session.commit()
+    return {"message": "审查任务已排队", "status": run.status.value, "run_id": run.id}
+
+
+@router.post("/{contract_id}/review/resume")
+async def resume_review(
+    contract: Contract = Depends(verify_contract_access),
+    db_session: AsyncSession = Depends(get_db),
+):
+    """Resume the latest failed or stalled review from its LangGraph checkpoint."""
+    from app.services.review.durable_graph import create_review_run
+    run = await create_review_run(contract.id)
+    if run.status not in {ReviewRunStatus.failed, ReviewRunStatus.stalled, ReviewRunStatus.queued}:
+        raise HTTPException(status_code=409, detail="当前审查任务正在运行")
+    run.status = ReviewRunStatus.queued
+    run.last_error = None
+    contract.review_status = ReviewStatusEnum.pending
+    contract.review_error = None
+    await db_session.commit()
+    return {"message": "已从断点排队恢复", "status": run.status.value, "run_id": run.id}
+
+
+@router.post("/{contract_id}/review/retry-stage")
+async def retry_review_stage(
+    contract_id: str,
+    stage: str,
+    contract: Contract = Depends(verify_contract_access),
+    db_session: AsyncSession = Depends(get_db),
+):
+    """Retry the current failed/stalled stage without discarding earlier checkpoints."""
+    from app.services.review.durable_graph import STAGES, create_review_run
+    if stage not in STAGES:
+        raise HTTPException(status_code=400, detail="无效的审查阶段")
+    run = await create_review_run(contract.id)
+    if run.status not in {ReviewRunStatus.failed, ReviewRunStatus.stalled}:
+        raise HTTPException(status_code=409, detail="当前任务不可重试阶段")
+    step_result = await db_session.execute(select(ReviewStep).where(ReviewStep.run_id == run.id))
+    steps = {step.stage: step for step in step_result.scalars().all()}
+    selected = steps.get(stage)
+    if not selected or selected.status not in {ReviewStepStatus.failed, ReviewStepStatus.waiting}:
+        raise HTTPException(status_code=400, detail="只能重试失败或待执行阶段")
+    run.status = ReviewRunStatus.queued
+    run.current_stage = stage
+    run.last_error = None
+    for name in STAGES[STAGES.index(stage):]:
+        if name in steps:
+            steps[name].status = ReviewStepStatus.waiting
+            steps[name].error = None
+            steps[name].started_at = None
+            steps[name].completed_at = None
+    contract.review_status = ReviewStatusEnum.pending
+    contract.review_error = None
+    await db_session.commit()
+    return {"message": "阶段已重新排队", "status": run.status.value, "run_id": run.id, "stage": stage}
+
+
 @router.post("/{contract_id}/rerun-review")
 async def rerun_review(
     contract: Contract = Depends(verify_contract_access),
@@ -642,6 +492,7 @@ async def rerun_review(
     """
     import logging
     import os
+    from app.services.review.durable_graph import create_review_run
     logger = logging.getLogger(__name__)
 
     # 检查文件是否存在
@@ -652,22 +503,15 @@ async def rerun_review(
             detail=f"文件不存在或已被删除，无法重新审查"
         )
 
-    # 更新状态为 pending
+    # 更新状态为 pending，并交给持久化 worker 执行
     contract.review_status = ReviewStatusEnum.pending
     contract.review_result = None  # 清除旧结果
+    contract.review_error = None
     await db.commit()
 
-    # 触发审查流程
-    try:
-        trigger_contract_review(contract.id, contract.file_path)
-        logger.info(f"[Rerun] Review triggered for contract {contract.id}")
-        return {"message": "重新审查已启动", "status": contract.review_status.value}
-    except Exception as e:
-        logger.error(f"[Rerun] Failed to trigger review for contract {contract.id}: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"启动重新审查失败: {str(e)}"
-        )
+    run = await create_review_run(contract.id)
+    logger.info(f"[Rerun] Review queued for contract {contract.id}, run={run.id}")
+    return {"message": "重新审查已排队", "status": run.status.value, "run_id": run.id}
 
 
 @router.get("/{contract_id}/review", response_model=dict)
@@ -699,6 +543,41 @@ async def get_review_status(
 
     返回审查进度、错误信息等
     """
+    async with db.async_session_maker() as session:
+        from app.models.document import DocumentRecord, DocumentVersion
+        document_record = (await session.execute(select(DocumentRecord).where(DocumentRecord.contract_id == contract.id))).scalar_one_or_none()
+        document_version = await session.get(DocumentVersion, document_record.current_version_id) if document_record and document_record.current_version_id else None
+        run_result = await session.execute(
+            select(ReviewRun)
+            .where(ReviewRun.contract_id == contract.id)
+            .order_by(ReviewRun.created_at.desc())
+            .limit(1)
+        )
+        run = run_result.scalars().first()
+        if run:
+            step_result = await session.execute(
+                select(ReviewStep).where(ReviewStep.run_id == run.id).order_by(ReviewStep.created_at)
+            )
+            payload = _review_run_payload(run, step_result.scalars().all())
+            if run.started_at:
+                payload["elapsed_seconds"] = max(0, int(((run.completed_at or datetime.utcnow()) - run.started_at).total_seconds()))
+            else:
+                payload["elapsed_seconds"] = 0
+            payload.update({
+                "contract_id": contract.id,
+                "file_name": contract.file_name,
+                "review_status": contract.review_status.value,
+                "content_text_length": len(contract.content_text) if contract.content_text else 0,
+                "review_result_keys": list(contract.review_result.keys()) if contract.review_result else None,
+                "review_error": contract.review_error or run.last_error,
+                "contract_type": contract.contract_type.value if contract.contract_type else None,
+                "document_id": document_record.id if document_record else None,
+                "document_version_id": document_version.id if document_version else None,
+                "document_status": document_version.status if document_version else "not_started",
+            })
+            return payload
+
+    # Legacy contracts created before durable runs existed.
     return {
         "contract_id": contract.id,
         "file_name": contract.file_name,
@@ -709,6 +588,14 @@ async def get_review_status(
         "review_result_keys": list(contract.review_result.keys()) if contract.review_result else None,
         "review_error": contract.review_error,
         "contract_type": contract.contract_type.value if contract.contract_type else None,
+        "document_id": None,
+        "document_version_id": None,
+        "document_status": "not_started",
+        "status": contract.review_status.value,
+        "current_stage": None,
+        "stage_label": None,
+        "progress": 100 if contract.review_status == ReviewStatusEnum.completed else 0,
+        "steps": [],
     }
 
 
@@ -766,9 +653,28 @@ async def get_clause_locations(
                 "bbox": loc.bbox,
                 "similarity": loc.similarity,
                 "match_type": loc.match_type,
+                "evidence_id": (loc.extra_data or {}).get("evidence_id"),
+                "document_id": (loc.extra_data or {}).get("document_id"),
+                "version_id": (loc.extra_data or {}).get("version_id"),
+                "coord_system": "pdf_top_left",
+                "resolution_status": "resolved" if loc.bbox else "page_only",
+                "locations": [{"page": loc.page_number, "bbox": loc.bbox, "coord_system": "pdf_top_left",
+                               "resolution_status": "resolved" if loc.bbox else "page_only"}],
             }
             for loc in locations
         ]
+
+
+@router.get("/{contract_id}/evidence/{evidence_id}")
+async def get_evidence_location(
+    evidence_id: str,
+    contract: Contract = Depends(verify_contract_access),
+):
+    """Resolve one review evidence ID to all of its PDF locations."""
+    if contract.review_status != ReviewStatusEnum.completed:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="合同尚未完成审查")
+    from app.services.document.evidence_navigation import get_evidence_locations
+    return await get_evidence_locations(contract.id, evidence_id)
 
 
 @router.get("/{contract_id}/pdf-positions")
@@ -829,6 +735,13 @@ async def get_pdf_text_positions(
                 "risk_level": loc.risk_level,
                 "page": loc.page_number,
                 "bbox": loc.bbox,
+                "evidence_id": (loc.extra_data or {}).get("evidence_id"),
+                "document_id": (loc.extra_data or {}).get("document_id"),
+                "version_id": (loc.extra_data or {}).get("version_id"),
+                "coord_system": "pdf_top_left",
+                "resolution_status": "resolved" if loc.bbox else "page_only",
+                "locations": [{"page": loc.page_number, "bbox": loc.bbox, "coord_system": "pdf_top_left",
+                               "resolution_status": "resolved" if loc.bbox else "page_only"}],
             }
             for loc in locations
         ]

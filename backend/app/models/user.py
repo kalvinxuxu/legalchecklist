@@ -26,6 +26,7 @@ class User(Base, UUIDMixin, TimestampMixin):
         comment="租户 ID"
     )
     email = Column(String(255), unique=True, nullable=False, index=True, comment="邮箱")
+    name = Column(String(100), nullable=True, comment="用户姓名")
     password_hash = Column(String(255), nullable=False, comment="密码哈希")
     role = Column(
         Enum(UserRole),

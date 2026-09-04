@@ -8,6 +8,18 @@ class PartitionedContextBuilder:
     """分区 Context 构建器"""
 
     @staticmethod
+    def _item_text(item: Dict[str, Any]) -> str:
+        """Serialize one reranked candidate with auditable retrieval metadata."""
+        audit = []
+        for key in ("bm25_rank", "vector_rank", "fused_rank", "rerank_rank", "bm25_score", "vector_score", "fused_score", "semantic_score", "authority_score", "metadata_score", "rerank_score", "reranker_provider", "reranker_model", "fallback_reason"):
+            if item.get(key) is not None:
+                audit.append(f"{key}={item[key]}")
+        source_id = item.get("evidence_id") or item.get("chunk_id") or item.get("id")
+        prefix = f"[source_id={source_id}]" if source_id else "[source_id=unknown]"
+        suffix = f"\n(retrieval: {', '.join(audit)})" if audit else ""
+        return f"{prefix}\n{item.get('content', '')}{suffix}"
+
+    @staticmethod
     def build_context_text(
         partitioned_context: Dict[str, List[Dict[str, Any]]],
         config: Dict[str, Dict]
@@ -34,7 +46,7 @@ class PartitionedContextBuilder:
             section = f"## {label}\n"
             for item in items:
                 title = item.get("title", item.get("content", "")[:50])
-                content = item.get("content", "")
+                content = PartitionedContextBuilder._item_text(item)
                 score = item.get("score", 0)
 
                 section += f"\n【{title}】\n{content}"
@@ -63,7 +75,7 @@ class PartitionedContextBuilder:
         for item in law_items:
             title = item.get("title", item.get("content", "")[:50])
             content = item.get("content", "")
-            sections.append(f"【{title}】\n{content}")
+            sections.append(f"【{title}】\n{PartitionedContextBuilder._item_text(item)}")
 
         return "\n\n".join(sections)
 
@@ -85,7 +97,7 @@ class PartitionedContextBuilder:
         for item in policy_items:
             title = item.get("title", item.get("content", "")[:50])
             content = item.get("content", "")
-            sections.append(f"【{title}】\n{content}")
+            sections.append(f"【{title}】\n{PartitionedContextBuilder._item_text(item)}")
 
         return "\n\n".join(sections)
 
@@ -107,3 +119,32 @@ class PartitionedContextBuilder:
                     for item in items
                 ])
         return result
+
+    @staticmethod
+    def build_contract_context(items: List[Dict[str, Any]]) -> str:
+        if not items:
+            return "未生成合同条款候选区"
+        expanded = PartitionedContextBuilder.expand_parent_context(items)
+        return "\n\n".join(
+            f"【合同条款 source_id={item.get('chunk_id') or item.get('id')} "
+            f"page={item.get('page_start')}-{item.get('page_end')}】\n"
+            f"{PartitionedContextBuilder._item_text(item)}"
+            for item in expanded
+        )
+
+    @staticmethod
+    def expand_parent_context(items: List[Dict[str, Any]], max_parent_chars: int = 6000) -> List[Dict[str, Any]]:
+        """Expand child retrieval hits with bounded parent-clause context without changing provenance IDs."""
+        expanded = []
+        for item in items:
+            value = dict(item)
+            parent_text = (item.get("parent_text") or "").strip()
+            content = (item.get("content") or "").strip()
+            if parent_text and parent_text != content:
+                value["content"] = (
+                    "[精准子条款]\n" + content +
+                    "\n[完整父条款上下文]\n" + parent_text[:max_parent_chars]
+                )
+                value["parent_context_included"] = True
+            expanded.append(value)
+        return expanded

@@ -1,6 +1,6 @@
 """
 法律知识库模型
-向量数据已迁移到 Chroma，此表仅存储原始数据和元数据
+生产向量数据使用 pgvector；旧 embedding 字段仅用于兼容 Chroma 数据
 """
 from sqlalchemy import Column, String, Text, JSON, Index
 from app.models.base import Base, UUIDMixin, TimestampMixin
@@ -23,6 +23,8 @@ class LegalKnowledge(Base, UUIDMixin, TimestampMixin):
     # 向量嵌入已迁移到 Chroma，此字段仅保留用于向后兼容
     # 新增数据不再写入此字段
     embedding = Column(JSON, nullable=True, comment="向量嵌入（已迁移到 Chroma，仅兼容保留）")
+    embedding_vector = Column(Text, nullable=True, comment="pgvector 生产索引列")
+    embedding_model = Column(String(120), nullable=True, comment="向量模型版本")
 
     # 索引策略
     __table_args__ = (

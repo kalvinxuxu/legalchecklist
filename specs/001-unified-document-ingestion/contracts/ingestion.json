@@ -1,0 +1,30 @@
+{
+  "name": "document-ingestion",
+  "version": "v1",
+  "purpose": "Canonical ingestion output consumed by review, RAG, and PDF display.",
+  "request": {
+    "document_id": "string",
+    "source_path": "string",
+    "media_type": "application/pdf",
+    "options": {
+      "preferred_parser": "string|null",
+      "allow_ocr": "boolean",
+      "force_reprocess": "boolean"
+    }
+  },
+  "response": {
+    "document_id": "string",
+    "version_id": "string",
+    "status": "queued|processing|completed|failed",
+    "parser": "string",
+    "parser_version": "string",
+    "coord_system": "pdf_top_left",
+    "pages": "array<DocumentPage>",
+    "blocks": "array<DocumentBlock>",
+    "spans": "array<DocumentSpan>",
+    "tables": "array<DocumentTable>",
+    "text": "string",
+    "parse_quality": "number|null",
+    "warnings": "array<object>"
+  }
+}

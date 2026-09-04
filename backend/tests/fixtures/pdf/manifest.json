@@ -1,0 +1,6 @@
+[
+  {"name": "2018-batch-2", "source_path": "示范文件/2018年三批次2标合同.pdf", "expected": "scan", "pages": 44},
+  {"name": "poly-dalian-crrc", "source_path": "示范文件/20220425-保利大连中车厂项目合同.pdf", "expected": "scan", "pages": 24},
+  {"name": "consortium-agreement", "source_path": "示范文件/20220916联合体协议书final.pdf", "expected": "text", "pages": 7},
+  {"name": "property-trading", "source_path": "示范文件/产权交易合同样本.pdf", "expected": "scan", "pages": 10}
+]

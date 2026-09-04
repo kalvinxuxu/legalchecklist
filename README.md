@@ -19,6 +19,28 @@ cp .env.example .env
 # 编辑 .env，填入你的 DeepSeek API Key
 ```
 
+## 当前生产部署
+
+- 前端：Vercel
+- API：Railway，服务根目录设置为 `backend`
+- 审查 Worker：Railway API 服务内由 `start-railway.sh` 同时启动
+- 数据库：Railway PostgreSQL
+- 文件/Chroma：Railway Volume 挂载到 `/app/data`
+
+Vercel 环境变量：
+
+```text
+VITE_API_BASE_URL=https://<railway-api-domain>/api/v1
+```
+
+生产向量存储使用 PostgreSQL + pgvector；Chroma 仅保留为兼容回退。首次部署 PostgreSQL 后执行 `backend/migrations/001_hybrid_fts.sql` 和 `backend/migrations/002_pgvector_contract_chunks.sql`。
+Chunk 和 Embedding 参数见 `docs/Chunk与Embedding模型说明.md`。
+
+Railway API 服务使用 `backend/railway.toml`，并由 `start-railway.sh` 启动 API 与 Worker。
+两者共享同一个服务和 `/app/data` Volume。不要在生产环境设置 `USE_CELERY`；审查由
+`review_worker.py` 消费 PostgreSQL 中的 ReviewRun。当前方案适合 MVP；未来横向扩展前，
+应把合同文件迁移到 S3/R2/OSS，再拆分 Worker 服务。
+
 ### 3. 启动服务
 
 ```bash
@@ -119,3 +141,6 @@ legal-ai-saas/
 ## License
 
 MIT
+# Legal RAG reranker
+
+Retrieval uses parallel BM25/vector recall, RRF, then a cross-encoder reranker and deterministic legal-source policy. Set `RAG_RERANKER_PROVIDER=bge_local` and `RAG_RERANKER_MODEL=BAAI/bge-reranker-v2-m3` for local/Railway model inference, or set `RAG_RERANKER_PROVIDER=jina` with `JINA_API_KEY` for hosted inference. If the model/provider is unavailable, results are labeled `deterministic_fallback` with a `fallback_reason`.

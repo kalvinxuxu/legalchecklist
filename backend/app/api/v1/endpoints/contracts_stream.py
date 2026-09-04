@@ -46,7 +46,6 @@ async def stream_contract_review(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"合同尚未完成审查，当前状态：{contract.review_status.value}"
         )
-
     if not contract.content_text:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -179,26 +178,3 @@ async def ask_contract_question(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"问答生成失败: {str(e)}"
         )
-
-
-# 保留原有的非流式端点以兼容
-@router.get("/{contract_id}/review")
-async def get_review_result(
-    contract: Contract = Depends(verify_contract_access)
-):
-    """
-    获取合同审查结果（非流式）
-    """
-    if contract.review_status != ReviewStatusEnum.completed:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"合同尚未完成审查，当前状态：{contract.review_status.value}"
-        )
-
-    if not contract.review_result:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="未找到审查结果"
-        )
-
-    return contract.review_result

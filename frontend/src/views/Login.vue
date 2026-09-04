@@ -33,7 +33,7 @@ async function handleSubmit() {
               <path d="M10 2L15 6.5L10 11" stroke="#1A1A2E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
             </svg>
           </div>
-          <span class="text-base font-semibold text-white tracking-tight">法务 AI</span>
+          <span class="text-base font-semibold text-white tracking-tight">法务AI Box</span>
         </div>
 
         <h1
@@ -48,7 +48,7 @@ async function handleSubmit() {
 
         <div class="mt-10 space-y-3">
           <div
-            v-for="item in ['30 秒完成合同审查', 'RAG 引用溯源，每条建议有法可依', '支持 20+ 合同类型']"
+            v-for="item in ['2-3 分钟深度审查', 'RAG 引用溯源，每条建议有法可依', '支持 20+ 合同类型', '越用越懂你公司']"
             :key="item"
             class="flex items-center gap-3 text-gray-300 text-sm"
           >

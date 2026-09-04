@@ -6,7 +6,7 @@ import { useRegister } from '@/composables/useAuth'
 const router = useRouter()
 const register = useRegister()
 
-const form = ref({ email: '', password: '', company_name: '' })
+const form = ref({ email: '', password: '', name: '', company_name: '' })
 
 async function handleSubmit() {
   try {
@@ -32,7 +32,7 @@ async function handleSubmit() {
               <path d="M10 2L15 6.5L10 11" stroke="#1A1A2E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
             </svg>
           </div>
-          <span class="text-base font-semibold text-white tracking-tight">法务 AI</span>
+          <span class="text-base font-semibold text-white tracking-tight">法务AI Box</span>
         </div>
 
         <h1
@@ -47,7 +47,7 @@ async function handleSubmit() {
 
         <div class="mt-10 grid grid-cols-3 gap-4">
           <div
-            v-for="stat in [{v:'10+',l:'免费额度'}, {v:'30s',l:'审查速度'}, {v:'99%',l:'识别准确率'}]"
+            v-for="stat in [{v:'10',l:'免费额度'}, {v:'2-3min',l:'审查速度'}, {v:'99%',l:'识别准确率'}]"
             :key="stat.l"
             class="p-4 bg-white/5 border border-white/10 rounded-xl text-center"
           >
@@ -78,7 +78,7 @@ async function handleSubmit() {
               <path d="M10 2L15 6.5L10 11" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
             </svg>
           </div>
-          <span class="text-sm font-semibold text-gray-900">法务 AI</span>
+          <span class="text-sm font-semibold text-gray-900">法务AI Box</span>
         </div>
 
         <h2
@@ -90,6 +90,17 @@ async function handleSubmit() {
         <p class="text-gray-500 text-sm mb-8 animate-fade-up stagger-1">填写以下信息完成注册</p>
 
         <form @submit.prevent="handleSubmit" class="space-y-5">
+          <div class="space-y-1.5">
+            <label class="text-sm font-medium text-gray-700" for="name">您的姓名</label>
+            <input
+              id="name"
+              v-model="form.name"
+              type="text"
+              placeholder="示例：张三"
+              class="w-full h-11 px-4 rounded-lg border border-gray-200 bg-white text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition-all"
+            />
+          </div>
+
           <div class="space-y-1.5">
             <label class="text-sm font-medium text-gray-700" for="company">公司名称</label>
             <input

@@ -9,6 +9,7 @@ from app.services.rag.embedder import embedder
 from app.core.config import settings
 import json
 import logging
+import json as json_module
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +43,11 @@ class VectorRAGRetriever:
         top_k: int,
         tenant_id: Optional[str]
     ) -> List[Dict[str, Any]]:
-        """基于 Chroma 的向量语义检索"""
+        """基于 PostgreSQL pgvector 的生产检索，Chroma 仅作兼容回退。"""
+        if settings.VECTOR_STORE.lower() == "pgvector":
+            pg_results = await self._pgvector_search(query, content_type, top_k, tenant_id)
+            if pg_results:
+                return pg_results
         try:
             store = TenantAwareChromaStore(tenant_id=tenant_id)
             results = await store.query(
@@ -53,7 +58,7 @@ class VectorRAGRetriever:
             )
 
             formatted = []
-            for r in results:
+            for rank, r in enumerate(results, 1):
                 formatted.append({
                     "id": r["id"],
                     "title": r["metadata"].get("title", ""),
@@ -61,6 +66,8 @@ class VectorRAGRetriever:
                     "content_type": r["metadata"].get("content_type", ""),
                     "metadata": r["metadata"],
                     "score": r["score"],
+                    "vector_score": r["score"],
+                    "vector_rank": rank,
                     "tenant_id": r.get("tenant_id")
                 })
 
@@ -70,6 +77,32 @@ class VectorRAGRetriever:
         except Exception as e:
             logger.warning(f"[VectorRAG] Chroma search failed: {e}, falling back to DB")
             return await self._fallback_db_search(query, content_type, top_k, tenant_id)
+
+    async def _pgvector_search(self, query, content_type, top_k, tenant_id):
+        if not settings.is_postgresql or (settings.EMBEDDING_PROVIDER.lower() == "zhipu" and not settings.ZHIPU_EMBEDDING_API_KEY):
+            return []
+        from sqlalchemy import text
+        vector = await embedder.embed(query)
+        embedding_model = f"{embedder.provider_name}:{embedder.model}:{settings.EMBEDDING_MODEL_VERSION}"
+        filters = ["embedding_vector IS NOT NULL", "embedding_model = :embedding_model"]
+        params = {"query_vector": json_module.dumps(vector), "embedding_model": embedding_model, "top_k": top_k}
+        if content_type:
+            filters.append("content_type = :content_type"); params["content_type"] = content_type
+        if tenant_id:
+            filters.append("(tenant_id = :tenant_id OR tenant_id IS NULL)"); params["tenant_id"] = tenant_id
+        else:
+            filters.append("tenant_id IS NULL")
+        stmt = text(f"""SELECT id, title, content, content_type, metadata_json, tenant_id,
+                    1 - (embedding_vector::vector <=> CAST(:query_vector AS vector)) AS score
+                    FROM legal_knowledge WHERE {' AND '.join(filters)}
+                    ORDER BY embedding_vector::vector <=> CAST(:query_vector AS vector) LIMIT :top_k""").bindparams(**params)
+        async with database.async_session_maker() as session:
+            rows = (await session.execute(stmt)).all()
+        return [{"id": str(row.id), "title": row.title, "content": row.content,
+                 "content_type": row.content_type, "metadata": row.metadata_json or {},
+                 "score": float(row.score), "vector_score": float(row.score),
+                 "vector_rank": rank, "tenant_id": row.tenant_id}
+                for rank, row in enumerate(rows, 1)]
 
     async def _fallback_db_search(
         self,
@@ -144,7 +177,7 @@ class VectorRAGRetriever:
         }
 
         # 添加到 Chroma
-        if generate_embedding:
+        if generate_embedding and settings.VECTOR_STORE.lower() != "pgvector":
             try:
                 await chroma_store.add(
                     texts=[text_to_embed],
@@ -165,6 +198,8 @@ class VectorRAGRetriever:
                 content=content,
                 content_type=content_type,
                 metadata_json=full_metadata,
+                embedding_vector=json_module.dumps(await embedder.embed(text_to_embed), separators=(",", ":")) if generate_embedding and settings.VECTOR_STORE.lower() == "pgvector" and settings.is_postgresql and (settings.EMBEDDING_PROVIDER.lower() != "zhipu" or settings.ZHIPU_EMBEDDING_API_KEY) else None,
+                embedding_model=(f"{embedder.provider_name}:{embedder.model}:{settings.EMBEDDING_MODEL_VERSION}" if generate_embedding and settings.VECTOR_STORE.lower() == "pgvector" and settings.is_postgresql and (settings.EMBEDDING_PROVIDER.lower() != "zhipu" or settings.ZHIPU_EMBEDDING_API_KEY) else None),
                 tenant_id=tenant_id
             )
             session.add(knowledge)
@@ -201,7 +236,7 @@ class VectorRAGRetriever:
                 chroma_ids.append(knowledge_id)
 
         # 批量添加到 Chroma
-        if generate_embeddings and chroma_texts:
+        if generate_embeddings and chroma_texts and settings.VECTOR_STORE.lower() != "pgvector":
             try:
                 await chroma_store.add(
                     texts=chroma_texts,
@@ -211,6 +246,8 @@ class VectorRAGRetriever:
                 logger.info(f"[VectorRAG] Batch added {len(chroma_ids)} to Chroma")
             except Exception as e:
                 logger.warning(f"[VectorRAG] Batch Chroma add failed: {e}")
+
+        pg_embeddings = await embedder.embed_batch(chroma_texts) if generate_embeddings and chroma_texts and settings.VECTOR_STORE.lower() == "pgvector" and settings.is_postgresql and (settings.EMBEDDING_PROVIDER.lower() != "zhipu" or settings.ZHIPU_EMBEDDING_API_KEY) else []
 
         # 同步到关系数据库
         async with database.async_session_maker() as session:
@@ -226,7 +263,9 @@ class VectorRAGRetriever:
                     content=item["content"],
                     content_type=item["content_type"],
                     metadata_json=item.get("metadata", {}),
-                    tenant_id=item.get("tenant_id")
+                    tenant_id=item.get("tenant_id"),
+                    embedding_vector=json_module.dumps(pg_embeddings[i], separators=(",", ":")) if i < len(pg_embeddings) else None,
+                    embedding_model=(f"{embedder.provider_name}:{embedder.model}:{settings.EMBEDDING_MODEL_VERSION}" if i < len(pg_embeddings) else None)
                 )
                 session.add(knowledge)
 

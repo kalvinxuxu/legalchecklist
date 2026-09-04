@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>创业初心 - 公众号创始人文</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy-900: #1a2744;
+      --navy-800: #243352;
+      --navy-700: #2e4266;
+      --warm-gray-700: #3d3d3d;
+      --warm-gray-500: #666;
+      --warm-gray-300: #b0b0b0;
+      --warm-gray-150: #f5f3f0;
+      --ivory-50: #fdfcfa;
+      --accent-gold: #c49a3c;
+      --accent-orange: #d97018;
+      --accent-red: #b83d3d;
+      --accent-green: #3a7a45;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Source Sans 3', 'Noto Serif SC', sans-serif;
+      background: var(--warm-gray-150);
+      color: var(--warm-gray-700);
+      line-height: 2;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      background: var(--ivory-50);
+      min-height: 100vh;
+    }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-700) 50%, #3d5a80 100%);
+      padding: 56px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background:
+        radial-gradient(circle at 20% 80%, rgba(196,154,60,0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(217,112,24,0.1) 0%, transparent 50%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 24px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.9);
+      letter-spacing: 1px;
+      margin-bottom: 24px;
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-tag::before {
+      content: '◆';
+      color: var(--accent-gold);
+      font-size: 8px;
+    }
+
+    .hero-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: white;
+      line-height: 1.3;
+      margin-bottom: 16px;
+    }
+
+    .hero-subtitle {
+      font-size: 18px;
+      color: rgba(255,255,255,0.8);
+      font-weight: 400;
+    }
+
+    .hero-author {
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .author-avatar {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-orange) 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .author-info {
+      flex: 1;
+    }
+
+    .author-name {
+      font-weight: 600;
+      color: white;
+      font-size: 15px;
+    }
+
+    .author-title {
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+    }
+
+    .author-meta {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    /* Content */
+    .content {
+      padding: 48px 40px;
+    }
+
+    .section {
+      margin-bottom: 40px;
+    }
+
+    /* Story opener */
+    .story-opener {
+      padding: 28px;
+      background: linear-gradient(135deg, rgba(196,154,60,0.08) 0%, rgba(217,112,24,0.05) 100%);
+      border-left: 4px solid var(--accent-gold);
+      border-radius: 0 12px 12px 0;
+      margin-bottom: 32px;
+    }
+
+    .story-opener p {
+      font-size: 17px;
+      color: var(--navy-800);
+      margin: 0;
+      text-align: left;
+    }
+
+    /* Section title */
+    .section-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--navy-900);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-title::before {
+      content: '';
+      width: 4px;
+      height: 24px;
+      background: var(--accent-gold);
+      border-radius: 2px;
+    }
+
+    .section-title.center {
+      justify-content: center;
+    }
+
+    .section-title.center::before {
+      display: none;
+    }
+
+    /* Table */
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 15px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(26,39,68,0.06);
+    }
+
+    .comparison-table th {
+      background: var(--navy-900);
+      color: white;
+      padding: 16px;
+      text-align: left;
+      font-weight: 500;
+    }
+
+    .comparison-table td {
+      padding: 14px 16px;
+      background: white;
+      border-bottom: 1px solid var(--warm-gray-150);
+    }
+
+    .comparison-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .comparison-table .label {
+      font-weight: 600;
+      color: var(--navy-800);
+    }
+
+    /* Quote */
+    .quote {
+      padding: 24px 28px;
+      background: var(--warm-gray-150);
+      border-radius: 12px;
+      margin: 24px 0;
+      position: relative;
+    }
+
+    .quote::before {
+      content: '"';
+      position: absolute;
+      top: 8px;
+      left: 16px;
+      font-size: 64px;
+      color: var(--accent-gold);
+      opacity: 0.3;
+      font-family: Georgia, serif;
+      line-height: 1;
+    }
+
+    .quote p {
+      position: relative;
+      z-index: 1;
+      font-size: 17px;
+      color: var(--navy-800);
+      font-style: italic;
+      margin: 0;
+    }
+
+    .quote.highlight {
+      background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-700) 100%);
+    }
+
+    .quote.highlight p {
+      color: white;
+      font-style: normal;
+    }
+
+    .quote.highlight::before {
+      color: var(--accent-gold);
+      opacity: 0.4;
+    }
+
+    /* Highlight box */
+    .highlight-box {
+      background: white;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 4px 20px rgba(26,39,68,0.08);
+      margin: 24px 0;
+    }
+
+    .highlight-box .icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-orange) 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+
+    .highlight-box h4 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--navy-900);
+      margin-bottom: 12px;
+    }
+
+    .highlight-box p {
+      font-size: 15px;
+      color: var(--warm-gray-500);
+      margin: 0;
+    }
+
+    /* Stats */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 32px 0;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 20px 12px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(26,39,68,0.06);
+    }
+
+    .stat-value {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--navy-900);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--warm-gray-500);
+      margin-top: 4px;
+    }
+
+    /* Experience card */
+    .experience-card {
+      background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-700) 100%);
+      border-radius: 16px;
+      padding: 28px;
+      color: white;
+      margin: 24px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .experience-card::after {
+      content: '';
+      position: absolute;
+      bottom: -40px;
+      right: -40px;
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle, rgba(196,154,60,0.2) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .experience-card .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      background: var(--accent-gold);
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .experience-card h4 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .experience-card p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.8);
+      margin: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .experience-card .stat {
+      display: inline-block;
+      margin-right: 20px;
+    }
+
+    .experience-card .stat-value {
+      font-size: 24px;
+      color: var(--accent-gold);
+    }
+
+    /* Vision */
+    .vision-box {
+      text-align: center;
+      padding: 40px 28px;
+      background: linear-gradient(135deg, rgba(196,154,60,0.08) 0%, rgba(217,112,24,0.05) 100%);
+      border-radius: 16px;
+      margin: 32px 0;
+    }
+
+    .vision-box .icon {
+      font-size: 40px;
+      margin-bottom: 16px;
+    }
+
+    .vision-box p {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--navy-900);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* CTA */
+    .cta-section {
+      background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-700) 100%);
+      border-radius: 16px;
+      padding: 36px;
+      text-align: center;
+      margin: 40px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 80% 20%, rgba(196,154,60,0.2) 0%, transparent 50%);
+    }
+
+    .cta-section * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: white;
+      margin-bottom: 8px;
+    }
+
+    .cta-desc {
+      font-size: 14px;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 24px;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      padding: 14px 40px;
+      background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-orange) 100%);
+      color: white;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 15px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(196,154,60,0.3);
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 6px 30px rgba(196,154,60,0.4);
+    }
+
+    /* Divider */
+    .divider {
+      text-align: center;
+      margin: 40px 0;
+      color: var(--warm-gray-300);
+      font-size: 20px;
+      letter-spacing: 8px;
+    }
+
+    /* Footer */
+    .footer {
+      padding: 32px 40px;
+      text-align: center;
+      border-top: 1px solid var(--warm-gray-150);
+    }
+
+    .footer-brand {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--navy-900);
+      margin-bottom: 4px;
+    }
+
+    .footer-desc {
+      font-size: 13px;
+      color: var(--warm-gray-300);
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .tag {
+      padding: 6px 12px;
+      background: var(--warm-gray-150);
+      border-radius: 16px;
+      font-size: 12px;
+      color: var(--warm-gray-500);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Hero -->
+    <header class="hero">
+      <div class="hero-content">
+        <span class="hero-tag">创业故事</span>
+        <h1 class="hero-title">一份合同没审好<br>可能吃掉10个项目的利润</h1>
+        <p class="hero-subtitle">10年项目管理经验，我为什么用AI做合同审查</p>
+
+        <div class="hero-author">
+          <div class="author-avatar">法</div>
+          <div class="author-info">
+            <p class="author-name">[你的名字]</p>
+            <p class="author-title">前世界TOP3工程管理公司 | 房地产公司投资经理</p>
+            <p class="author-meta">10年+ 项目管理经验</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="content">
+      <!-- Opener -->
+      <div class="story-opener">
+        <p>上周五晚上 11 点，我收到一条用户私信：</p>
+        <p style="margin-top: 12px;">"你们的工具真的帮了我大忙。明天要和投资方签 Term Sheet，我用你们的 AI 审了一遍，发现了好几个对我们不利的条款。改完之后谈下来的条件，比原来好很多。真的谢谢你们。"</p>
+        <p style="margin-top: 12px;">看完这条消息，我在椅子上坐了很久。然后回了他一句：谢谢你的反馈，这才是我做这件事的意义。</p>
+      </div>
+
+      <div class="divider">•••</div>
+
+      <!-- Section 1: The gap -->
+      <section class="section">
+        <h2 class="section-title">大公司 vs 中小企业</h2>
+
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>大公司</th>
+              <th>中小企业</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="label">法务参与</td>
+              <td>深度参与每份合同</td>
+              <td>没有专职法务</td>
+            </tr>
+            <tr>
+              <td class="label">审查成本</td>
+              <td>预算充足，找律师</td>
+              <td>成本敏感，能省则省</td>
+            </tr>
+            <tr>
+              <td class="label">合同流程</td>
+              <td>标准化，流程规范</td>
+              <td>随意，容易漏风险</td>
+            </tr>
+            <tr>
+              <td class="label">人员能力</td>
+              <td>法务团队专业</td>
+              <td>行政/老板兼任，不专业</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p style="text-align: center; font-size: 17px; color: var(--navy-800); font-weight: 500; margin-top: 20px;">
+          大公司花大价钱做合同风控，中小企业只能靠运气。
+        </p>
+      </section>
+
+      <!-- Section 2: The cost -->
+      <section class="section">
+        <h2 class="section-title">一个合同没审好 = 吃掉10个利润</h2>
+
+        <div class="quote">
+          <p>一个项目合同风控没做好：<br>
+          → 轻则：支付违约金、额外成本<br>
+          → 重则：吃官司、巨额赔款<br>
+          → 结果：<strong>10个项目的利润，可能被1个失败项目吃掉</strong></p>
+        </div>
+
+        <p style="text-align: center; font-size: 17px; color: var(--accent-red); font-weight: 600;">
+          这不是危言耸听，是我亲眼见过的。
+        </p>
+
+        <p style="text-align: center; margin-top: 8px; font-size: 16px; color: var(--warm-gray-500);">
+          合同审查不是"花冤枉钱"，是"省大钱"——甚至可能是"保命钱"。
+        </p>
+      </section>
+
+      <div class="divider">•••</div>
+
+      <!-- Section 3: My experience -->
+      <section class="section">
+        <h2 class="section-title">我的经历</h2>
+
+        <div class="experience-card">
+          <span class="badge">专业背景</span>
+          <h4>曾任职世界TOP3工程管理公司<br>担任房地产公司投资经理</h4>
+          <p>从事项目管理超过 <strong>10 年</strong>，这10年里，我见过太多案例。</p>
+        </div>
+
+        <div class="highlight-box">
+          <div class="icon">📋</div>
+          <h4>合同是项目管理的基石</h4>
+          <p>合同条款一个疏漏，可能导致整个项目亏损；风险管理做得好不好，直接决定项目成败。</p>
+        </div>
+
+        <div class="quote highlight">
+          <p>我深知：<strong>合同是项目管理的基石，风控是利润的保障。</strong></p>
+        </div>
+
+        <p>但我也知道，不是每个公司都有条件配置专业法务团队。</p>
+        <p>所以我想用 AI，把大公司花了十几年、无数教训沉淀下来的合同管理经验，<strong>普惠给每一个中小企业</strong>。</p>
+      </section>
+
+      <!-- Section 4: What we do -->
+      <section class="section">
+        <h2 class="section-title">不是做"花哨"的AI<br>而是做"靠谱"的AI</h2>
+
+        <div class="highlight-box">
+          <div class="icon">⚖️</div>
+          <h4>不是取代律师，是填补空白</h4>
+          <p>融资、诉讼、重大交易——交给专业律师。<br>
+          日常合同（保密协议、劳动合同、采购合同、服务协议）——这就是我要解决的。</p>
+        </div>
+
+        <!-- Screenshot: Demo Page -->
+        <div style="margin: 24px 0;">
+          <img src="file:///C:/Users/kalvi/Pictures/法务AI宣传截图/Demo页.png" alt="法务AI Box 产品介绍" style="width: 100%; border-radius: 12px; box-shadow: 0 4px 20px rgba(26,39,68,0.1);">
+        </div>
+
+        <div class="highlight-box">
+          <div class="icon">🔍</div>
+          <h4>RAG 检索增强，每条建议都有依据</h4>
+          <p>不是 AI 凭空编出来的。系统从法律知识库检索相关法条，作为上下文提供给 AI，确保每条建议都能溯源。</p>
+        </div>
+
+        <!-- Screenshot: Company Knowledge Base -->
+        <div style="margin: 24px 0;">
+          <img src="file:///C:/Users/kalvi/Pictures/法务AI宣传截图/公司专属知识库.png" alt="公司专属知识库" style="width: 100%; border-radius: 12px; box-shadow: 0 4px 20px rgba(26,39,68,0.1);">
+        </div>
+
+        <div class="highlight-box">
+          <div class="icon">🚀</div>
+          <h4>借鉴大公司经验，赋能中小企业</h4>
+          <p>把大公司花大价钱做的合同管理，用 AI 的方式普惠化，让中小企业也能用得起、用得放心。</p>
+        </div>
+      </section>
+
+      <!-- Section 5: Target users -->
+      <section class="section">
+        <h2 class="section-title center">三类用户，一个解决方案</h2>
+
+        <div class="stats-row">
+          <div class="stat-item">
+            <div class="stat-value">1</div>
+            <div class="stat-label">中小企业企业主</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">2</div>
+            <div class="stat-label">公司法务</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">3</div>
+            <div class="stat-label">非法律出身者</div>
+          </div>
+        </div>
+
+        <div class="quote">
+          <p><strong>1. 中小企业企业主：</strong><br>
+          合同自己看半天，只能凭感觉和经验；花钱找律师，价格又太高。想用合理成本把合同管起来。</p>
+        </div>
+
+        <div class="quote">
+          <p><strong>2. 公司法务：</strong><br>
+          人手不够，日常合同审查占用大量时间。想用 AI 提效，把精力放在真正重要的事上。</p>
+        </div>
+
+        <div class="quote">
+          <p><strong>3. 非法律出身的审查者：</strong><br>
+          行政、人事、甚至老板自己——有业务思维，但缺法律思维和风险思维。审合同只能看个大概，心里没底。</p>
+        </div>
+      </section>
+
+      <!-- Section 6: Product -->
+      <section class="section">
+        <h2 class="section-title">法务AI Box 是什么</h2>
+
+        <div class="highlight-box">
+          <div class="icon">⚡</div>
+          <h4>3 步搞定合同审查</h4>
+          <p>1️⃣ 上传合同（PDF/Word） → 2️⃣ AI 智能审查（2-3分钟） → 3️⃣ 一键导出</p>
+        </div>
+
+        <!-- Screenshot: Upload Page -->
+        <div style="margin: 24px 0;">
+          <img src="file:///C:/Users/kalvi/Pictures/法务AI宣传截图/上传页（流程说明）.png" alt="上传合同" style="width: 100%; border-radius: 12px; box-shadow: 0 4px 20px rgba(26,39,68,0.1);">
+        </div>
+
+        <p style="font-size: 17px; font-weight: 600; color: var(--navy-900); text-align: center; margin: 24px 0;">
+          用不到 1% 的价格，用 AI 构建你的专属律师顾问<br>
+          <span style="color: var(--accent-gold);">提升 10-20 倍审查效率</span>
+        </p>
+
+        <p style="text-align: center; color: var(--warm-gray-500);">
+          不替代律师。融资协议、诉讼、重大交易——请找专业律师。
+        </p>
+
+        <!-- Screenshot: Review Report -->
+        <div style="margin: 24px 0;">
+          <img src="file:///C:/Users/kalvi/Pictures/法务AI宣传截图/审查报告页1.png" alt="审查报告 - 风险标注" style="width: 100%; border-radius: 12px; box-shadow: 0 4px 20px rgba(26,39,68,0.1);">
+        </div>
+      </section>
+
+      <!-- Vision -->
+      <div class="vision-box">
+        <div class="icon">🎯</div>
+        <p>让中小企业不用花大价钱<br>也能做好合同风控</p>
+      </div>
+
+      <!-- Screenshot: Dashboard -->
+      <div style="margin: 32px 0;">
+        <img src="file:///C:/Users/kalvi/Pictures/法务AI宣传截图/工作台.png" alt="工作台" style="width: 100%; border-radius: 12px; box-shadow: 0 4px 20px rgba(26,39,68,0.1);">
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-section">
+        <p class="cta-title">现在免费试用</p>
+        <p class="cta-desc">评论"试用"，送你 10 次免费审查额度<br>先试试，觉得有用再说。</p>
+        <a href="#" class="cta-btn">立即体验法务AI Box →</a>
+      </div>
+
+      <!-- Tags -->
+      <div class="tags">
+        <span class="tag">#创业</span>
+        <span class="tag">#中小企业</span>
+        <span class="tag">#法务AI</span>
+        <span class="tag">#项目管理</span>
+        <span class="tag">#法律科技</span>
+        <span class="tag">#SaaS</span>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p class="footer-brand">法务AI Box</p>
+      <p class="footer-desc">用 AI 普惠合同风控</p>
+    </footer>
+  </div>
+</body>
+</html>

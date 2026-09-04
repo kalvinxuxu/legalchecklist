@@ -65,6 +65,7 @@ class Contract(Base, UUIDMixin, TimestampMixin):
     review_result = Column(JSON, nullable=True, comment="审查结果（JSON）")
     review_error = Column(Text, nullable=True, comment="审查失败错误信息")
     risk_level = Column(Enum(RiskLevel), nullable=True, comment="风险等级")
+    review_config = Column(JSON, nullable=True, comment="审查立场配置（甲乙方/金额/风险偏好）")
 
     # 关联关系
     workspace = relationship("Workspace", back_populates="contracts")
@@ -74,6 +75,12 @@ class Contract(Base, UUIDMixin, TimestampMixin):
         back_populates="contract",
         uselist=False,
         cascade="all, delete-orphan"
+    )
+    review_runs = relationship(
+        "ReviewRun",
+        back_populates="contract",
+        cascade="all, delete-orphan",
+        order_by="ReviewRun.created_at.desc()",
     )
     clause_locations = relationship(
         "ClauseLocation",

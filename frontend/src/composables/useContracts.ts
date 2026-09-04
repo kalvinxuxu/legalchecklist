@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query'
+import { computed, isRef, type Ref } from 'vue'
 import api from '@/lib/api'
 import { useAuthStore } from '@/stores/auth'
 import { useToast } from '@/composables/useToast'
@@ -27,6 +28,9 @@ export interface ReviewResult {
     suggestion?: string
     legal_reference?: string
     policy_reference?: string
+    evidence_id?: string
+    evidence_locations?: Array<{ page: number; bbox?: { x0: number; y0: number; x1: number; y1: number } }>
+    evidence_resolution_status?: 'resolved' | 'fuzzy_fallback' | 'page_only' | 'unresolved'
   }>
   missing_clauses: Array<{
     title?: string
@@ -42,6 +46,13 @@ export interface ReviewResult {
     section?: string
     content?: string
   }>
+  retrieval_diagnostics?: {
+    modes?: string[]
+    candidate_count?: number
+    contract_chunks?: number
+    contract_top_candidates?: Array<{ chunk_id?: string; document_version_id?: string; page_start?: number; page_end?: number; bm25_rank?: number; vector_rank?: number; fused_score?: number; rerank_score?: number; retrieval_mode?: string; reranker_provider?: string; fallback_reason?: string }>
+    top_candidates?: Array<{ id?: string; bm25_rank?: number; vector_rank?: number; fused_score?: number; rerank_score?: number }>
+  }
 }
 
 export interface ContractUnderstanding {
@@ -67,12 +78,44 @@ export interface ContractUnderstanding {
   }
 }
 
+export interface ReviewStepStatus {
+  stage: string
+  stage_label?: string
+  status: 'waiting' | 'running' | 'completed' | 'failed' | 'skipped'
+  attempt: number
+  started_at?: string | null
+  completed_at?: string | null
+  error?: string | null
+}
+
+export interface ReviewStatus {
+  run_id?: string
+  status: 'queued' | 'running' | 'completed' | 'failed' | 'stalled' | string
+  review_status: 'pending' | 'processing' | 'completed' | 'failed'
+  current_stage?: string | null
+  stage_label?: string | null
+  progress: number
+  attempt: number
+  last_heartbeat_at?: string | null
+  elapsed_seconds: number
+  last_error?: string | null
+  resumable_from?: string | null
+  steps: ReviewStepStatus[]
+}
+
 export interface ClauseLocation {
   clause_title?: string
   clause_text?: string
   page: number
   bbox?: { x0: number; y0: number; x1: number; y1: number }
   risk_level?: 'high' | 'medium' | 'low'
+  evidence_id?: string
+  document_id?: string
+  version_id?: string
+  coord_system?: 'pdf_top_left'
+  locations?: Array<{ page: number; bbox?: { x0: number; y0: number; x1: number; y1: number }; span_id?: string }>
+  match_type?: 'id_exact' | 'offset_exact' | 'fuzzy_legacy' | 'page_only'
+  resolution_status?: 'resolved' | 'fuzzy_fallback' | 'page_only' | 'unresolved'
 }
 
 // ========== Hooks ==========
@@ -90,6 +133,18 @@ export function useContract(id: string) {
     queryKey: ['contracts', id],
     queryFn: () => api.get(`/contracts/${id}`) as Promise<Contract>,
     enabled: !!id,
+  })
+}
+
+export function useReviewStatus(id: string) {
+  return useQuery({
+    queryKey: ['contracts', id, 'review-status'],
+    queryFn: () => api.get(`/contracts/${id}/review-status`) as Promise<ReviewStatus>,
+    enabled: !!id,
+    refetchInterval: (query) => {
+      const status = query.state.data?.status
+      return status === 'completed' || status === 'failed' || status === 'stalled' ? 5000 : 2000
+    },
   })
 }
 
@@ -135,11 +190,12 @@ export function useContractUnderstanding(id: string) {
   })
 }
 
-export function useClauseLocations(id: string) {
+export function useClauseLocations(id: string, enabled: boolean | Ref<boolean> = true) {
   return useQuery({
     queryKey: ['contracts', id, 'clause-locations'],
     queryFn: () => api.get(`/contracts/${id}/clause-locations`) as Promise<ClauseLocation[]>,
-    enabled: !!id,
+    // 由调用方控制是否启用查询
+    enabled: computed(() => !!id && (isRef(enabled) ? enabled.value : enabled)),
   })
 }
 
@@ -150,11 +206,25 @@ export function useUploadContract() {
   const { toast } = useToast()
 
   return useMutation({
-    mutationFn: ({ file, workspaceId, contractType }: { file: File; workspaceId: string; contractType: string }) => {
+    mutationFn: ({ file, workspaceId, contractType, partyPosition, contractAmount, riskPreference }: {
+      file: File
+      workspaceId: string
+      contractType: string
+      partyPosition?: string | null
+      contractAmount?: number | null
+      riskPreference?: string | null
+    }) => {
       const formData = new FormData()
       formData.append('file', file)
       formData.append('workspace_id', workspaceId)
       formData.append('contract_type', contractType)
+      // 传递审查立场配置
+      if (partyPosition) formData.append('party_position', partyPosition)
+      if (contractAmount) formData.append('contract_amount', contractAmount.toString())
+      if (riskPreference) formData.append('risk_preference', riskPreference)
+      // 不自动触发审查，用户手动在详情页点击"开始审查"
+      // 后端字段名为 auto_review_str；关闭同步审查，避免上传阶段触发解析/模型调用
+      formData.append('auto_review_str', 'false')
       return api.post('/contracts/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } }) as Promise<{ id: string }>
     },
     onSuccess: () => {

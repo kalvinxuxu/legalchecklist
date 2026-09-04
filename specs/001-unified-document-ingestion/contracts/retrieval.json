@@ -1,0 +1,32 @@
+{
+  "name": "hybrid-retrieval-audit",
+  "version": "v1",
+  "purpose": "Auditable three-stage legal RAG retrieval output.",
+  "pipeline": {
+    "stage_1": "parallel BM25 and vector recall, hard metadata filters, RRF over top 40",
+    "stage_2": "cross-encoder query/passage scoring",
+    "stage_3": "deterministic authority and metadata policy scoring"
+  },
+  "score_formula": "rerank_score = 0.75 * semantic_score + 0.15 * authority_score + 0.10 * metadata_score",
+  "candidate": {
+    "chunk_id": "string",
+    "document_id": "string",
+    "version_id": "string",
+    "bm25_rank": "integer|null",
+    "vector_rank": "integer|null",
+    "fused_rank": "integer|null",
+    "rerank_rank": "integer|null",
+    "bm25_score": "number|null",
+    "vector_score": "number|null",
+    "fused_score": "number",
+    "semantic_score": "number|null",
+    "authority_score": "number",
+    "metadata_score": "number",
+    "rerank_score": "number",
+    "reranker_provider": "bge_local|jina|deterministic_fallback",
+    "reranker_model": "string|null",
+    "reranker_version": "string|null",
+    "fallback_reason": "string|null",
+    "provenance": "DocumentChunk provenance"
+  }
+}

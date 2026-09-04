@@ -322,3 +322,15 @@ test.describe('Contract Upload Validation', () => {
     await expect(page.getByText('请选择工作区')).toBeVisible()
   })
 })
+
+test('returns additive evidence metadata for PDF highlighting', async ({ page }) => {
+  await page.route('**/api/v1/contracts/demo/pdf-positions', async route => {
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({
+      coord_system: 'pdf_top_left', document_id: 'doc-1', version_id: 'ver-1',
+      clause_locations: [{ evidence_id: 'ev-1', page: 0, bbox: { x0: 1, y0: 2, x1: 10, y1: 12 }, locations: [{ page: 0 }] }]
+    }) })
+  })
+  const response = await page.request.get('/api/v1/contracts/demo/pdf-positions')
+  expect(response.ok()).toBeTruthy()
+  expect((await response.json()).coord_system).toBe('pdf_top_left')
+})

@@ -2,10 +2,12 @@
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useContracts } from '@/composables/useContracts'
+import { useAuthStore } from '@/stores/auth'
 import { Upload, FileText, AlertTriangle, Clock, ArrowRight, TrendingUp, ShieldCheck, Sparkles } from 'lucide-vue-next'
 import { formatDateShort, CONTRACT_TYPE_MAP, REVIEW_STATUS_MAP } from '@/lib/utils'
 
 const router = useRouter()
+const authStore = useAuthStore()
 const { data: contracts = ref([]), isLoading } = useContracts()
 
 const contractsList = computed(() => contracts.value || [])
@@ -54,7 +56,7 @@ function formatDate(dateStr: string) {
           <h1 class="text-xl font-bold text-navy-900" style="font-family: 'Noto Serif SC', Georgia, serif;">
             工作台
           </h1>
-          <p class="text-sm text-warm-gray mt-0.5">欢迎回来，查看您的合同审查概览</p>
+          <p class="text-sm text-warm-gray mt-0.5">欢迎回来，{{ authStore.displayName }}，查看您的合同审查概览</p>
         </div>
         <button
           @click="router.push('/workspace/upload')"
@@ -137,7 +139,7 @@ function formatDate(dateStr: string) {
             </div>
             <div>
               <h3 class="text-white font-semibold mb-0.5">上传新合同</h3>
-              <p class="text-navy-300 text-sm">支持 PDF、Word 格式，30 秒完成审查</p>
+              <p class="text-navy-300 text-sm">支持 PDF、Word 格式，2-3 分钟完成深度审查</p>
             </div>
           </div>
           <button

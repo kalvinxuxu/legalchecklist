@@ -165,6 +165,26 @@ class AliyunDocumentParser:
             backend_dir = Path(__file__).resolve().parent.parent.parent.parent
             file_path = str(backend_dir / file_path)
 
+        # Canonical path for PDF consumers. Keep the legacy extractors below as
+        # a compatibility fallback for malformed files and existing fixtures.
+        if settings.DOCUMENT_AST_ENABLED:
+            try:
+                import hashlib
+                from app.services.document.pymupdf_adapter import PyMuPDFAdapter
+                from app.services.document.text_projection import project_text
+                from app.services.document.identity import document_id, version_id
+                file_hash = hashlib.sha256(Path(file_path).read_bytes()).hexdigest()
+                doc_id = document_id(file_hash)
+                ver_id = version_id(doc_id, "pymupdf", PyMuPDFAdapter.version)
+                ast = await PyMuPDFAdapter().parse_async(file_path, doc_id, ver_id)
+                projected = project_text(ast)
+                # Scanned PDFs can produce a valid but empty AST. Continue to
+                # the legacy OCR chain instead of returning an empty success.
+                if (projected.get("text") or "").strip():
+                    return projected
+            except Exception as exc:
+                print(f"统一 AST 解析失败，回退兼容解析: {exc}")
+
         text_parts = []
         pages = 0
 
@@ -225,17 +245,25 @@ class AliyunDocumentParser:
         except Exception as e:
             print(f"pymupdf 解析失败: {e}")
 
-        # 方法 3：使用 EasyOCR（扫描版 PDF）
+        # Prefer the explicitly configured Linux/Windows Tesseract path. This
+        # avoids loading the much slower EasyOCR model on CPU deployments.
+        if os.getenv("TESSERACT_CMD") or settings.LINUX_OCR_ENABLED:
+            print("尝试使用 Tesseract OCR 进行识别...")
+            ocr_result = await self._parse_with_tesseract(file_path)
+            if ocr_result.get("text"):
+                return ocr_result
+
+        # Optional secondary OCR provider for environments without Tesseract.
         print("尝试使用 EasyOCR 进行 OCR 识别...")
         ocr_result = await self._parse_with_easyocr(file_path)
         if ocr_result.get("text"):
             return ocr_result
 
-        # 方法 4：使用 Tesseract OCR（备用）
-        print("尝试使用 Tesseract OCR 进行识别...")
-        ocr_result = await self._parse_with_tesseract(file_path)
-        if ocr_result.get("text"):
-            return ocr_result
+        if not (os.getenv("TESSERACT_CMD") or settings.LINUX_OCR_ENABLED):
+            print("尝试使用 Tesseract OCR 进行识别...")
+            ocr_result = await self._parse_with_tesseract(file_path)
+            if ocr_result.get("text"):
+                return ocr_result
 
         return {
             "text": "",
@@ -253,6 +281,7 @@ class AliyunDocumentParser:
             import io
             import numpy as np
             import os
+            from shutil import which
             import gc
 
             # 初始化 EasyOCR（支持中文+英文）
@@ -319,26 +348,20 @@ class AliyunDocumentParser:
             import pytesseract
             import io
             import os
+            from shutil import which
 
-            # 配置 tesseract 路径（Windows 安装路径）
-            tesseract_exe = None
-            tesseract_paths = [
-                r"C:\Program Files\Tesseract-OCR\tesseract.exe",
-                r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe",
-                r"C:\Tesseract-OCR\tesseract.exe"
-            ]
-            for path in tesseract_paths:
-                if os.path.exists(path):
-                    tesseract_exe = path
-                    pytesseract.pytesseract.tesseract_cmd = path
-                    break
+            # Resolve the executable from PATH; Railway/Linux and local Windows
+            # can configure it without hardcoded platform-specific paths.
+            tesseract_exe = which("tesseract") or os.getenv("TESSERACT_CMD")
+            if tesseract_exe:
+                pytesseract.pytesseract.tesseract_cmd = tesseract_exe
 
             if not tesseract_exe:
                 print("Tesseract 未安装")
                 return {"text": "", "pages": 0, "source": "tesseract"}
 
             # 检查语言包
-            tessdata_path = os.path.join(os.path.dirname(tesseract_exe), 'tessdata')
+            tessdata_path = os.getenv("TESSDATA_PREFIX") or os.path.join(os.path.dirname(tesseract_exe), 'tessdata')
             chi_sim_path = os.path.join(tessdata_path, 'chi_sim.traineddata')
             if not os.path.exists(chi_sim_path):
                 print(f"Tesseract 中文语言包未找到: {chi_sim_path}")

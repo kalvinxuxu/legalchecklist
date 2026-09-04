@@ -4,6 +4,7 @@ import Components from 'unplugin-vue-components/vite'
 import path from 'path'
 
 export default defineConfig({
+  base: '/',
   plugins: [
     vue(),
     Components({
@@ -17,11 +18,22 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  build: {
+    assetsInlineLimit: 0,
+    cssCodeSplit: false,
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+        assetFileNames: 'assets/[name][extname]',
+        chunkFileNames: 'assets/[name].js',
+      },
+    },
+  },
   server: {
     port: 5173,
     proxy: {
       '/api': {
-        target: 'http://localhost:8000',
+        target: 'http://127.0.0.1:8001',
         changeOrigin: true,
       },
     },

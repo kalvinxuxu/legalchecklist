@@ -4,6 +4,27 @@ import api from '@/lib/api'
 import { useAuthStore } from '@/stores/auth'
 import { useToast } from '@/composables/useToast'
 
+interface AuthUser {
+  id: string
+  email: string
+  name?: string
+  role: string
+  tenant_id: string
+  tenant?: {
+    id: string
+    name: string
+    plan: string
+    contract_quota: number
+    created_at: string
+  }
+}
+
+interface AuthResponse {
+  access_token: string
+  token_type: string
+  user: AuthUser
+}
+
 export function useLogin() {
   const router = useRouter()
   const { login } = useAuthStore()
@@ -11,7 +32,7 @@ export function useLogin() {
 
   return useMutation({
     mutationFn: (data: { email: string; password: string }) =>
-      api.post('/auth/login', data) as Promise<{ access_token: string; user: { id: string; email: string } }>,
+      api.post('/auth/login', data) as Promise<AuthResponse>,
     onSuccess: (data) => {
       login(data.access_token, data.user)
       toast({ title: '登录成功', variant: 'success' })
@@ -29,8 +50,8 @@ export function useRegister() {
   const { toast } = useToast()
 
   return useMutation({
-    mutationFn: (data: { email: string; password: string; company_name: string }) =>
-      api.post('/auth/register', data) as Promise<{ access_token: string; user: { id: string; email: string } }>,
+    mutationFn: (data: { email: string; password: string; name?: string; company_name?: string }) =>
+      api.post('/auth/register', data) as Promise<AuthResponse>,
     onSuccess: (data) => {
       if (data.access_token) {
         login(data.access_token, data.user)
