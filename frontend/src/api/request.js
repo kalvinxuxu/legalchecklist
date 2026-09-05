@@ -2,9 +2,12 @@ import axios from 'axios'
 import { ElMessage } from 'element-plus'
 import router from '@/router'
 
+// 生产环境通过 Vercel 环境变量指向 Railway；本地开发继续走 Vite 代理。
+const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '')
+
 // 创建 Axios 实例
 const request = axios.create({
-  baseURL: '/api/v1',
+  baseURL: `${apiBaseUrl}/api/v1`,
   timeout: 30000
 })
 
