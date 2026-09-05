@@ -1,6 +1,7 @@
 """
 应用配置管理
 """
+from pydantic import field_validator
 from pydantic_settings import BaseSettings
 from typing import List, Optional
 import os
@@ -114,6 +115,21 @@ class Settings(BaseSettings):
         "http://localhost:3000",
         "http://127.0.0.1:5173",
     ]
+
+    @field_validator(
+        "JWT_SECRET",
+        "ZHIPU_EMBEDDING_API_KEY",
+        "DEEPSEEK_API_KEY",
+        "MINIMAX_API_KEY",
+        "JINA_API_KEY",
+        "QQ_MAIL_USERNAME",
+        "QQ_MAIL_APP_PASSWORD",
+        mode="before",
+    )
+    @classmethod
+    def strip_secret_whitespace(cls, value):
+        """Prevent pasted Railway secrets from introducing invalid header characters."""
+        return value.strip() if isinstance(value, str) else value
 
     @property
     def is_mysql(self) -> bool:
