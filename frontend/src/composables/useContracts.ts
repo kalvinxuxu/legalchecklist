@@ -225,7 +225,8 @@ export function useUploadContract() {
       // 不自动触发审查，用户手动在详情页点击"开始审查"
       // 后端字段名为 auto_review_str；关闭同步审查，避免上传阶段触发解析/模型调用
       formData.append('auto_review_str', 'false')
-      return api.post('/contracts/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } }) as Promise<{ id: string }>
+      // 让浏览器/Axios 自动生成 multipart boundary，手动设置会导致文件 POST 被浏览器拦截。
+      return api.post('/contracts/upload', formData) as Promise<{ id: string }>
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['contracts'] })
