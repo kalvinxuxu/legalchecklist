@@ -110,3 +110,5 @@ playwright-report/
 # OS
 Thumbs.db
 .DS_Store
+
+.vercel
